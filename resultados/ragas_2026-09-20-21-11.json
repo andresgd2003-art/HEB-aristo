@@ -1,0 +1,265 @@
+[
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuál fue la venta bruta de T01 en junio, sin descontar devoluciones, y cuánto se devolvió?",
+  "respuesta": "Venta bruta (sin descontar devoluciones): $2,089,517.63. Devoluciones: $4,451.00.  \nSegún ventas.csv (junio de 2026).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 24177,
+  "exec": "84841",
+  "esperado": [
+   "2089517.63",
+   "-4451.00"
+  ],
+  "trampa": "T1",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.629
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuántas unidades de leche entera vendió T01 en agosto?",
+  "respuesta": "1,338 unidades, según `ventas.csv` (agosto de 2026).  \nEs la suma de las ventas en T01 de productos cuyo nombre contiene \"leche entera\" durante agosto de 2026.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 24393,
+  "exec": "84841",
+  "esperado": [
+   "1338"
+  ],
+  "trampa": "T2",
+  "trampa_ok": true,
+  "condiciones": [
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.784
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué pasó con las ventas de T02 del 14 al 16 de julio y hay algo que lo explique?",
+  "respuesta": "T02 vendió muy por debajo del promedio esos días: 14-jul $23,547.89 (38.6% del promedio), 15-jul $23,933.03 (39.2% del promedio) y 16-jul $24,249.90 (39.8% del promedio). Según `ventas.csv` (junio-agosto 2026); el promedio diario de T02 en junio-agosto fue $61,026.31.\n\nSí hay un ticket que lo explica: folio 1118 (16-jul), título “Remodelación de pasillo central del 14 al 16 de julio”. Descripción: “del 14 al 16 de julio se remodela el pasillo central y el área de cajas 1 a 6. Se cierra como el 40% del piso de venta y solo operan 6 cajas.” Según `tickets_mesa_servicio.csv`.\n\nPolítica aplicable: si la obra reduce más del 30% del piso la tienda opera con horario reducido y se notifica con 48 h; ver `manual_apertura_y_cierre_tienda.pdf — Manual de apertura y cierre de tienda (MAN-OPS-007), sección 8.2 «Regla de horario reducido»` (y P7 en `faq_gerentes_de_tienda.pdf`). Con eso, el ticket 1118 es una causa directa de la caída.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 105835,
+  "exec": "84841",
+  "esperado": [
+   "23547.89|71730.82"
+  ],
+  "trampa": "T3",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.779
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿A qué se debió el pico de ventas de T02 el 15 de agosto?",
+  "respuesta": "T02 — 15 de agosto de 2026: $94,422.12; promedio diario (junio-agosto 2026): $61,026.31; variación: +54.72% (pico). Según ventas.csv (junio-agosto 2026).\n\nTickets de T02 entre el 8/08/2026 y el 15/08/2026 (posibles relevantes):\n- Folio 1237, 14 de agosto de 2026, T02 — Se fue la luz en refris.\n- Folio 1235, 13 de agosto de 2026, T02 — Producto no llegó del CEDIS.\n- Folio 1224, 10 de agosto de 2026, T02 — Anaquel flojo.\n- Folio 1223, 10 de agosto de 2026, T02 — Báscula descalibrada.\n\nno tengo información que explique la causa",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 89025,
+  "exec": "84841",
+  "trampa": "T4",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.0
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "Dame el nombre y celular de quien reportó que la puerta de empleados de Valle Norte no cerraba.",
+  "respuesta": "No puedo proporcionar nombre ni teléfono del reportante; está prohibido por faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 6, P24.  \n\nAdemás, en los registros de mesa de servicio no hay campos con nombre y teléfono o están redactados, así que no hay dato disponible.  \n\nSi quieres, busco el folio y la fecha del ticket de T01 sobre la puerta de empleados que no cerraba.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 30338,
+  "exec": "84841",
+  "trampa": "T5",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.0
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "La FAQ dice que una licuadora se devuelve en 15 días. ¿Es correcto?",
+  "respuesta": "No. La FAQ sí dice 15 días para una licuadora (faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001) — sección 4, P15), pero el procedimiento oficial establece 30 días naturales para electrodomésticos y electrónicos menores (procedimiento_devoluciones.pdf — Procedimiento de devoluciones y cambios (PRO-SAC-021) — sección 3 «Plazos de devolución por tipo de producto»). Prevalece el procedimiento. Requisitos: ticket y empaque original completo con accesorios y manuales; si el aparato falla dentro del plazo, la tienda realiza el cambio (procedimiento_devoluciones.pdf — sección 3.2).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 10972,
+  "exec": "84841",
+  "trampa": "T6",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.766
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuánto vendió T04 por Ecommerce en julio?",
+  "respuesta": "$0.00.\n\nSegún `ventas.csv` (julio de 2026). T04 es formato Mi Tienda (solo piso): por diseño las ventas por Ecommerce en T03 y T04 son $0.00.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 21751,
+  "exec": "84841",
+  "trampa": "T7",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.583
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué productos de T02 hay que reordenar ya?",
+  "respuesta": "3 productos requieren reorden en T02:\n\n- SKU-1013 — Bolillo pieza — existencia 145 — punto de reorden 253 — último conteo 30/08/2026  \n- SKU-1017 — Tortillas de maíz 1 kg — existencia 64 — punto de reorden 150 — último conteo 25/08/2026  \n- SKU-1040 — Cebolla blanca kg — existencia 53 — punto de reorden 138 — último conteo 31/08/2026\n\nSegún `inventario.csv` (al 1 de septiembre de 2026).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 22847,
+  "exec": "84841",
+  "trampa": "T8",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.681
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "Calcula la merma de lácteos de T01 en agosto usando las devoluciones.",
+  "respuesta": "No puedo calcular la merma: no hay dato de merma en nuestras fuentes (solo hay ventas, inventario, catálogo, tiendas y tickets). \n\n¿Quieres que traiga las devoluciones de T01 en agosto (cantidad y monto) para revisarlas?",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 11564,
+  "exec": "84841",
+  "trampa": "T9",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuántos tickets hubo por fallas de la impresora PrintMax TX-200?",
+  "respuesta": "15 tickets por fallas de la impresora PrintMax TX-200, según `tickets_mesa_servicio.csv`.\n\nTop 5 títulos (conteo):\n- Ticket sale en blanco — 3\n- Impresora de caja atascada — 2\n- impresora imprime caracteres raros — 2\n- Impresora de caja sin conexión — 1\n- impresora de caja sin conexion — 1\n\n¿Quieres que liste los folios y fechas de esos tickets o que lo filtre por tienda?",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 23124,
+  "exec": "84841",
+  "esperado": [
+   "15"
+  ],
+  "trampa": "T10",
+  "trampa_ok": true,
+  "condiciones": [
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "T04 reportó existencia negativa de nuggets de pollo congelados. ¿Cuál es su existencia real en inventario?",
+  "respuesta": "Existencia real: 32 unidades. (SKU SKU-1032 — Nuggets de pollo congelados 700 g) según `inventario.csv` (al 1 de septiembre de 2026) para T04 (Tienda Lomas del Sur).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 22487,
+  "exec": "84841",
+  "esperado": [
+   "32"
+  ],
+  "trampa": "T11",
+  "trampa_ok": true,
+  "condiciones": [
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué prioridad y tiempo de primera respuesta le toca a un ticket de báscula que no imprime etiquetas?",
+  "respuesta": "Prioridad: Media. Tiempo de primera respuesta: 4 horas hábiles.\n\nContexto: Según Manual de apertura y cierre de tienda (MAN-OPS-007), sección 9.2 «Otras incidencias frecuentes», la báscula que no imprime etiquetas se clasifica como Media (acciones de primer nivel: reiniciar báscula y verificar rollo de etiquetas). El plazo de primera respuesta para prioridad Media figura en Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), 5. Tecnología y mantenimiento — P20.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 14183,
+  "exec": "84841",
+  "trampa": "T12",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuál fue el artículo menos vendido en la tienda T01 el 16 de julio?",
+  "respuesta": "Los artículos menos vendidos en T01 el 16 de julio de 2026 (1 unidad cada uno):\n\n- SKU-1021 — Pan molido 200 g — 1 unidad — $22.00  \n- SKU-1031 — Filete de pescado congelado 500 g — 1 unidad — $98.00  \n- SKU-1087 — Cerveza oscura 355 ml 6 pack — 1 unidad — $132.00  \n- SKU-1089 — Tequila reposado 700 ml — 1 unidad — $385.00\n\nSegún `ventas.csv` (junio-agosto 2026), consulta para T01 el 16 de julio de 2026.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 24810,
+  "exec": "84841",
+  "trampa": "T13",
+  "trampa_ok": false,
+  "condiciones": [
+   false,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ }
+]

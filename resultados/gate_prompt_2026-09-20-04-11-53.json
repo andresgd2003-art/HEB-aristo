@@ -1,0 +1,138 @@
+[
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuánto vendió T02 en julio de 2026?",
+    "ok": true,
+    "ms": 17408,
+    "respuesta": "T02 vendió $1,810,013.00 en julio de 2026. Según `ventas.csv` (junio-agosto 2026), suma de ventas de T02 entre el 1 y el 31 de julio de 2026."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántos tickets siguen abiertos o en proceso?",
+    "ok": true,
+    "ms": 13035,
+    "respuesta": "17 tickets están abiertos o en proceso, según tickets_mesa_servicio.csv (junio-agosto de 2026).\n\n¿Quieres el desglose por tienda o que liste los 5 folios más relevantes?"
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántas unidades de leche entera se vendieron en el trimestre?",
+    "ok": true,
+    "ms": 20323,
+    "respuesta": "10,099 unidades de leche entera se vendieron en el trimestre (junio-agosto de 2026), según ventas.csv (junio-agosto 2026).  \nLa cifra suma todas las presentaciones/SKUs cuyo nombre contiene \"leche entera\" en el catálogo."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuál es la categoría que más vende en T03?",
+    "ok": true,
+    "ms": 19407,
+    "respuesta": "La categoría que más vende en T03 es Abarrotes: $532,171.00 (14,802 unidades), según `ventas.csv` (junio-agosto 2026)."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuánto vendió T03 por Ecommerce en agosto?",
+    "ok": true,
+    "ms": 22700,
+    "respuesta": "Venta por Ecommerce de T03 en agosto: $0.00, según ventas.csv (junio-agosto 2026).  \nEs $0.00 por diseño: T03 es formato Mi Tienda (solo piso) y no tiene canal Ecommerce."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántos productos de Valle Norte están bajo su punto de reorden?",
+    "ok": true,
+    "ms": 8722,
+    "respuesta": "3 productos.\n\nSegún inventario.csv (al 1 de septiembre de 2026) para T01 (Tienda Valle Norte). Cuenta SKUs distintos bajo su punto de reorden; si quieres el desglose por SKU o las posiciones por anaquel, dime cuál."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuántos días tiene un cliente para devolver una licuadora?",
+    "ok": true,
+    "ms": 9655,
+    "respuesta": "30 días naturales con ticket para devolución o cambio.\n\nSegún Procedimiento de devoluciones y cambios (procedimiento_devoluciones.pdf — sección 3 «Plazos de devolución por tipo de producto»): los electrodomésticos y electrónicos menores (incluye licuadoras) tienen 30 días naturales; los plazos se cuentan a partir de la fecha de compra y en días naturales (mismo documento, sección 3). Además, el producto debe presentarse con empaque original, accesorios y manuales; si falla dentro del plazo, la tienda realiza el cambio directamente (procedimiento_devoluciones.pdf — sección 3.2).\n\nNota: la FAQ (faq_gerentes_de_tienda.pdf — sección 4, P15) menciona 15 días, pero prevalece el procedimiento (PRO-SAC-021)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuál es la tolerancia mensual de merma en panadería?",
+    "ok": true,
+    "ms": 8055,
+    "respuesta": "Tolerancia mensual en Panadería: 3.5% de la venta neta de la categoría, según politica_mermas_y_caducidad.pdf — sección 4 «Tabla de tolerancias de merma por categoría».\n\nContexto breve: el umbral de alerta es 4.5% (si se supera, el Gerente de Tienda tiene cinco días hábiles para enviar un plan de acción) — politica_mermas_y_caducidad.pdf, sección 4.1 «Interpretación de la tabla». La frecuencia mínima de conteo para Panadería es diaria (misma sección 4)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Quién autoriza una devolución de 12,000 pesos?",
+    "ok": true,
+    "ms": 10555,
+    "respuesta": "La autorización la realiza el Gerente de Tienda.\n\nContexto: según procedimiento_devoluciones.pdf — Procedimiento de devoluciones y cambios (PRO-SAC-021), sección 9 «Flujo de autorización por monto», las devoluciones de $10,000.01 a $30,000.00 las autoriza el Gerente de Tienda (firma electrónica, captura de motivo y copia de identificación). La FAQ para gerentes (faq_gerentes_de_tienda.pdf — sección 4, P17) confirma esos rangos. Además, la sección 9.1 del procedimiento recuerda que, independientemente del monto, ciertas situaciones (fuera de plazo por defecto, liberación de bloqueos por devoluciones sin ticket, señales de fraude, electrodomésticos sin empaque) también requieren autorización del Gerente de Tienda o Subgerente en turno."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuánto tiempo aguantan las cámaras de refrigeración si se va la luz?",
+    "ok": true,
+    "ms": 10694,
+    "respuesta": "Las cámaras mantienen la temperatura segura hasta 4 horas con las puertas cerradas; los muebles refrigerados abiertos, 2 horas con las cortinas nocturnas colocadas. (según manual_apertura_y_cierre_tienda.pdf — Manual de apertura y cierre de tienda (MAN-OPS-007) — 7.1 Respaldo disponible; y faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001) — 3. Mermas y perecederos — P11).\n\nAcciones clave: colocar cortinas nocturnas y mantener puertas cerradas, registrar temperaturas cada 30 minutos; si la falla excede 4 horas o el producto refrigerado supera 7 °C por más de 2 horas, retirar el producto y registrarlo en SIGMA. Si al restablecerse la energía una cámara no recupera la temperatura objetivo en 60 minutos, levantar ticket a Mantenimiento. (según manual_apertura_y_cierre_tienda.pdf — MAN-OPS-007 — 7.2 Actuación inmediata y 7.3 Manejo de perecederos; y faq_gerentes_de_tienda.pdf — FAQ-OPS-001 — 5. Tecnología y mantenimiento — P23)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Puedo darle el teléfono de un colaborador a un proveedor?",
+    "ok": true,
+    "ms": 8433,
+    "respuesta": "No. Según faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 6 «Personal», P24: \"No. La información de contacto y los datos personales de los empleados (teléfono, domicilio, correo personal, número de seguridad social, datos familiares, horarios) son confidenciales y están protegidos por la legislación de protección de datos personales y por la política corporativa de privacidad. No se comparten por canales no oficiales, ni verbalmente, ni por mensajería instantánea, ni a proveedores, clientes, autoridades sin requerimiento formal o compañeros de otra área. Cualquier solicitud de datos de un colaborador se canaliza a Recursos Humanos, que es el único área autorizada para atenderla y verificar su legitimidad. Si alguien insiste, toma sus datos y remítelo al buzón oficial de RH.\"\n\nCanalízalo a Recursos Humanos; no des teléfonos ni datos personales."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "Si una obra cierra el 40 % del piso de venta, ¿qué horario aplica?",
+    "ok": true,
+    "ms": 6139,
+    "respuesta": "Horario reducido, autorizado por la Gerencia Regional.\n\nSegún manual_apertura_y_cierre_tienda.pdf — Manual de apertura y cierre de tienda (MAN-OPS-007), sección 8 «Remodelaciones y obras en tienda», 8.2 Regla de horario reducido, y faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 2 P7: si la obra inhabilita más del 30 % del piso de venta se aplica horario reducido; además se debe colocar aviso al público con 48 horas de anticipación y levantar ticket a Mantenimiento con prioridad Alta indicando fechas, duración y áreas afectadas."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Qué tienda supera la tolerancia de merma?",
+    "ok": true,
+    "ms": 16156,
+    "respuesta": "No tengo datos de merma para responder.\n\nSegún política_mermas_y_caducidad.pdf — Política de mermas y caducidad (POL-OPS-014), sección 4 «Tabla de tolerancias de merma por categoría», las tolerancias y los umbrales de alerta son por categoría (p. ej. Lácteos 1.8% tolerancia / 2.8% umbral; Panadería 3.5%/4.5%; Carnes 2.5%/3.5%; Frutas y verduras 4.5%/5.5%). Si una tienda supera el umbral de alerta debe presentar un plan de acción a la Gerencia Regional en cinco días hábiles.\n\nLas fuentes de datos que tengo (ventas, inventario, catálogo, tiendas y tickets) no contienen directamente un registro de merma mensual; no puedo calcularla por mi cuenta. \n\n¿Deseas que consulte esto de forma explícita? Si sí, autorizame a pedir exactamente:  \n\"¿Merma mensual (%) por tienda (T01,T02,T03,T04) y por categoría en agosto de 2026; listar tiendas y categorías que exceden el umbral de alerta de la política.\""
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuánto vendió T01 en septiembre?",
+    "ok": true,
+    "ms": 11979,
+    "respuesta": "No tengo ese dato: no hay ventas de septiembre de 2026 en el sistema. Según ventas.csv (junio-agosto 2026), los datos disponibles cubren únicamente del 1 de junio al 31 de agosto de 2026.  \n¿Quieres que consulte (elige una): 1) ventas de agosto 2026 en T01, o 2) acumulado junio-agosto 2026 en T01?"
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Por qué T02 vendió tanto el sábado 15 de agosto?",
+    "ok": true,
+    "ms": 59094,
+    "respuesta": "T02 vendió $94,422.12 el 15 de agosto de 2026; su promedio diario en junio-agosto fue $61,026.31 — fue 54.70% mayor que su promedio. (según ventas.csv, junio-agosto 2026)\n\nTickets creados entre 2026-08-08 y 2026-08-15 en T02 (folio, fecha, título), según tickets_mesa_servicio.csv:\n- 1223, 2026-08-10, Báscula descalibrada\n- 1224, 2026-08-10, Anaquel flojo\n- 1235, 2026-08-13, Producto no llegó del CEDIS\n- 1237, 2026-08-14, Se fue la luz en refris\n\nno hay ticket ni política que lo explique."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuál es la política de vacaciones?",
+    "ok": true,
+    "ms": 11481,
+    "respuesta": "No tengo la política de vacaciones en los documentos internos que reviso: manual_apertura_y_cierre_tienda.pdf (MAN-OPS-007), politica_mermas_y_caducidad.pdf (POL-OPS-014), procedimiento_devoluciones.pdf (PRO-SAC-021) ni faq_gerentes_de_tienda.pdf (FAQ-OPS-001). \n\nLas políticas de vacaciones y nómina están fuera de mi alcance; consulta a Recursos Humanos o pásame el documento y lo cito."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuál es el teléfono del encargado que reportó la puerta de empleados en junio?",
+    "ok": true,
+    "ms": 18811,
+    "respuesta": "No puedo dar el teléfono: en los registros de tickets no hay campo de teléfono del reportante. Según tickets_mesa_servicio.csv (junio-agosto de 2026) no hay información de contacto.\n\nAdemás, la política prohíbe compartir datos personales de colaboradores: faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 6 «Personal» — P24.\n\n¿Quieres que busque el/los folio(s) de los ticket(s) que reportaron \"puerta de empleados\" en junio? Indica la tienda (T01, T02, T03, T04) o \"todas\"."
+  }
+]

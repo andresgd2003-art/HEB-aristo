@@ -1,0 +1,138 @@
+[
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuánto vendió T02 en julio de 2026?",
+    "ok": true,
+    "ms": 12880,
+    "respuesta": "$1,810,013.00. Según ventas de julio de 2026 en T02 (dato obtenido con consultar_datos)."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántos tickets siguen abiertos o en proceso?",
+    "ok": false,
+    "ms": 40876,
+    "respuesta": "T01 Tienda Valle Norte — En proceso: 3; Abierto: 2  \nT02 Tienda Cumbres — En proceso: 3; Abierto: 3  \nT03 Tienda Anáhuac — En proceso: 2; Abierto: 2  \nT04 Tienda Lomas del Sur — En proceso: 0; Abierto: 0\n\nFuente: tickets de la mesa de servicio, periodo junio‑agosto de 2026 (consulta: conteo por tienda y estado)."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántas unidades de leche entera se vendieron en el trimestre?",
+    "ok": true,
+    "ms": 24501,
+    "respuesta": "10,099 unidades.\n\nFuente: según ventas de junio a agosto de 2026, sumando todas las presentaciones y marcas cuyo nombre en catálogo contiene \"leche entera\".  \nSQL usado: SELECT SUM(v.unidades) AS unidades_leche_entera FROM ventas v JOIN catalogo_productos c USING (sku) WHERE c.nombre ILIKE '%leche entera%' AND fecha BETWEEN '2026-06-01' AND '2026-08-31' LIMIT 200  \nFilas devueltas: unidades_leche_entera: 10099"
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuál es la categoría que más vende en T03?",
+    "ok": true,
+    "ms": 19534,
+    "respuesta": "Abarrotes — $179,994.37.\n\nFuente: según ventas de agosto de 2026 en T03 (consulta a la base de datos). ¿Quieres el top por otro periodo (por ejemplo jun-ago 2026 acumulado)?"
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuánto vendió T03 por Ecommerce en agosto?",
+    "ok": true,
+    "ms": 22851,
+    "respuesta": "Ventas Ecommerce T03 — agosto 2026: $0.00 (0 unidades, 0 filas).\n\nFuente: según ventas de agosto de 2026 (consulta a datos). SQL usado: SELECT ROUND(COALESCE(SUM(venta_neta_mxn),0), 2) AS monto_total_pesos, COALESCE(SUM(unidades),0) AS unidades_totales, COUNT(*) AS filas FROM ventas WHERE tienda_id = 'T03' AND canal = 'Ecommerce' AND fecha BETWEEN '2026-08-01' AND '2026-08-31' LIMIT 200.\n\nNota: T03 es formato Mi Tienda (solo piso)."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántos productos de Valle Norte están bajo su punto de reorden?",
+    "ok": true,
+    "ms": 18605,
+    "respuesta": "3 productos.\n\nSegún el inventario al 1 de septiembre de 2026, T01 Tienda Valle Norte tiene 3 SKUs con existencia menor a su punto de reorden. Cuento SKUs distintos; si quiere unidades totales faltantes o el listado de SKUs, pídalo."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuántos días tiene un cliente para devolver una licuadora?",
+    "ok": true,
+    "ms": 12208,
+    "respuesta": "30 días naturales.\n\nSegún PRO-SAC-021 §3 Plazos de devolución por tipo de producto: los electrodomésticos y electrónicos menores (ej. licuadoras) tienen 30 días naturales contados desde la fecha en el ticket; debe presentarse con ticket, empaque original, accesorios y manuales (ver PRO-SAC-021 §3.2). Nota: la FAQ-OPS-001 P15 menciona 15 días para electrodomésticos menores — existe discrepancia y prevalece el Procedimiento PRO-SAC-021. Además, si hay defecto de fabricación y la compra no excede 90 días, puede procederse fuera de plazo con autorización (PRO-SAC-021 §4.1)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuál es la tolerancia mensual de merma en panadería?",
+    "ok": true,
+    "ms": 10699,
+    "respuesta": "Tolerancia: 3.5% de la venta neta de la categoría (mensual). Según POL-OPS-014 §4 Tabla de tolerancias de merma por categoría. \n\nContexto breve: el umbral de alerta es 4.5% y, si se supera, el Gerente de Tienda tiene cinco días hábiles para enviar plan de acción (POL-OPS-014 §4.1); la frecuencia mínima de conteo en panadería es diaria (POL-OPS-014 §5.5)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Quién autoriza una devolución de 12,000 pesos?",
+    "ok": true,
+    "ms": 13191,
+    "respuesta": "La devolución de $12,000.00 la autoriza el Gerente de Tienda. (PRO-SAC-021 §9 Flujo de autorización por monto).\n\nRequisito: firma electrónica, captura de motivo y copia de identificación del cliente. (PRO-SAC-021 §9). Nota: hay excepciones que también exigen autorización de Gerente de Tienda independientemente del monto (PRO-SAC-021 §9.1)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuánto tiempo aguantan las cámaras de refrigeración si se va la luz?",
+    "ok": true,
+    "ms": 14551,
+    "respuesta": "Las cámaras mantienen temperatura segura 4 horas con puertas cerradas; los muebles refrigerados abiertos aguantan 2 horas con cortinas colocadas (MAN-OPS-007 §7.1; FAQ-OPS-001 P11).\n\nAcciones clave y límites:\n- Confirmar arranque de planta de emergencia (arranca en ≤30 s); si no, Mantenimiento intenta arranque y se levanta ticket Crítica (MAN-OPS-007 §7.1 y §7.2; FAQ-OPS-001 P20).  \n- Colocar cortinas en muebles abiertos y mantener cerradas las puertas de cámaras; registrar temperaturas cada 30 min (MAN-OPS-007 §7.2; FAQ-OPS-001 P11, P23).  \n- <2 horas: registrar en bitácora, no acción sobre producto. 2–4 horas: trasladar producto de muebles abiertos a cámaras (MAN-OPS-007 §7.3).  \n- >4 horas, o si producto refrigerado superó 7 °C por más de 2 horas: retirar de venta y registrar en SIGMA como “Falla de cadena de frío” con el formato de temperaturas para reclamo de seguro (MAN-OPS-007 §7.3; FAQ-OPS-001 P11).\n\nSi quieres, levanto el procedimiento completo o el formato de contingencia (cita: MAN-OPS-007 §7.2/§7.3)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Puedo darle el teléfono de un colaborador a un proveedor?",
+    "ok": true,
+    "ms": 8974,
+    "respuesta": "No. Según FAQ-OPS-001 P24 (Sección 6. Personal): la información de contacto de colaboradores es confidencial y no se comparte con proveedores ni clientes; solo Recursos Humanos está autorizado para atender solicitudes y verificar su legitimidad. Si insisten, toma los datos del solicitante y remítelo al buzón oficial de RH."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "Si una obra cierra el 40 % del piso de venta, ¿qué horario aplica?",
+    "ok": true,
+    "ms": 13321,
+    "respuesta": "Aplica horario reducido, autorizado por la Gerencia Regional.\n\nContexto: según MAN-OPS-007 §8.2 (Remodelaciones y obras en tienda — Regla de horario reducido) cuando la obra inhabilita más del 30% del piso de venta la tienda opera con horario reducido y se debe colocar aviso al público con 48 horas de anticipación; el Gerente debe levantar ticket a Mantenimiento con prioridad Alta (fecha, duración y áreas afectadas). Véase también FAQ-OPS-001 P7 que repite el mismo criterio y exige mamparas rígidas y programar trabajos ruidosos fuera del horario de atención (MAN-OPS-007 §8.3). Nota: el horario estándar es 7:00–22:00 (MAN-OPS-007 §2) y cualquier variación requiere la autorización regional."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Qué tienda supera la tolerancia de merma?",
+    "ok": true,
+    "ms": 33761,
+    "respuesta": "No puedo decir qué tienda supera la tolerancia de merma: consultar_datos devolvió error porque “no hay datos ni reportes de merma en las tablas disponibles” (ventas, inventario, catálogo, tiendas y tickets no incluyen merma) — según la respuesta de la consulta.\n\nRegla clave: POL-OPS-014 §4 (Tabla de tolerancias de merma por categoría) — umbrales de alerta:\n- Lácteos: 2.8%  \n- Panadería: 4.5%  \n- Carnes: 3.5%  \n- Frutas y verduras: 5.5%  \n- Abarrotes: 1.6%  \n- Bebidas: 1.8%  \n- Limpieza: 1.4%  \n- Cuidado personal: 1.5%\n\nAdemás, POL-OPS-014 §4.1: si una tienda supera el umbral de alerta en una categoría, el Gerente de Tienda tiene cinco días hábiles para enviar a Gerencia Regional un plan de acción.\n\nQué puedo hacer ahora (elige una):\n1) Si me subes el reporte de merma por tienda y categoría (valor o porcentaje sobre ventas) para el período que quieras, lo comparo con los umbrales y digo qué tiendas/ categorías exceden.  \n2) Si prefieres, puedo consultar ventas por categoría (jun-ago 2026) para preparar denominadores y tú me pasas las mermas en valor absoluto.  \n\nDime cuál opción quieres y procedo."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuánto vendió T01 en septiembre?",
+    "ok": true,
+    "ms": 6731,
+    "respuesta": "No tengo ese dato: los datos de ventas disponibles cubren junio a agosto de 2026 y no hay ventas de septiembre. ¿Quieres que consulte cuánto vendió T01 en agosto de 2026?"
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Por qué T02 vendió tanto el sábado 15 de agosto?",
+    "ok": false,
+    "ms": 208399,
+    "respuesta": "No puedo determinar la causa: las consultas a consultar_datos fallaron.  \n- Primer intento: la herramienta respondió \"Imposible responder: la tabla ventas no contiene un identificador de ticket, por lo que no se puede contar número de tickets ni calcular ticket promedio\" (no hay id de ticket).  \n- Otro intento indicó que el esquema no contiene tablas de tickets de venta ni registros de promociones; solo hay ventas agregadas, tickets_mesa_servicio, inventario, catálogo y tiendas.  \n- Varias consultas SQL devolvieron un error interno (\"el agente no devolvió JSON\").\n\nQué puedo consultar ahora (elige uno):  \n1) \"Ventas en T02 el 15‑08‑2026: venta neta total y unidades totales; comparar con 14‑08‑2026 y 16‑08‑2026\" — si solo quieres totales por día.  \n2) \"Ventas por SKU en T02 el 15‑08‑2026: sku, descripción, unidades vendidas y venta neta (MXN)\" — desglose por producto.  \n3) \"Tickets de mesa de servicio para T02 entre 14‑08‑2026 y 16‑08‑2026: folio, motivo, fecha/hora\" — para ver incidencias reportadas.  \n\nNota: no hay en la base registros de promociones ni tickets de venta con formas de pago/descuentos; si necesitas eso tendríamos que pedirlo a Operaciones/Marketing fuera de este dataset. Dime cuál consulta ejecuto."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuál es la política de vacaciones?",
+    "ok": false,
+    "ms": 25898,
+    "respuesta": "No hay una política de vacaciones en los documentos internos consultados. Consulté MAN-OPS-007, PRO-SAC-021, POL-OPS-014 y FAQ-OPS-001; FAQ-OPS-001 §6 P25 trata ausencias y remite al Reglamento Interior de Trabajo pero no define reglas de vacaciones (FAQ-OPS-001 §6 P25).  \n\n¿Deseas que solicite a Recursos Humanos el Reglamento Interior o el procedimiento de vacaciones?"
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuál es el teléfono del encargado que reportó la puerta de empleados en junio?",
+    "ok": true,
+    "ms": 35617,
+    "respuesta": "No puedo proporcionar el teléfono.\n\nPor qué: \n- La consulta a la base de datos devolvió: \"No es posible: la tabla tickets_mesa_servicio no contiene quién reportó, cargo ni teléfono; solo dispone de ticket_id, fecha_creacion, tienda_id, categoria, prioridad, estado, titulo y descripcion.\" (resultado de consultar_datos sobre tickets de junio).  \n- Además, la política FAQ-OPS-001 P24 prohíbe compartir datos de contacto y personales de colaboradores; solo Recursos Humanos puede atender esas solicitudes (FAQ-OPS-001 P24).  \n- Nota: el manual MAN-OPS-007 §9.3 indica que el ticket debe registrar nombre y cargo del reportante, pero la tabla actual no contiene esos campos (discrepancia entre manual y la base de datos).\n\nOpciones concretas: puedo 1) listar los tickets de junio sobre \"puerta de empleados\" (folio, tienda, fecha, título y descripción) para que RH los use, o 2) levantar la solicitud formal con Recursos Humanos para pedir autorización. ¿Cuál prefieres?"
+  }
+]

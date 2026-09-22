@@ -1,0 +1,170 @@
+[
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuánto vendió T02 en julio de 2026?",
+  "respuesta": "T02 vendió $1,810,013.00 en julio de 2026, según ventas de julio de 2026.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS venta_neta FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}]}\"}"
+  ],
+  "ms": 14229,
+  "exec": "82657",
+  "esperado": "1810013.00",
+  "exacto": true,
+  "reference": "La respuesta correcta es 1810013.00.",
+  "ragas_faithfulness": 1.0
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuál fue la venta neta total de las cuatro tiendas entre junio y agosto?",
+  "respuesta": "Venta neta total: $17,228,300.26 — según ventas de junio a agosto de 2026 (total sumado de las cuatro tiendas).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS venta_neta_total FROM ventas WHERE fecha BETWEEN '2026-06-01' AND '2026-08-31'\\\",\\\"filas\\\":[{\\\"venta_neta_total\\\":\\\"17228300.26\\\"}]}\"}"
+  ],
+  "ms": 12424,
+  "exec": "82658",
+  "esperado": "17228300.26",
+  "exacto": true,
+  "reference": "La respuesta correcta es 17228300.26.",
+  "ragas_faithfulness": 0.333
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuántos tickets siguen abiertos o en proceso?",
+  "respuesta": "17 tickets abiertos o en proceso. Según tickets de la mesa de servicio (junio-agosto de 2026).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_pendientes FROM tickets_mesa_servicio WHERE estado IN ('Abierto', 'En proceso')\\\",\\\"filas\\\":[{\\\"tickets_pendientes\\\":\\\"17\\\"}]}\"}"
+  ],
+  "ms": 11575,
+  "exec": "82659",
+  "esperado": "17",
+  "exacto": true,
+  "reference": "La respuesta correcta es 17.",
+  "ragas_faithfulness": 0.5
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuántas unidades de leche entera se vendieron en el trimestre?",
+  "respuesta": "10,099 unidades.\n\nFuente: ventas del trimestre (junio-agosto de 2026). Si querías el conteo de SKUs distintos en vez de unidades, dímelo y lo consulto.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT SUM(v.unidades) AS unidades FROM ventas v JOIN catalogo_productos c USING (sku) WHERE c.nombre ILIKE '%leche entera%' AND v.fecha BETWEEN '2026-06-01' AND '2026-08-31'\\\",\\\"filas\\\":[{\\\"unidades\\\":\\\"10099\\\"}]}\"}"
+  ],
+  "ms": 16185,
+  "exec": "82660",
+  "esperado": "10099",
+  "exacto": true,
+  "reference": "La respuesta correcta es 10099.",
+  "ragas_faithfulness": 0.667
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuánto se vendió por Ecommerce en agosto?",
+  "respuesta": "$128,038.00 — según ventas de agosto de 2026.  \nNota: T03 y T04 son formato Mi Tienda y por diseño registran ventas Ecommerce de $0.00.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS venta_neta FROM ventas WHERE canal = 'Ecommerce' AND fecha BETWEEN '2026-08-01' AND '2026-08-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"128038.00\\\"}]}\"}"
+  ],
+  "ms": 15952,
+  "exec": "82661",
+  "esperado": "128038.00",
+  "exacto": true,
+  "reference": "La respuesta correcta es 128038.00.",
+  "ragas_faithfulness": 0.5
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuántos productos de Tienda Valle Norte están bajo su punto de reorden?",
+  "respuesta": "3 productos. Según inventario al 1 de septiembre de 2026 para Tienda Valle Norte.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS productos FROM inventario i JOIN tiendas t USING (tienda_id) WHERE t.nombre ILIKE '%valle norte%' AND i.existencia < i.punto_reorden\\\",\\\"filas\\\":[{\\\"productos\\\":\\\"3\\\"}]}\"}"
+  ],
+  "ms": 13130,
+  "exec": "82662",
+  "esperado": "3",
+  "exacto": true,
+  "reference": "La respuesta correcta es 3.",
+  "ragas_faithfulness": 0.667
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuál es la categoría que más vende en T03?",
+  "respuesta": "Abarrotes — $532,171.00.\n\nSegún ventas (jun-ago de 2026) en T03.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT c.categoria, ROUND(SUM(v.venta_neta_mxn), 2) AS venta_neta FROM ventas v JOIN catalogo_productos c USING (sku) WHERE v.tienda_id = 'T03' GROUP BY 1 ORDER BY venta_neta DESC LIMIT 1\\\",\\\"filas\\\":[{\\\"categoria\\\":\\\"Abarrotes\\\",\\\"venta_neta\\\":\\\"532171.00\\\"}]}\"}"
+  ],
+  "ms": 14675,
+  "exec": "82663",
+  "esperado": "Abarrotes",
+  "exacto": true,
+  "reference": "La respuesta correcta es Abarrotes.",
+  "ragas_faithfulness": 0.667
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuántos tickets críticos hubo en el periodo?",
+  "respuesta": "8 tickets críticos. Según los tickets de la mesa de servicio, periodo junio-agosto de 2026.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_criticos FROM tickets_mesa_servicio WHERE prioridad = 'Crítica'\\\",\\\"filas\\\":[{\\\"tickets_criticos\\\":\\\"8\\\"}]}\"}"
+  ],
+  "ms": 16623,
+  "exec": "82664",
+  "esperado": "8",
+  "exacto": true,
+  "reference": "La respuesta correcta es 8.",
+  "ragas_faithfulness": null
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuánto sumaron las devoluciones en junio?",
+  "respuesta": "$-13,305.00. Según ventas de junio de 2026 (suma de ventas con unidades < 0, periodo 2026-06-01 a 2026-06-30).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS devoluciones FROM ventas WHERE unidades < 0 AND fecha BETWEEN '2026-06-01' AND '2026-06-30'\\\",\\\"filas\\\":[{\\\"devoluciones\\\":\\\"-13305.00\\\"}]}\"}"
+  ],
+  "ms": 12609,
+  "exec": "82665",
+  "esperado": "-13305.00",
+  "exacto": true,
+  "reference": "La respuesta correcta es -13305.00.",
+  "ragas_faithfulness": 1.0
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuántos tickets abiertos o en proceso tiene T02?",
+  "respuesta": "8 tickets abiertos o en proceso en T02, según tickets de la mesa de servicio (periodo: junio-agosto 2026).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_pendientes FROM tickets_mesa_servicio WHERE tienda_id = 'T02' AND estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_pendientes\\\":\\\"8\\\"}]}\"}"
+  ],
+  "ms": 14169,
+  "exec": "82666",
+  "esperado": "8",
+  "exacto": true,
+  "reference": "La respuesta correcta es 8.",
+  "ragas_faithfulness": 0.667
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuánto cayó la venta de T02 el 14 de julio respecto al 13?",
+  "respuesta": "Cayó $29,197.29 (-55.36%) respecto al 13 de julio. Según ventas de julio de 2026: 13-jul $52,745.18; 14-jul $23,547.89.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(COALESCE(SUM(venta_neta_mxn) FILTER (WHERE fecha = '2026-07-14'), 0), 2) AS venta_14_jul, ROUND(COALESCE(SUM(venta_neta_mxn) FILTER (WHERE fecha = '2026-07-13'), 0), 2) AS venta_13_jul, ROUND(COALESCE(SUM(venta_neta_mxn) FILTER (WHERE fecha = '2026-07-14'), 0) - COALESCE(SUM(venta_neta_mxn) FILTER (WHERE fecha = '2026-07-13'), 0), 2) AS diferencia, CASE WHEN COALESCE(SUM(venta_neta_mxn) FILTER (WHERE fecha = '2026-07-13'), 0) = 0 THEN NULL ELSE ROUND((COALESCE(SUM(venta_neta_mxn) FILTER (WHERE fecha = '2026-07-14'), 0) - COALESCE(SUM(venta_neta_mxn) FILTER (WHERE fecha = '2026-07-13'), 0)) / COALESCE(SUM(venta_neta_mxn) FILTER (WHERE fecha = '2026-07-13'), 0) * 100, 2) END AS porcentaje_cambio FROM ventas WHERE tienda_id = 'T02' AND fecha IN ('2026-07-13','2026-07-14')\\\",\\\"filas\\\":[{\\\"venta_14_jul\\\":\\\"23547.89\\\",\\\"venta_13_jul\\\":\\\"52745.18\\\",\\\"diferencia\\\":\\\"-29197.29\\\",\\\"porcentaje_cambio\\\":\\\"-55.36\\\"}]}\"}"
+  ],
+  "ms": 25068,
+  "exec": "82667",
+  "esperado": "23547.89",
+  "exacto": true,
+  "reference": "La respuesta correcta es 23547.89.",
+  "ragas_faithfulness": 0.75
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuántos productos perecederos caducan antes del 15 de septiembre en T04?",
+  "respuesta": "28 productos perecederos.\n\nSegún inventario al 1 de septiembre de 2026, es el conteo de registros de inventario (lotes) en T04 cuya fecha de caducidad es anterior al 15/09/2026. Si quieres el conteo por SKUs distintos o las unidades totales, dímelo y lo consulto.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS productos FROM inventario i JOIN catalogo_productos c USING (sku) WHERE i.tienda_id = 'T04' AND c.perecedero = true AND i.fecha_caducidad_lote_proximo < '2026-09-15'\\\",\\\"filas\\\":[{\\\"productos\\\":\\\"28\\\"}]}\"}"
+  ],
+  "ms": 24493,
+  "exec": "82669",
+  "esperado": "28",
+  "exacto": true,
+  "reference": "La respuesta correcta es 28.",
+  "ragas_faithfulness": 0.333
+ }
+]

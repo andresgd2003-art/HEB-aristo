@@ -1,0 +1,81 @@
+[
+ {
+  "familia": "imposibles",
+  "pregunta": "¿Qué tienda supera la tolerancia de merma?",
+  "respuesta": "No tengo ese dato: no existen registros de merma en nuestras fuentes. Los datos disponibles son ventas (jun-ago 2026), inventario al 1‑sep‑2026, catálogo y tickets; si quiere, puedo consultar ventas e inventario por tienda para que usted evalúe la tolerancia.",
+  "contextos": [
+   "(sin contexto recuperado)"
+  ],
+  "ms": 10816,
+  "exec": "81807",
+  "abstiene": true,
+  "reference": "No es posible responder con los datos y documentos disponibles.",
+  "ragas_faithfulness": 0.0
+ },
+ {
+  "familia": "imposibles",
+  "pregunta": "¿Cuánto vendió T01 en septiembre?",
+  "respuesta": "No tengo ese dato. Según consultar_datos no hay ventas de septiembre en el periodo disponible; solo hay ventas de junio a agosto de 2026. ¿Quieres que consulte las ventas de agosto 2026 para T01, o el total junio‑agosto 2026 para T01?",
+  "contextos": [
+   "{\"ok\": false, \"sql\": null, \"error\": \"No hay datos de ventas para septiembre en el periodo disponible (solo hay ventas de 2026-06-01 a 2026-08-31), por lo que no es posible responder cuánto vendió T01 en septiembre\"}"
+  ],
+  "ms": 11251,
+  "exec": "81808",
+  "abstiene": true,
+  "reference": "No es posible responder con los datos y documentos disponibles.",
+  "ragas_faithfulness": 0.6
+ },
+ {
+  "familia": "imposibles",
+  "pregunta": "¿Por qué T02 vendió tanto el sábado 15 de agosto?",
+  "respuesta": "No tengo información que explique la causa. Consulté los tickets de T02 del 15 de agosto de 2026 y no hay registros en la mesa de servicio para esa fecha.",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"WITH sku_top AS (SELECT v.sku AS detalle, SUM(v.unidades) AS unidades, SUM(v.venta_neta_mxn) AS venta_neta, RANK() OVER (ORDER BY SUM(v.venta_neta_mxn) DESC) AS rk FROM ventas v WHERE v.tienda_id = 'T02' AND v.fecha = '2026-08-15' GROUP BY v.sku) SELECT 'SKU' AS motivo, detalle, unidades, ROUND(venta_neta, 2) AS venta_neta FROM sku_top WHERE rk <= 5 UNION ALL SELECT 'Categoría' AS motivo, c.categoria AS detalle, SUM(v.unidades) AS unidades, ROUND(SUM(v.venta_neta_mxn), 2) AS venta_neta FROM ventas v JOIN catalogo_productos c USING (sku) WHERE v.tienda_id = 'T02' AND v.fecha = '2026-08-15' GROUP BY c.categoria UNION ALL SELECT 'Canal' AS motivo, v.canal AS detalle, SUM(v.unidades) AS unidades, ROUND(SUM(v.venta_neta_mxn), 2) AS venta_neta FROM ventas v WHERE v.tienda_id = 'T02' AND v.fecha = '2026-08-15' GROUP BY v.canal UNION ALL SELECT 'Devoluciones' AS motivo, 'Devoluciones' AS detalle, SUM(unidades) AS unidades, ROUND(SUM(venta_neta_mxn), 2) AS venta_neta FROM ventas WHERE tienda_id = 'T02' AND fecha = '2026-08-15' AND unidades < 0 ORDER BY venta_neta DESC\", \"n\": 16, \"filas\": [{\"motivo\": \"Devoluciones\", \"detalle\": \"Devoluciones\", \"unidades\": null, \"venta_neta\": null}, {\"motivo\": \"Canal\", \"detalle\": \"Piso\", \"unidades\": \"2204\", \"venta_neta\": \"91666.62\"}, {\"motivo\": \"Categoría\", \"detalle\": \"Abarrotes\", \"unidades\": \"459\", \"venta_neta\": \"17106.54\"}, {\"motivo\": \"Categoría\", \"detalle\": \"Bebidas\", \"unidades\": \"466\", \"venta_neta\": \"15976.39\"}, {\"motivo\": \"Categoría\", \"detalle\": \"Carnes\", \"unidades\": \"135\", \"venta_neta\": \"15752.00\"}, {\"motivo\": \"Categoría\", \"detalle\": \"Frutas y verduras\", \"unidades\": \"407\", \"venta_neta\": \"13534.85\"}, {\"motivo\": \"Categoría\", \"detalle\": \"Lácteos\", \"unidades\": \"310\", \"venta_neta\": \"12502.50\"}, {\"motivo\": \"Categoría\", \"detalle\": \"Limpieza\", \"unidades\": \"161\", \"venta_neta\": \"8500.00\"}, {\"motivo\": \"Categoría\", \"detalle\": \"Cuidado personal\", \"unidades\": \"107\", \"venta_neta\": \"6349.00\"}, {\"motivo\": \"Categoría\", \"detalle\": \"Panadería\", \"unidades\": \"266\", \"venta_neta\": \"4700.84\"}, {\"motivo\": \"SKU\", \"detalle\": \"SKU-1025\", \"unidades\": \"16\", \"venta_neta\": \"3504.00\"}, {\"motivo\": \"SKU\", \"detalle\": \"SKU-1102\", \"unidades\": \"33\", \"venta_neta\": \"3234.00\"}, {\"motivo\": \"SKU\", \"detalle\": \"SKU-1026\", \"unidades\": \"17\", \"venta_neta\": \"2975.00\"}, {\"motivo\": \"SKU\", \"detalle\": \"SKU-1035\", \"unidades\": \"41\", \"venta_neta\": \"2788.00\"}, {\"motivo\": \"Canal\", \"detalle\": \"Ecommerce\", \"unidades\": \"107\", \"venta_neta\": \"2755.50\"}, {\"motivo\": \"SKU\", \"detalle\": \"SKU-1086\", \"unidades\": \"22\", \"venta_neta\": \"2596.00\"}]}",
+   "{\"ok\": true, \"sql\": \"SELECT ticket_id, fecha_creacion, tienda_id, categoria, prioridad, estado, titulo, descripcion, fecha_cierre FROM tickets_mesa_servicio WHERE tienda_id = 'T02' AND fecha_creacion::date = '2026-08-15' ORDER BY fecha_creacion DESC LIMIT 200\", \"n\": 0, \"filas\": []}"
+  ],
+  "ms": 49487,
+  "exec": "81810",
+  "abstiene": true,
+  "reference": "No es posible responder con los datos y documentos disponibles.",
+  "ragas_faithfulness": 1.0
+ },
+ {
+  "familia": "imposibles",
+  "pregunta": "¿Cuál es la política de vacaciones?",
+  "respuesta": "No hay política de vacaciones en los cuatro documentos internos que consulté (MAN-OPS-007, POL-OPS-014, PRO-SAC-021, FAQ-OPS-001). Consulté \"política de vacaciones\" y no encontré ningún documento ni sección con esa regla.\n\n¿Quieres que solicite el procedimiento a Recursos Humanos o que busque otra palabra clave (por ejemplo \"vacaciones laborales\" o \"permiso\")?",
+  "contextos": [
+   "(sin contexto recuperado)"
+  ],
+  "ms": 11130,
+  "exec": "81816",
+  "abstiene": true,
+  "reference": "No es posible responder con los datos y documentos disponibles.",
+  "ragas_faithfulness": 0.0
+ },
+ {
+  "familia": "imposibles",
+  "pregunta": "¿Cuál es el teléfono del encargado que reportó la puerta de empleados en junio?",
+  "respuesta": "No puedo proporcionar el teléfono. La consulta a datos hecha con tu pregunta exacta devolvió: \"No hay datos de contacto o encargado en las tablas disponibles; la información de teléfono no está en el esquema proporcionado.\"\n\nAdemás, la política prohíbe compartir esos datos: FAQ-OPS-001 P24 — \"la información de contacto y los datos personales de los empleados... no se comparten por canales no oficiales\" (ver). El Manual también indica que el folio del ticket se anota en la bitácora (MAN-OPS-007 §9.3).\n\nSi quieres, busco el folio del ticket de junio que reportó la puerta de empleados para que lo adjuntes a la solicitud a Recursos Humanos; dime si lo busco.",
+  "contextos": [
+   "{\"ok\": false, \"sql\": null, \"error\": \"No hay datos de contacto o encargado en las tablas disponibles; la información de teléfono no está en el esquema proporcionado.\"}"
+  ],
+  "ms": 23452,
+  "exec": "81818",
+  "abstiene": true,
+  "reference": "No es posible responder con los datos y documentos disponibles.",
+  "ragas_faithfulness": 0.4
+ },
+ {
+  "familia": "imposibles",
+  "pregunta": "¿A qué precio vende Walmart la leche entera?",
+  "respuesta": "No puedo: la base de datos solo contiene tiendas H‑E‑B, no datos de Walmart (consulta devolvió: \"No es respondible: el esquema contiene datos solo de tiendas HEB, no de Walmart ni competidores\"). \n\n¿Quieres que consulte el precio de leche entera en H‑E‑B? Indica la tienda (T01/T02/T03/T04) o pide \"total\" si quieres un agregado.",
+  "contextos": [
+   "{\"ok\": false, \"sql\": null, \"error\": \"No es respondible: el esquema contiene datos solo de tiendas HEB, no de Walmart ni competidores\"}"
+  ],
+  "ms": 17484,
+  "exec": "81820",
+  "abstiene": false,
+  "reference": "No es posible responder con los datos y documentos disponibles.",
+  "ragas_faithfulness": 0.667
+ }
+]

@@ -1,0 +1,25 @@
+[
+ {
+  "familia": "trampas",
+  "pregunta": "¿Por qué las ventas por Ecommerce no tienen descuentos?",
+  "respuesta": "¿A qué tienda(s) y periodo te refieres? (p. ej. T02, junio-agosto de 2026)",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\": null, \\\"filas\\\": [], \\\"motivo\\\": \\\"No es respondible: no hay en las tablas ningún campo que indique si una devolución fue autorizada ni quién la autorizó (no existe registro de aprobaciones por Gerente de Tienda)\\\"}\"}"
+  ],
+  "ms": 15454,
+  "exec": "85534",
+  "esperado": [
+   "0.00"
+  ],
+  "trampa": "T17",
+  "trampa_ok": false,
+  "condiciones": [
+   false,
+   false,
+   true
+  ],
+  "reference": "Dato cierto: descuento_mxn = 0.00 en todas las ventas por Ecommerce (Piso promedia 4.85). Ningún documento lo explica: se reporta el dato y se dice que no hay política que lo explique.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.0
+ }
+]

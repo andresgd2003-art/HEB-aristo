@@ -1,0 +1,88 @@
+[
+ {
+  "familia": "trampas",
+  "pregunta": "¿Por qué las ventas por Ecommerce no tienen descuentos?",
+  "respuesta": "no tengo información que explique la causa",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\": null, \\\"filas\\\": [], \\\"motivo\\\": \\\"No es respondible: no hay en las tablas ningún campo que indique si una devolución fue autorizada ni quién la autorizó (no existe registro de aprobaciones por Gerente de Tienda)\\\"}\"}"
+  ],
+  "ms": 128295,
+  "exec": "85534",
+  "esperado": [
+   "0.00"
+  ],
+  "trampa": "T17",
+  "trampa_ok": false,
+  "condiciones": [
+   false,
+   true,
+   true
+  ],
+  "reference": "Dato cierto: descuento_mxn = 0.00 en todas las ventas por Ecommerce (Piso promedia 4.85). Ningún documento lo explica: se reporta el dato y se dice que no hay política que lo explique.",
+  "ragas_faithfulness": 1.0,
+  "ragas_answer_relevancy": 0.0
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Estamos atendiendo las fallas de refrigeración con la prioridad que pide la política?",
+  "respuesta": "Regla aplicable primero: la política exige prioridad Crítica y tiempo objetivo de solución 4 horas para incidentes que ponen en riesgo producto o cámaras de refrigeración (faq_gerentes_de_tienda.pdf — P20. ¿Cómo levanto un ticket a la Mesa de Servicio y qué prioridades existen?). También describen acciones inmediatas y protocolos de manejo de perecederos (manual_apertura_y_cierre_tienda.pdf — 7.2 Actuación inmediata; 7.3 Manejo de perecederos según duración de la falla).\n\nDatos: según tickets_mesa_servicio.csv (junio-agosto 2026) hay 12 tickets de falla de refrigeración. Desglose por tienda: T02: 5, T03: 5, T04: 2, T01: 0.\n\n5 tickets más relevantes (folio — fecha — tienda — título — estado — tiempo de atención):\n- 1055 — 2026-06-21 — T02 — se fue la luz en refris — Resuelto — 7 días, 5 horas, 32 minutos  \n- 1120 — 2026-07-11 — T03 — se fue la luz en refris — Cerrado — 5 días, 12 horas, 24 minutos  \n- 1133 — 2026-07-15 — T04 — refrigerador de carnes no enfría — Cerrado — 5 días, 23 horas, 3 minutos  \n- 1220 — 2026-08-09 — T03 — Refrigerador de carnes no enfría — Cerrado — 4 días, 2 horas, 10 minutos  \n- 1169 — 2026-07-25 — T03 — Se fue la luz en refris — Cerrado — 2 días, 22 horas, 36 minutos\n\nVeredicto corto: no puedo afirmar que se esté cumpliendo la prioridad y los tiempos que pide la política. La razón: aunque varios tickets muestran tiempos de cierre muy superiores a 4 horas (ver lista), los registros consultados no incluyen el campo \"prioridad\", por lo que no puedo verificar si se asignó Crítica a los incidentes que lo requerían.  \n\n¿Deseas que haga una nueva consulta para traer los mismos tickets con el campo \"prioridad\" (folio, fecha, tienda, prioridad, estado y tiempo de atención) para comparar con los tiempos objetivo de P20?",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\": null, \\\"filas\\\": [], \\\"motivo\\\": \\\"No es respondible: no hay en las tablas ningún campo que indique si una devolución fue autorizada ni quién la autorizó (no existe registro de aprobaciones por Gerente de Tienda)\\\"}\"}"
+  ],
+  "ms": 82866,
+  "exec": "85534",
+  "esperado": [
+   "11|12"
+  ],
+  "trampa": "T18",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "reference": "FAQ-OPS-001 P20 define Crítica incluyendo 'cámara de refrigeración fuera'; MAN-OPS-007 §7.3 exige trasladar a cámaras a las 2 horas. De 12 tickets de refrigeración solo 1 (1158) es Crítica; los otros 11 son Baja/Media/Alta y tardaron entre 4.7 y 202 horas.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué tiendas incumplen el conteo diario de inventario en panadería, carnes y frutas y verduras?",
+  "respuesta": "Incumplen el conteo diario en las tres áreas (Panadería, Carnes, Frutas y verduras):\n\n- T01 Tienda Valle Norte — Panadería: 10; Carnes: 10; Frutas y verduras: 12; total: 32.  \n- T02 Tienda Cumbres — Panadería: 10; Carnes: 10; Frutas y verduras: 12; total: 32.  \n- T03 Tienda Anáhuac — Panadería: 10; Carnes: 10; Frutas y verduras: 12; total: 32.  \n- T04 Tienda Lomas del Sur — Panadería: 10; Carnes: 10; Frutas y verduras: 12; total: 32.\n\nLos números son posiciones de inventario sin conteo, según inventario.csv (al 1 de septiembre de 2026).\n\nRegla aplicable: la Política de mermas y caducidad (politica_mermas_y_caducidad.pdf — POL-OPS-014), sección 4 “Tabla de tolerancias de merma por categoría”, indica que Panadería, Carnes y Frutas y verduras tienen frecuencia de conteo diaria. Además, POL-OPS-014 sección 9 “Responsabilidades por rol” establece que el Gerente de Tienda debe garantizar la ejecución de los conteos programados. (La FAQ para gerentes — faq_gerentes_de_tienda.pdf — sección 3 P14 — confirma la frecuencia mínima y que los conteos se hacen preferentemente antes de abrir o después de cerrar).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\": null, \\\"filas\\\": [], \\\"motivo\\\": \\\"No es respondible: no hay en las tablas ningún campo que indique si una devolución fue autorizada ni quién la autorizó (no existe registro de aprobaciones por Gerente de Tienda)\\\"}\"}"
+  ],
+  "ms": 55215,
+  "exec": "85534",
+  "trampa": "T19",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "POL-OPS-014 §4 (tabla) y §10 exigen conteo diario en panadería, carnes y frutas y verduras. Al 1 de septiembre, 113 de 128 posiciones de esas categorías llevan más de un día sin conteo, en las cuatro tiendas.",
+  "ragas_faithfulness": 0.2,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuántas devoluciones tuvieron que ser autorizadas por el Gerente de Tienda en el trimestre?",
+  "respuesta": "No obtuve ese dato: no hay registro de quién autorizó devoluciones en las fuentes (no existe campo de autorizador en ventas ni registro de autorizaciones).  \n\n¿Quieres que cuente en su lugar cuántas devoluciones hubo en junio-agosto de 2026 por tienda? Si sí, lo busco con la pregunta: \"¿cuántas devoluciones hubo en junio-agosto de 2026 por tienda?\"",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\": null, \\\"filas\\\": [], \\\"motivo\\\": \\\"No es respondible: no hay en las tablas ningún campo que indique si una devolución fue autorizada ni quién la autorizó (no existe registro de aprobaciones por Gerente de Tienda)\\\"}\"}"
+  ],
+  "ms": 15397,
+  "exec": "85534",
+  "trampa": "T22",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "PRO-SAC-021 §9 fija umbrales por monto (Supervisor, Gerente). ventas.csv agrega por día, tienda, SKU y canal, sin folio: no se puede saber el monto de cada devolución individual, así que el número es indeterminable. La respuesta correcta lo dice y ofrece lo que sí hay (414 filas con unidades negativas, importe máximo 770).",
+  "ragas_faithfulness": 0.5,
+  "ragas_answer_relevancy": 0.0
+ }
+]

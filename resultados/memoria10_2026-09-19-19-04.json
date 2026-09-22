@@ -1,0 +1,107 @@
+{
+ "ok": 4,
+ "total": 10,
+ "verdades": {
+  "peorAgo": "2026-08-13",
+  "ventaPeor": "148144.89",
+  "menosTienda": [
+   "T04",
+   "21244.75"
+  ],
+  "reorden": [
+   "SKU-1013",
+   "SKU-1040",
+   "SKU-1077",
+   "SKU-1094",
+   "SKU-1108",
+   "SKU-1116"
+  ],
+  "segundoNombre": "Cebolla blanca kg",
+  "t02_15jul": "23933.03",
+  "t02_prom": "61026.31",
+  "t02_15ago": "94422.12",
+  "ticketsJul15": "4"
+ },
+ "res": [
+  {
+   "turno": 1,
+   "pregunta": "¿Cuál fue el peor día de agosto en ventas, sumando las cuatro tiendas?",
+   "mide": "cifra + día",
+   "ok": false,
+   "ms": 29996,
+   "respuesta": "El peor día de agosto (sumando las cuatro tiendas) fue el 10 de agosto de 2026: ventas totales $157,612.42 (3,843 unidades), según `ventas.csv` (junio–agosto 2026)."
+  },
+  {
+   "turno": 2,
+   "pregunta": "¿Y qué tienda vendió menos ese día?",
+   "mide": "correferencia 'ese día' → tienda + cifra",
+   "ok": false,
+   "ms": 28396,
+   "respuesta": "La que vendió menos el 10 de agosto de 2026 fue T04 — Tienda Lomas del Sur: $22,649.95 (539 unidades), según `ventas.csv` (junio–agosto 2026).\n\nT04 es formato Mi Tienda (solo piso)."
+  },
+  {
+   "turno": 3,
+   "pregunta": "¿Qué productos hay que reordenar en esa tienda?",
+   "mide": "correferencia 'esa tienda' → 6 SKU",
+   "ok": true,
+   "ms": 62074,
+   "respuesta": "Hay 6 productos que requieren reorden en T04:\n\n- SKU-1094 — Bebida de avena 1 L — existencia 9 — punto_reorden 12  \n- SKU-1116 — Crema corporal 400 ml — existencia 11 — punto_reorden 14  \n- SKU-1108 — Aromatizante en aerosol 300 ml — existencia 13 — punto_reorden 16  \n- SKU-1077 — Refresco de cola 2 L — existencia 21 — punto_reorden 61  \n- SKU-1013 — Bolillo pieza — existencia 28 — punto_reorden 96  \n- SKU-1040 — Cebolla blanca kg — existencia 30 — punto_reorden 52\n\nTotal: 6 productos, según `inventario.csv` (al 1 de septiembre de 2026).\n\nProcedimiento: para reabasto urgente verifica primero que el inventario físico coincida con SIGMA y, si procede, registra la solicitud en el módulo \"Pedido urgente\" antes de las 11:00 para surtido desde el centro de distribución al día siguiente (faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 2 «Operación diaria», P6)."
+  },
+  {
+   "turno": 4,
+   "pregunta": "Hazme un correo para el proveedor con esos productos.",
+   "mide": "regla 10: NO redacta, entrega lista",
+   "ok": true,
+   "ms": 11219,
+   "respuesta": "No puedo redactar correos para proveedores. Te entrego la lista de reorden para que la uses:\n\n- SKU-1094 — Bebida de avena 1 L — existencia 9 — punto_reorden 12  \n- SKU-1116 — Crema corporal 400 ml — existencia 11 — punto_reorden 14  \n- SKU-1108 — Aromatizante en aerosol 300 ml — existencia 13 — punto_reorden 16  \n- SKU-1077 — Refresco de cola 2 L — existencia 21 — punto_reorden 61  \n- SKU-1013 — Bolillo pieza — existencia 28 — punto_reorden 96  \n- SKU-1040 — Cebolla blanca kg — existencia 30 — punto_reorden 52\n\nDatos según `inventario.csv` (al 1 de septiembre de 2026)."
+  },
+  {
+   "turno": 5,
+   "pregunta": "Está bien, pero mándamelo en inglés.",
+   "mide": "regla 10 sostenida en seguimiento",
+   "ok": true,
+   "ms": 12805,
+   "respuesta": "No puedo redactar correos para proveedores. Te doy la lista en inglés:\n\n- SKU-1094 — Oat drink 1 L — stock 9 — reorder point 12  \n- SKU-1116 — Body cream 400 ml — stock 11 — reorder point 14  \n- SKU-1108 — Aerosol air freshener 300 ml — stock 13 — reorder point 16  \n- SKU-1077 — Cola soft drink 2 L — stock 21 — reorder point 61  \n- SKU-1013 — Bolillo (bread roll) piece — stock 28 — reorder point 96  \n- SKU-1040 — White onion kg — stock 30 — reorder point 52\n\nDatos según `inventario.csv` (al 1 de septiembre de 2026)."
+  },
+  {
+   "turno": 6,
+   "pregunta": "Cambiando de tema: ¿qué pasó con las ventas de T02 el 15 de julio?",
+   "mide": "regla 11: compara contra promedio + causa (ticket 1118)",
+   "ok": true,
+   "ms": 238742,
+   "respuesta": "T02 vendió $23,933.03 el 15 de julio de 2026, que es 39.2% del promedio diario de $61,026.31 (jun–ago 2026): caída significativa, según `ventas.csv` (junio–agosto 2026).\n\nHay 28 tickets creados entre 2026-06-15 y 2026-07-15, según `tickets_mesa_servicio.csv`. Los 5 más relevantes que pueden explicar la baja:\n\n- (ticket) «Remodelación de pasillo central del 14 al 16 de julio» — coincide con la fecha (aparece en los tickets del periodo) — `tickets_mesa_servicio.csv`.  \n  - Según Manual de apertura y cierre de tienda (MAN-OPS-007), sección 8.2 «Regla de horario reducido», si la obra reduce >30% del piso de venta la tienda opera con horario reducido y debe avisarse con 48 horas; eso puede reducir ventas.\n- Folio 1060 — 2026-06-23 — Terminal bancaria rechazada — `tickets_mesa_servicio.csv`.  \n- Folio 1055 — 2026-06-21 — se fue la luz en refris — `tickets_mesa_servicio.csv`.  \n- Folio 1102 — 2026-07-06 — se cayó el wifi de los handhelds — `tickets_mesa_servicio.csv`.  \n- Folio 1052 — 2026-06-21 — Falta personal en fin de semana — `tickets_mesa_servicio.csv`.  \n\nConclusión: hay un ticket de remodelación que coincide directamente con el 15 de julio y, según MAN-OPS-007 §8.2 (y FAQ-OPS-001 P7 que lo confirma), una obra así puede justificar la caída por posible horario reducido o restricción de área. Si quieres que liste los 28 tickets completos o que busque el folio exacto del ticket de remodelación, dime y lo traigo."
+  },
+  {
+   "turno": 7,
+   "pregunta": "¿Y el 15 de agosto en esa misma tienda?",
+   "mide": "correferencia + pico sin causa: se abstiene",
+   "ok": false,
+   "ms": 111848,
+   "respuesta": "no tengo información que explique la causa"
+  },
+  {
+   "turno": 8,
+   "pregunta": "¿Cuántos tickets hubo ese día, el de julio?",
+   "mide": "correferencia doble ('ese día, el de julio') → tickets 15-jul",
+   "ok": false,
+   "ms": 15953,
+   "respuesta": "No quedó clara la fecha exacta en julio. Indica la fecha (ej.: 2026-07-15) y cuento los tickets de ese día según `tickets_mesa_servicio.csv`."
+  },
+  {
+   "turno": 9,
+   "pregunta": "De los productos a reordenar que me diste, ¿cómo se llama el segundo?",
+   "mide": "recuerda la lista del turno 3 (5 turnos atrás)",
+   "ok": false,
+   "ms": 52283,
+   "respuesta": "Se llama \"Crema corporal 400 ml\" (SKU-1116), según `inventario.csv` (al 1 de septiembre de 2026)."
+  },
+  {
+   "turno": 10,
+   "pregunta": "¿Cuál fue la primera pregunta que te hice en esta conversación?",
+   "mide": "borde de la ventana: turno 1 desde el turno 10",
+   "ok": false,
+   "ms": 3714,
+   "respuesta": "La primera pregunta fue: \"Está bien, pero mándamelo en inglés.\""
+  }
+ ]
+}

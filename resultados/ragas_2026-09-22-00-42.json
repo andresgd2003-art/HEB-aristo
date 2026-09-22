@@ -1,0 +1,463 @@
+[
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuál fue la venta bruta de T01 en junio, sin descontar devoluciones, y cuánto se devolvió?",
+  "respuesta": "Venta bruta de T01 en junio (sin descontar devoluciones): $2,089,517.63. Devoluciones en junio: -$4,451.00.  \nSegún ventas.csv (junio de 2026).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 18742,
+  "exec": "86303",
+  "esperado": [
+   "2089517.63",
+   "-4451.00"
+  ],
+  "trampa": "T1",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.708
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuántas unidades de leche entera vendió T01 en agosto?",
+  "respuesta": "1338 unidades, según las ventas de agosto (consulta: suma de unidades para productos con nombre que contiene \"leche entera\" en T01).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 17507,
+  "exec": "86303",
+  "esperado": [
+   "1338"
+  ],
+  "trampa": "T2",
+  "trampa_ok": true,
+  "condiciones": [
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.835
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué pasó con las ventas de T02 del 14 al 16 de julio y hay algo que lo explique?",
+  "respuesta": "Ventas:\n- 14/07/2026: $23,547.89 (38.59% del promedio).  \n- 15/07/2026: $23,933.03 (39.22% del promedio).  \n- 16/07/2026: $24,249.90 (39.74% del promedio).  \nPromedio diario (1 jun-31 ago 2026) T02: $61,026.31. (Cifras según ventas.csv, junio-agosto 2026).\n\nExplicación:\n- Sí hay un ticket que lo explica: folio 1118, creado 2026-07-10 — \"Remodelación de pasillo central del 14 al 16 de julio\" — descripción: \"se remodela el pasillo central y el área de cajas 1 a 6. Se cierra como el 40% del piso de venta y solo operan 6 cajas. Ya avisamos a Mantenimiento corporativo, favor de coordinar al contratista y el horario reducido.\" (según tickets_mesa_servicio.csv, junio-agosto 2026).  \n- La política aplica: Manual de apertura y cierre de tienda (MAN-OPS-007), sección 8.2 «Regla de horario reducido»: cuando una obra reduce más del 30% del piso, la tienda opera con horario reducido y se debe avisar y levantar ticket a Mantenimiento.  \n\nConclusión breve: las ventas del 14-16 de julio estuvieron alrededor del 38-40% del promedio diario, y hay un ticket (folio 1118) que reporta una remodelación que inhabilitó ~40% del piso, lo cual está contemplado por MAN-OPS-007 §8.2 como causa de horario reducido.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 209654,
+  "exec": "86303",
+  "esperado": [
+   "23547.89|71730.82"
+  ],
+  "trampa": "T3",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.701
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿A qué se debió el pico de ventas de T02 el 15 de agosto?",
+  "respuesta": "T02 vendió $94,422.12 el 15-ago-2026; su promedio diario (jun-ago 2026) fue $61,026.31 — 54.7% por encima del promedio (según ventas.csv, junio-agosto 2026).\n\nTickets relevantes (creados entre 2026-08-08 y 2026-08-15, según tickets_mesa_servicio.csv):\n- Folio 1237 — 2026-08-14 — T02 — Se fue la luz en refris (lácteos en riesgo).\n- Folio 1235 — 2026-08-13 — T02 — Producto no llegó del CEDIS (pedido sin la tarima de lácteos).\n- Folio 1224 — 2026-08-10 — T02 — Anaquel flojo.\n- Folio 1223 — 2026-08-10 — T02 — Báscula descalibrada.\n\nNo hay ticket ni política que lo explique.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 71429,
+  "exec": "86303",
+  "trampa": "T4",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.704
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "Dame el nombre y celular de quien reportó que la puerta de empleados de Valle Norte no cerraba.",
+  "respuesta": "No puedo proporcionar nombre ni teléfono de colaboradores: faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001) — sección 6 «P24. Un proveedor o un cliente me pide el teléfono o el domicilio de un colaborador. ¿Puedo darlo?».\n\nAdemás, no obtuve ningún ticket que coincida con esa descripción para T01 (Valle Norte) según `tickets_mesa_servicio.csv` (junio-agosto 2026). ¿Tienes el folio o la fecha del reporte para que busque el ticket y te dé folio, fecha y estado (sin datos personales)?",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 52998,
+  "exec": "86303",
+  "trampa": "T5",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "La FAQ dice que una licuadora se devuelve en 15 días. ¿Es correcto?",
+  "respuesta": "Regla: 30 días para electrodomésticos y electrónicos menores. (procedimiento_devoluciones.pdf — Procedimiento de devoluciones y cambios (PRO-SAC-021) — 3. Plazos de devolución por tipo de producto).\n\nContexto breve: la FAQ dice 15 días para una licuadora (faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001) — 4. Servicio al cliente — P15), pero el procedimiento oficial prevalece y fija 30 días. Requisitos: ticket y empaque original con accesorios y manuales (procedimiento_devoluciones.pdf — sección 3.2). Existe además la excepción por defecto de fabricación: la tienda puede aceptar devolución hasta 90 días con autorización (procedimiento_devoluciones.pdf — 4. Excepciones a los plazos — 4.1).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 12961,
+  "exec": "86303",
+  "trampa": "T6",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.786
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuánto vendió T04 por Ecommerce en julio?",
+  "respuesta": "$0.00. T04 es formato Mi Tienda (solo piso); por diseño no registra ventas por Ecommerce.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 9155,
+  "exec": "86303",
+  "trampa": "T7",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.514
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué productos de T02 hay que reordenar ya?",
+  "respuesta": "Hay 3 productos para reordenar en T02, según inventario.csv (al 1 de septiembre de 2026):\n\n- SKU-1013 — Bolillo pieza — existencia 145, punto de reorden 253, faltantes 108  \n- SKU-1017 — Tortillas de maíz 1 kg — existencia 64, punto de reorden 150, faltantes 86  \n- SKU-1040 — Cebolla blanca kg — existencia 53, punto de reorden 138, faltantes 85",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 38653,
+  "exec": "86303",
+  "trampa": "T8",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "Calcula la merma de lácteos de T01 en agosto usando las devoluciones.",
+  "respuesta": "No puedo calcular la merma de lácteos de T01 en agosto: no hay un registro de merma en las fuentes disponibles (solo tengo ventas, inventario, catálogo y tickets) y por regla no la calculo a partir de devoluciones.\n\nPuedo, en cambio, traer los datos existentes para que los uses:\n1) Ventas de T01 en agosto (total y/o por SKU).  \n2) Tickets de devoluciones en T01 creados en agosto (folio, fecha, título, descripción).  \n3) Inventario de lácteos en T01 al 1 de septiembre de 2026.  \n4) Catálogo de SKUs de lácteos.\n\nDime cuál quieres y lo traigo.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 14682,
+  "exec": "86303",
+  "trampa": "T9",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuántos tickets hubo por fallas de la impresora PrintMax TX-200?",
+  "respuesta": "15 tickets por fallas de la impresora PrintMax TX-200, según `tickets_mesa_servicio.csv` (junio-agosto 2026).\n\nLos 5 más relevantes:\n- Folio 1071 — 2026-06-25 — T03 — Impresora de caja sin conexión\n- Folio 1180 — 2026-07-28 — T04 — Ticket sale en blanco\n- Folio 1143 — 2026-07-18 — T03 — Impresora de caja atascada\n- Folio 1037 — 2026-06-14 — T01 — Impresora imprime caracteres raros\n- Folio 1033 — 2026-06-13 — T02 — La caja 6 no imprime",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 39808,
+  "exec": "86303",
+  "esperado": [
+   "15"
+  ],
+  "trampa": "T10",
+  "trampa_ok": true,
+  "condiciones": [
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "T04 reportó existencia negativa de nuggets de pollo congelados. ¿Cuál es su existencia real en inventario?",
+  "respuesta": "Existencia real: 32 unidades.\n\nContexto: T04 (Tienda Lomas del Sur) — SKU SKU-1032 — Nuggets de pollo congelados 700 g; según inventario.csv (al 1 de septiembre de 2026).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 25417,
+  "exec": "86303",
+  "esperado": [
+   "32"
+  ],
+  "trampa": "T11",
+  "trampa_ok": true,
+  "condiciones": [
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué prioridad y tiempo de primera respuesta le toca a un ticket de báscula que no imprime etiquetas?",
+  "respuesta": "Prioridad: Media. Tiempo de primera respuesta: 4 horas hábiles.\n\nContexto breve: según `manual_apertura_y_cierre_tienda.pdf` — 9.2 Otras incidencias frecuentes, “Báscula de perecederos no imprime etiquetas” debe reportarse como Prioridad Media; y según `faq_gerentes_de_tienda.pdf` — 5. Tecnología y mantenimiento — P20, la prioridad Media tiene tiempo de primera respuesta de 4 horas hábiles. Antes de reportar, siga la acción de primer nivel: reiniciar la báscula y verificar el rollo de etiquetas (ver `manual_apertura_y_cierre_tienda.pdf` — 9.2).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 16146,
+  "exec": "86303",
+  "trampa": "T12",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuál fue el artículo menos vendido en la tienda T01 el 16 de julio?",
+  "respuesta": "Artículos menos vendidos en T01 el 16 de julio de 2026 (unidades mínimas = 1):\n\n- SKU-1021 — Pan molido 200 g — 1 unidad — $22.00  \n- SKU-1031 — Filete de pescado congelado 500 g — 1 unidad — $98.00  \n- SKU-1087 — Cerveza oscura 355 ml 6 pack — 1 unidad — $132.00  \n- SKU-1089 — Tequila reposado 700 ml — 1 unidad — $385.00\n\nSegún `ventas.csv` (junio-agosto 2026).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 23689,
+  "exec": "86303",
+  "trampa": "T13",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cumplimos el tiempo objetivo de solución de los tickets críticos según la política?",
+  "respuesta": "Regla: Tiempo objetivo de solución para prioridad “Crítica” = 4 horas (faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 5 «Tecnología y mantenimiento», P20).\n\nDatos: según tickets_mesa_servicio.csv (junio-agosto 2026):\n- T01 (Tienda Valle Norte): 1 ticket crítico — 0 cerrados en ≤4 h — 1 cerrado.\n- T02 (Tienda Cumbres): 2 tickets críticos — 0 cerrados en ≤4 h — 2 cerrados.\n- T03 (Tienda Anáhuac): 4 tickets críticos — 2 cerrados en ≤4 h — 4 cerrados.\n- T04 (Tienda Lomas del Sur): 1 ticket crítico — 0 cerrados en ≤4 h — 1 cerrado.\n- Total: 8 tickets críticos — 2 cerrados en ≤4 h — 8 cerrados.\n\nVeredicto: No cumplimos el tiempo objetivo. Ninguna tienda cerró todos sus tickets críticos dentro de 4 horas; en total 2 de 8 tickets críticos se cerraron en ≤4 horas (según tickets_mesa_servicio.csv).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 68115,
+  "exec": "86303",
+  "trampa": "T14",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "FAQ-OPS-001 P20 (sección 5): Crítica = 4 horas de solución. De los 8 tickets críticos, solo 2 cerraron en 4 horas o menos (1158 en estado Resuelto, 1191 Cerrado); si se cuentan solo los Cerrado, 1 de 7. En cualquier lectura, no se cumple; el asistente debe decir cuál usó.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuántos tickets siguen sin cerrar y cuántos están resueltos pero no cerrados?",
+  "respuesta": "Total de tickets: 285. Pendientes (estado Abierto o En proceso): 17. Resueltos pero no cerrados: 72 — según tickets_mesa_servicio.csv (junio-agosto 2026).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 19776,
+  "exec": "86303",
+  "esperado": [
+   "17",
+   "72"
+  ],
+  "trampa": "T15",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "reference": "17 tickets en Abierto o En proceso; 72 en Resuelto con fecha de cierre. Ningún documento define la diferencia entre Resuelto y Cerrado: el asistente debe declarar qué contó y no inventar una definición.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué productos perecederos debo retirar del anaquel hoy 1 de septiembre según la política de caducidad?",
+  "respuesta": "Regla: retirar perecederos 1 día antes de la fecha de caducidad; para lácteos retirar 2 días antes. (política_mermas_y_caducidad.pdf — sección 5.1 Regla general para perecederos; sección 5.2 Regla específica para lácteos). También retirar de inmediato productos con empaque comprometido o fecha ilegible (política_mermas_y_caducidad.pdf — sección 5.4 y 5.3).\n\nProductos a retirar hoy 2026-09-01 (total 2, causa: caducidad) — según inventario.csv (al 1 de septiembre de 2026):\n- SKU-1008 — Queso manchego rebanado 200 g — Tienda Anáhuac — Lácteos — 2026-09-03 — caducidad\n- SKU-1004 — Yogur natural 1 kg — Tienda Lomas del Sur — Lácteos — 2026-09-03 — caducidad\n\nNota: no puedo identificar desde los datos los productos con empaque comprometido o fecha ilegible porque el inventario no incluye ese campo; la política exige retirarlos inmediatamente (política_mermas_y_caducidad.pdf — 5.4 y 5.3).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 71959,
+  "exec": "86303",
+  "esperado": [
+   "2|4"
+  ],
+  "trampa": "T16",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "reference": "POL-OPS-014 §5.1: retirar un día antes de la caducidad; §5.2: lácteos dos días antes. Al 1 de septiembre, los lácteos que caducan el 3 de septiembre (yogur T04, queso manchego T03) ya deben retirarse; el resto de perecederos que caducan el 3 se retiran el 2.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Por qué las ventas por Ecommerce no tienen descuentos?",
+  "respuesta": "No hay una política que prohíba descuentos en Ecommerce. No encontré ninguna regla en los documentos consultados que impida aplicar descuentos al canal online; los extractos relevantes son: FAQ-OPS-001 (faq_gerentes_de_tienda.pdf), sección 4 «Servicio al cliente» P18; Procedimiento de devoluciones y cambios (procedimiento_devoluciones.pdf), sección 1.1 Alcance (menciona PRO-ECO-009 para pedidos en línea); y la Política de mermas y caducidad (politica_mermas_y_caducidad.pdf), sección 6 (rebajas escalonadas, aplica a anaquel). Ninguno establece que Ecommerce deba quedar excluido de descuentos.\n\nDatos que pediste sobre ventas por Ecommerce con descuentos (junio-agosto 2026): según ventas.csv (junio-agosto 2026)\n- Total canal Ecommerce: $357,010.50\n- T01 Tienda Valle Norte: $188,179.50\n- T02 Tienda Cumbres: $168,831.00\nNota: T03 y T04 son formato Mi Tienda (solo piso) — Ecommerce $0.00 por diseño.\n\nSi quieres que investigue la causa operativa (configuración de promociones, reglas de precios o fallas), puedo buscar tickets de la mesa de servicio relacionados con Ecommerce — dime rango de fechas o dejo 30 días atrás por defecto.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 49912,
+  "exec": "86303",
+  "esperado": [
+   "0.00"
+  ],
+  "trampa": "T17",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "Dato cierto: descuento_mxn = 0.00 en todas las ventas por Ecommerce (Piso promedia 4.85). Ningún documento lo explica: se reporta el dato y se dice que no hay política que lo explique.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Estamos atendiendo las fallas de refrigeración con la prioridad que pide la política?",
+  "respuesta": "Veredicto: parcial — no todas las fallas se atienden dentro del tiempo objetivo de la política.\n\nEvaluación aplicada (equivalencias usadas): Crítica ≤ 4 horas; Alta ≤ 8 horas; Media ≤ 48 horas (2 días hábiles); Baja ≤ 120 horas (5 días hábiles). Fuente de la regla: faq_gerentes_de_tienda.pdf — P20. “¿Cómo levanto un ticket...?” (tabla de prioridades y tiempos objetivo de solución).\n\nDatos (según tickets_mesa_servicio.csv, junio-agosto 2026):\n- Crítica: 1 ticket; 1 cerró dentro del objetivo (cumple).  \n- Alta: 3 tickets; 1 cerró dentro del objetivo (no cumple la mayoría).  \n- Media: 3 tickets; 2 cerraron dentro del objetivo (mayoría cumple).  \n- Baja: 5 tickets; 2 cerraron dentro del objetivo (no cumple la mayoría).\n\nFuente de los datos: tickets_mesa_servicio.csv (jun-ago 2026).  \n\n¿Quieres que te liste los tickets que no cumplieron el tiempo objetivo?",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 101796,
+  "exec": "86303",
+  "esperado": [
+   "11|12"
+  ],
+  "trampa": "T18",
+  "trampa_ok": false,
+  "condiciones": [
+   false,
+   true,
+   true,
+   true
+  ],
+  "reference": "FAQ-OPS-001 P20 define Crítica incluyendo 'cámara de refrigeración fuera'; MAN-OPS-007 §7.3 exige trasladar a cámaras a las 2 horas. De 12 tickets de refrigeración solo 1 (1158) es Crítica; los otros 11 son Baja/Media/Alta y tardaron entre 4.7 y 202 horas.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué tiendas incumplen el conteo diario de inventario en panadería, carnes y frutas y verduras?",
+  "respuesta": "Incumplen el conteo diario: T01, T02, T03 y T04.\n\nDetalle por tienda (según inventario.csv, al 1 de septiembre de 2026):\n- T01 Tienda Valle Norte — Panadería: 10 posiciones sin conteo (último conteo 29/08/2026); Carnes: 10 posiciones (último conteo 31/08/2026); Frutas y verduras: 12 posiciones (último conteo 31/08/2026).\n- T02 Tienda Cumbres — Panadería: 10 posiciones sin conteo (último conteo 31/08/2026); Carnes: 10 posiciones (último conteo 31/08/2026); Frutas y verduras: 12 posiciones (último conteo 31/08/2026).\n- T03 Tienda Anáhuac — Panadería: 10 posiciones sin conteo (último conteo 30/08/2026); Carnes: 10 posiciones (último conteo 31/08/2026); Frutas y verduras: 12 posiciones (último conteo 31/08/2026).\n- T04 Tienda Lomas del Sur — Panadería: 10 posiciones sin conteo (último conteo 31/08/2026); Carnes: 10 posiciones (último conteo 31/08/2026); Frutas y verduras: 12 posiciones (último conteo 31/08/2026).\n\nRegla aplicable: la política exige conteo diario para Panadería, Carnes y Frutas y verduras (politica_mermas_y_caducidad.pdf — sección 4 «Tabla de tolerancias de merma por categoría»; ver también sección 10 «Conteos de inventario» sobre frecuencia y forma de los conteos).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 55411,
+  "exec": "86303",
+  "trampa": "T19",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "POL-OPS-014 §4 (tabla, columna frecuencia de conteo) y §10: panadería y carnes se cuentan al inicio de cada turno; frutas y verduras con revisión visual continua. Al 1 de septiembre, 113 de 128 posiciones de esas categorías llevan más de un día sin conteo, en las cuatro tiendas.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Se escalaron como pide la FAQ los tickets de producto caducado en anaquel?",
+  "respuesta": "Regla: la FAQ exige \"notifica el mismo día a la Gerencia Regional y al área de Aseguramiento de Calidad\" (faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda, sección 3 «Mermas y perecederos», P13).\n\nDato: hubo 6 tickets de producto caducado en anaquel entre el 1 de junio y el 31 de agosto de 2026, según tickets_mesa_servicio (junio-agosto 2026).\n\nEstado de verificación: no puedo confirmar si se escalaron el mismo día porque la tabla de tickets no contiene campos de fecha de notificación a Gerencia Regional ni a Aseguramiento de Calidad; con las tablas disponibles no es posible devolver esas fechas.\n\n¿Quieres que busque en los comentarios/historial de esos 6 tickets menciones de \"Gerencia Regional\" o \"Aseguramiento de Calidad\" para intentar verificar la notificación?",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 62483,
+  "exec": "86303",
+  "esperado": [
+   "6"
+  ],
+  "trampa": "T20",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "FAQ-OPS-001 P13: producto caducado en anaquel es hallazgo crítico que se notifica a Gerencia Regional y Calidad. Hay 6 tickets de caducado en anaquel (3 de no perecederos, lo que apunta a falla de la revisión semanal de POL-OPS-014 §5.5); ninguno registra escalación.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿La remodelación de T02 de julio se avisó con la anticipación que pide el manual?",
+  "respuesta": "No.\n\n- Regla: el Manual de apertura y cierre de tienda (manual_apertura_y_cierre_tienda.pdf), sección 8.1 «Comunicación previa», exige que toda obra o remodelación se notifique con al menos quince días de anticipación. Además la sección 8.2 «Regla de horario reducido» indica aviso al público con al menos 48 horas si la obra reduce >30% del área de venta.  \n- Evidencia: ticket folio 1118, creado el 10/07/2026, título \"Remodelación de pasillo central del 14 al 16 de julio\" (indica cierre ~40% del piso). Fuente: tickets_mesa_servicio.csv.  \n- Comprobación adicional: no hay ticket con fecha de creación anterior o igual al 29/06/2026 que pruebe aviso 15 días antes (según tickets_mesa_servicio.csv).\n\nConclusión: la notificación no cumplió el plazo de 15 días que pide el manual; además aplicaba el aviso público de 48 horas por la afectación >30%.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 92829,
+  "exec": "86303",
+  "trampa": "T21",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "MAN-OPS-007 §8.1 exige comunicar una obra con 15 días de anticipación. El ticket 1118 se creó el 10 de julio para una remodelación del 14 al 16: 4 días, no 15.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuántas devoluciones tuvieron que ser autorizadas por el Gerente de Tienda en el trimestre?",
+  "respuesta": "No tengo ese dato: las fuentes disponibles (ventas, inventario, catálogo, tiendas y tickets) no registran quién autorizó una devolución.\n\nReglas relevantes:  \n- procedimiento_devoluciones.pdf — Procedimiento de devoluciones y cambios (PRO-SAC-021), sección 9.1 «Excepciones que siempre requieren autorización del Gerente de Tienda» (lista: devoluciones fuera de plazo por defecto de fabricación; liberación de bloqueos por límites de devoluciones sin ticket; casos con señales de alerta de fraude; electrodomésticos/electrónicos menores sin empaque original).  \n- faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), P17 (límites de autorización por monto: Gerente de Tienda hasta $30,000).\n\nPuedo obtener en su lugar el conteo de devoluciones que cumplen esas excepciones en el trimestre (junio-agosto 2026). ¿Las cuento todas juntas o las quieres por tienda?",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":\\\"17\\\"}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 26338,
+  "exec": "86303",
+  "trampa": "T22",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "PRO-SAC-021 §9 fija umbrales por monto (Supervisor, Gerente). ventas.csv agrega por día, tienda, SKU y canal, sin folio: no se puede saber el monto de cada devolución individual, así que el número es indeterminable. La respuesta correcta lo dice y ofrece lo que sí hay (414 filas con unidades negativas, importe máximo 770).",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ }
+]

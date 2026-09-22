@@ -1,0 +1,216 @@
+{
+  "_motivo_descarte": "Guarda + Postgres como sub-flujo compartido. Sustituido por Postgres Tool con la guarda como expresión (ticket 12, etapa 1).",
+  "name": "HEB-aristo — Ejecutar SQL",
+  "nodes": [
+    {
+      "id": "t",
+      "name": "Cuando lo llaman",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "inputSource": "workflowInputs",
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "sql",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "v",
+      "name": "Guarda SQL",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        260,
+        0
+      ],
+      "parameters": {
+        "jsCode": "// Guarda determinista del SQL que genera el modelo. Corre DENTRO del nodo Code \"Guarda SQL\"\n// del sub-flujo \"HEB-aristo — Consultas SQL\" y tambien en local (guarda_sql.test.mjs).\n// El usuario Postgres ya es de solo lectura (heb_lector): esto es la segunda capa, y la que\n// da un mensaje claro en vez de un \"permission denied\".\n//\n// Contrato: guardar(textoDelModelo) -> { sql } o lanza Error con el motivo.\n\nconst TABLAS = ['tiendas', 'catalogo_productos', 'ventas', 'inventario', 'tickets_mesa_servicio'];\nconst LIMITE = 200;\n\nfunction guardar(crudo) {\n  let sql = String(crudo ?? '').trim();\n  // El modelo a veces envuelve en ```sql ... ``` o devuelve JSON {\"sql\": \"...\"}.\n  const fence = sql.match(/```(?:sql)?\\s*([\\s\\S]*?)```/i);\n  if (fence) sql = fence[1].trim();\n  if (sql.startsWith('{')) { try { sql = String(JSON.parse(sql).sql ?? '').trim(); } catch { /* sigue crudo */ } }\n  sql = sql.replace(/;\\s*$/, '').trim();\n\n  if (!sql) throw new Error('El modelo no produjo SQL.');\n  if (!/^(select|with)\\b/i.test(sql)) throw new Error('Solo se permiten consultas SELECT.');\n  if (/;/.test(sql)) throw new Error('Solo se permite una sentencia.');\n  if (/--|\\/\\*|\\*\\//.test(sql)) throw new Error('No se permiten comentarios en el SQL.');\n  if (/\\b(insert|update|delete|drop|alter|create|truncate|grant|revoke|copy|call|do|execute|set|reset|vacuum|analyze|lock|listen|notify|refresh|into)\\b/i.test(sql))\n    throw new Error('Palabra clave no permitida en una consulta de solo lectura.');\n  if (/\\b(pg_catalog|pg_|information_schema|current_setting|pg_sleep|lo_|dblink|public\\.)/i.test(sql))\n    throw new Error('Acceso a objetos del sistema no permitido.');\n  // Toda tabla referenciada debe ser del esquema heb (con o sin prefijo heb.) o un CTE propio.\n  const ctes = [...sql.matchAll(/\\b(?:with|,)\\s*([a-z_][a-z0-9_]*)\\s+as\\s*\\(/gi)].map((m) => m[1].toLowerCase());\n  for (const m of sql.matchAll(/\\b(?:from|join)\\s+(?:heb\\.)?([a-z_][a-z0-9_]*)/gi)) {\n    const t = m[1].toLowerCase();\n    if (!TABLAS.includes(t) && !ctes.includes(t) && !/^(select|lateral|unnest|generate_series)$/.test(t))\n      throw new Error('Tabla fuera del esquema heb: ' + m[1]);\n  }\n  // LIMIT forzado: el agente no necesita mas de 200 filas para contestar a una persona.\n  const lim = sql.match(/\\blimit\\s+(\\d+)\\s*$/i);\n  if (!lim) sql += ' LIMIT ' + LIMITE;\n  else if (Number(lim[1]) > LIMITE) sql = sql.replace(/\\blimit\\s+\\d+\\s*$/i, 'LIMIT ' + LIMITE);\n  return { sql };\n}\n\n\ntry { return [{ json: guardar($input.first().json.sql) }]; }\ncatch (e) { return [{ json: { sql: null, rechazo: e.message } }]; }"
+      }
+    },
+    {
+      "id": "i",
+      "name": "Paso la guarda",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        500,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "c",
+              "leftValue": "={{ $json.sql }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ]
+        },
+        "looseTypeValidation": true
+      }
+    },
+    {
+      "id": "p",
+      "name": "Postgres (solo lectura)",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        760,
+        -100
+      ],
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{ $json.sql }}",
+        "options": {
+          "queryBatching": "independently"
+        }
+      },
+      "credentials": {
+        "postgres": {
+          "id": "Jk9Oc1ul5YKVuNg3",
+          "name": "HEB lector (solo lectura)"
+        }
+      },
+      "onError": "continueErrorOutput",
+      "alwaysOutputData": true
+    },
+    {
+      "id": "r",
+      "name": "Filas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1020,
+        -100
+      ],
+      "parameters": {
+        "jsCode": "const sql = $('Guarda SQL').first().json.sql;\nconst filas = $input.all().map((i) => i.json).filter((j) => Object.keys(j).length);\nreturn [{ json: { ok: true, sql, n: filas.length, filas } }];"
+      }
+    },
+    {
+      "id": "e",
+      "name": "Error de Postgres",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1020,
+        100
+      ],
+      "parameters": {
+        "jsCode": "// Solo la primera linea del error, sin traza: es lo que el modelo necesita para corregir.\nconst msg = String($input.first().json?.error?.message ?? $input.first().json?.error ?? 'error desconocido').split('\\n')[0].slice(0, 300);\nreturn [{ json: { ok: false, sql: $('Guarda SQL').first().json.sql, error: msg } }];"
+      }
+    },
+    {
+      "id": "x",
+      "name": "Rechazo de la guarda",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        760,
+        120
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: { ok: false, sql: null, error: $input.first().json.rechazo } }];"
+      }
+    },
+    {
+      "id": "nota",
+      "name": "Nota",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -360
+      ],
+      "parameters": {
+        "color": 4,
+        "width": 640,
+        "height": 240,
+        "content": "## HEB-aristo — Ejecutar SQL\n\nUnica puerta a la base para los agentes. `{sql}` -> `{ok, sql, n, filas}` o `{ok:false, error}`.\n\n1. **Guarda SQL** (`infra/guarda_sql.js`, determinista): solo SELECT, una sentencia, sin comentarios, tablas del esquema `heb`, LIMIT 200.\n2. **Postgres** con `heb_lector`: solo SELECT en `heb`, timeout 15 s. Tercera capa, a nivel de base.\n\nSe regenera con `node infra/crear-consultas-sql.mjs`."
+      }
+    }
+  ],
+  "connections": {
+    "Cuando lo llaman": {
+      "main": [
+        [
+          {
+            "node": "Guarda SQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guarda SQL": {
+      "main": [
+        [
+          {
+            "node": "Paso la guarda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Paso la guarda": {
+      "main": [
+        [
+          {
+            "node": "Postgres (solo lectura)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Rechazo de la guarda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres (solo lectura)": {
+      "main": [
+        [
+          {
+            "node": "Filas",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error de Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

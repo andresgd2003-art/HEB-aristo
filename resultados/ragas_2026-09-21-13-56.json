@@ -1,0 +1,45 @@
+[
+ {
+  "familia": "trampas",
+  "pregunta": "¿Por qué las ventas por Ecommerce no tienen descuentos?",
+  "respuesta": "Los descuentos aplicados a ventas por Ecommerce (junio-agosto 2026) fueron: T01 $0.00; T02 $0.00; T03 $0.00; T04 $0.00 — según ventas.csv (junio-agosto 2026).\n\nRevisión de políticas: consulté Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 4 «Servicio al cliente», P18, y Política de mermas y caducidad (POL-OPS-014), secciones 1 «Objetivo», 12 «Indicadores de seguimiento» y 4 «Tabla de tolerancias de merma por categoría». No hay norma en esos documentos que explique por qué no se aplicaron descuentos en Ecommerce.\n\n¿Quieres que busque tickets de junio-agosto de 2026 que puedan explicar la causa?",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\": null, \\\"filas\\\": [], \\\"motivo\\\": \\\"No es respondible: no hay en las tablas ningún campo que indique si una devolución fue autorizada ni quién la autorizó (no existe registro de aprobaciones por Gerente de Tienda)\\\"}\"}"
+  ],
+  "ms": 51103,
+  "exec": "85534",
+  "esperado": [
+   "0.00"
+  ],
+  "trampa": "T17",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "Dato cierto: descuento_mxn = 0.00 en todas las ventas por Ecommerce (Piso promedia 4.85). Ningún documento lo explica: se reporta el dato y se dice que no hay política que lo explique.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué tiendas incumplen el conteo diario de inventario en panadería, carnes y frutas y verduras?",
+  "respuesta": "Incumplen: todas las tiendas (T01, T02, T03, T04).\n\nDetalle (SKU sin conteo en las categorías solicitadas):\n- T01 Tienda Valle Norte — Panadería: 10; Carnes: 10; Frutas y verduras: 12.  \n- T02 Tienda Cumbres — Panadería: 10; Carnes: 10; Frutas y verduras: 12.  \n- T03 Tienda Anáhuac — Panadería: 10; Carnes: 10; Frutas y verduras: 12.  \n- T04 Tienda Lomas del Sur — Panadería: 10; Carnes: 10; Frutas y verduras: 12.  \n\nFuente de los datos: según `inventario.csv` (al 1 de septiembre de 2026).\n\nPolítica aplicable: la frecuencia mínima por categoría está en la tabla de la Política de mermas y caducidad (politica_mermas_y_caducidad.pdf), sección 4; además ver “Conteos de inventario” (politica_mermas_y_caducidad.pdf — sección 10) y FAQ para gerentes (faq_gerentes_de_tienda.pdf — 3. Mermas y perecederos — P14). Según esas normas, los conteos diarios son obligatorios en las categorías que la tabla identifica como de alta merma; si Panadería, Carnes y Frutas y verduras están clasificadas como “diarias” en la sección 4, los registros arriba indican incumplimiento.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\": null, \\\"filas\\\": [], \\\"motivo\\\": \\\"No es respondible: no hay en las tablas ningún campo que indique si una devolución fue autorizada ni quién la autorizó (no existe registro de aprobaciones por Gerente de Tienda)\\\"}\"}"
+  ],
+  "ms": 57988,
+  "exec": "85534",
+  "trampa": "T19",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "POL-OPS-014 §4 (tabla, columna frecuencia de conteo) y §10: panadería y carnes se cuentan al inicio de cada turno; frutas y verduras con revisión visual continua. Al 1 de septiembre, 113 de 128 posiciones de esas categorías llevan más de un día sin conteo, en las cuatro tiendas.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null
+ }
+]

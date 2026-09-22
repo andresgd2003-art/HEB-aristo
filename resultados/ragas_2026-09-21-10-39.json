@@ -1,0 +1,45 @@
+[
+ {
+  "familia": "trampas",
+  "pregunta": "¿Por qué las ventas por Ecommerce no tienen descuentos?",
+  "respuesta": "no tengo información que explique la causa",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\": null, \\\"filas\\\": [], \\\"motivo\\\": \\\"No es respondible: no hay en las tablas ningún campo que indique si una devolución fue autorizada ni quién la autorizó (no existe registro de aprobaciones por Gerente de Tienda)\\\"}\"}"
+  ],
+  "ms": 104228,
+  "exec": "85534",
+  "esperado": [
+   "0.00"
+  ],
+  "trampa": "T17",
+  "trampa_ok": false,
+  "condiciones": [
+   false,
+   true,
+   true
+  ],
+  "reference": "Dato cierto: descuento_mxn = 0.00 en todas las ventas por Ecommerce (Piso promedia 4.85). Ningún documento lo explica: se reporta el dato y se dice que no hay política que lo explique.",
+  "ragas_faithfulness": 1.0,
+  "ragas_answer_relevancy": 0.0
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué tiendas incumplen el conteo diario de inventario en panadería, carnes y frutas y verduras?",
+  "respuesta": "Incumplen (según inventario.csv, al 1 de septiembre de 2026):\n- T01 — Tienda Valle Norte: 32 SKUs fuera de conteo\n- T02 — Tienda Cumbres: 32 SKUs fuera de conteo\n- T03 — Tienda Anáhuac: 32 SKUs fuera de conteo\n- T04 — Tienda Lomas del Sur: 32 SKUs fuera de conteo\n\nRegla aplicable: la Política de mermas y caducidad establece la frecuencia mínima obligatoria: panadería y carnes = \"Al inicio de cada turno\"; frutas y verduras = \"Revisión visual continua; retiro al detectar deterioro\" (politica_mermas_y_caducidad.pdf — Política de mermas y caducidad (POL-OPS-014) — 5. Reglas de retiro de anaquel — 5.5 Revisión de fechas). Además, la misma política señala que la frecuencia de la tabla es mínima obligatoria (politica_mermas_y_caducidad.pdf — POL-OPS-014 — 10. Conteos de inventario) y que el gerente debe garantizar la ejecución de los conteos (politica_mermas_y_caducidad.pdf — POL-OPS-014 — 9. Responsabilidades por rol).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\": null, \\\"filas\\\": [], \\\"motivo\\\": \\\"No es respondible: no hay en las tablas ningún campo que indique si una devolución fue autorizada ni quién la autorizó (no existe registro de aprobaciones por Gerente de Tienda)\\\"}\"}"
+  ],
+  "ms": 45119,
+  "exec": "85534",
+  "trampa": "T19",
+  "trampa_ok": false,
+  "condiciones": [
+   false,
+   true,
+   true
+  ],
+  "reference": "POL-OPS-014 §4 (tabla) y §10 exigen conteo diario en panadería, carnes y frutas y verduras. Al 1 de septiembre, 113 de 128 posiciones de esas categorías llevan más de un día sin conteo, en las cuatro tiendas.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.711
+ }
+]

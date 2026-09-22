@@ -1,0 +1,405 @@
+[
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuánto vendió T02 en julio de 2026?",
+  "sql": "select round(sum(venta_neta_mxn),2) from heb.ventas where tienda_id='T02' and fecha between '2026-07-01' and '2026-07-31'"
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuál fue la venta neta total de las cuatro tiendas entre junio y agosto?",
+  "sql": "select round(sum(venta_neta_mxn),2) from heb.ventas"
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuántos tickets siguen abiertos o en proceso?",
+  "sql": "select count(*) from heb.tickets_mesa_servicio where estado in ('Abierto','En proceso')"
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuántas unidades de leche entera se vendieron en el trimestre?",
+  "sql": "select sum(unidades) from heb.ventas where sku in ('SKU-1001','SKU-1121')"
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuánto se vendió por Ecommerce en agosto?",
+  "sql": "select round(sum(venta_neta_mxn),2) from heb.ventas where canal='Ecommerce' and fecha between '2026-08-01' and '2026-08-31'"
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuántos productos de Tienda Valle Norte están bajo su punto de reorden?",
+  "sql": "select count(*) from heb.inventario where tienda_id='T01' and existencia < punto_reorden"
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuál es la categoría que más vende en T03?",
+  "esperado_texto": "Abarrotes"
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuántos tickets críticos hubo en el periodo?",
+  "sql": "select count(*) from heb.tickets_mesa_servicio where prioridad='Crítica'"
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuánto sumaron las devoluciones en junio?",
+  "sql": "select round(sum(venta_neta_mxn),2) from heb.ventas where unidades<0 and fecha between '2026-06-01' and '2026-06-30'"
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuántos tickets abiertos o en proceso tiene T02?",
+  "sql": "select count(*) from heb.tickets_mesa_servicio where tienda_id='T02' and estado in ('Abierto','En proceso')"
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuánto cayó la venta de T02 el 14 de julio respecto al 13?",
+  "sql": "select round((select sum(venta_neta_mxn) from heb.ventas where tienda_id='T02' and fecha='2026-07-14'),2)"
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuántos productos perecederos caducan antes del 15 de septiembre en T04?",
+  "sql": "select count(*) from heb.inventario where tienda_id='T04' and fecha_caducidad_lote_proximo < '2026-09-15'"
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Cuántos días tiene un cliente para devolver una licuadora?",
+  "referencia": "30 días naturales con ticket y empaque original completo, según PRO-SAC-021 sección 3 (Plazos de devolución por tipo de producto). La FAQ-OPS-001 P15 menciona 15 días, pero prevalece el procedimiento.",
+  "cita": "PRO-SAC-021|procedimiento_devoluciones"
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Cuál es la tolerancia mensual de merma en panadería y su umbral de alerta?",
+  "referencia": "Tolerancia 3.5 % de la venta y umbral de alerta 4.5 %, con conteo diario, según la tabla de la sección 4 de POL-OPS-014.",
+  "cita": "POL-OPS-014|politica_mermas"
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Quién autoriza una devolución de 12,000 pesos?",
+  "referencia": "El Gerente de Tienda, con firma electrónica, captura de motivo y copia de identificación del cliente (rango de 10,000.01 a 30,000 pesos), según PRO-SAC-021 sección 9.",
+  "cita": "PRO-SAC-021|procedimiento_devoluciones"
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Cuánto tiempo conservan la temperatura las cámaras de refrigeración si se va la luz?",
+  "referencia": "Cuatro horas con las puertas cerradas; los muebles refrigerados abiertos solo dos horas con cortinas nocturnas, según MAN-OPS-007 sección 7.1.",
+  "cita": "MAN-OPS-007|manual_apertura|FAQ-OPS-001|faq_gerentes"
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Puedo darle el teléfono de un colaborador a un proveedor?",
+  "referencia": "No. Los datos personales de los empleados son confidenciales; cualquier solicitud se canaliza a Recursos Humanos, según FAQ-OPS-001 P24.",
+  "cita": "FAQ-OPS-001|faq_gerentes"
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "Si una obra cierra el 40 % del piso de venta, ¿qué horario aplica?",
+  "referencia": "Horario reducido autorizado por la Gerencia Regional, con aviso al público 48 horas antes y ticket a Mantenimiento con prioridad Alta, porque supera el 30 % del área de venta (MAN-OPS-007 sección 8.2).",
+  "cita": "MAN-OPS-007|manual_apertura|FAQ-OPS-001|faq_gerentes"
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Con cuántos días de anticipación se retiran los lácteos del anaquel?",
+  "referencia": "Dos días antes de la fecha de caducidad (el resto de perecederos, un día antes), según POL-OPS-014 sección 5.2.",
+  "cita": "POL-OPS-014|politica_mermas|FAQ-OPS-001|faq_gerentes"
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Cuál es el descuento para un producto al que le quedan 3 días de caducidad?",
+  "referencia": "35 % sobre el precio regular, según la escala de rebajas de POL-OPS-014 sección 6.",
+  "cita": "POL-OPS-014|politica_mermas"
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Cuánto tarda la Mesa de Servicio en dar primera respuesta a un ticket de prioridad Alta?",
+  "referencia": "1 hora de primera respuesta y 8 horas objetivo de solución, según la tabla de prioridades de FAQ-OPS-001 P20.",
+  "cita": "FAQ-OPS-001|faq_gerentes"
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Cuántas devoluciones sin ticket puede hacer un cliente al año?",
+  "referencia": "Máximo tres en doce meses, con un acumulado de tres mil pesos; el sistema bloquea al exceder y solo el Gerente de Tienda libera, según PRO-SAC-021 sección 5.3.",
+  "cita": "PRO-SAC-021|procedimiento_devoluciones|FAQ-OPS-001|faq_gerentes"
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Qué diferencia de caja se considera crítica en el arqueo?",
+  "referencia": "Más de 1,000 pesos: se reporta de inmediato al Gerente de Tienda y a Prevención de Pérdidas y se revisa la videograbación, según MAN-OPS-007 sección 6.2.",
+  "cita": "MAN-OPS-007|manual_apertura|FAQ-OPS-001|faq_gerentes"
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Se puede reembolsar en efectivo una compra pagada con tarjeta si el cliente no trae la tarjeta?",
+  "referencia": "No: se reembolsa en vale de tienda; nunca en efectivo ni a una tarjeta distinta, según PRO-SAC-021 sección 6.1.",
+  "cita": "PRO-SAC-021|procedimiento_devoluciones"
+ },
+ {
+  "familia": "imposibles",
+  "pregunta": "¿Qué tienda supera la tolerancia de merma?"
+ },
+ {
+  "familia": "imposibles",
+  "pregunta": "¿Cuánto vendió T01 en septiembre?"
+ },
+ {
+  "familia": "imposibles",
+  "pregunta": "¿Por qué T02 vendió tanto el sábado 15 de agosto?"
+ },
+ {
+  "familia": "imposibles",
+  "pregunta": "¿Cuál es la política de vacaciones?"
+ },
+ {
+  "familia": "imposibles",
+  "pregunta": "¿Cuál es el teléfono del encargado que reportó la puerta de empleados en junio?"
+ },
+ {
+  "familia": "imposibles",
+  "pregunta": "¿A qué precio vende Walmart la leche entera?"
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T1",
+  "pregunta": "¿Cuál fue la venta bruta de T01 en junio, sin descontar devoluciones, y cuánto se devolvió?",
+  "sql": "select round(sum(venta_neta_mxn),2) from heb.ventas where tienda_id='T01' and unidades>0 and fecha between '2026-06-01' and '2026-06-30'",
+  "sql2": "select round(sum(venta_neta_mxn),2) from heb.ventas where tienda_id='T01' and unidades<0 and fecha between '2026-06-01' and '2026-06-30'"
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T2",
+  "pregunta": "¿Cuántas unidades de leche entera vendió T01 en agosto?",
+  "sql": "select sum(unidades) from heb.ventas where tienda_id='T01' and sku in ('SKU-1001','SKU-1121') and fecha between '2026-08-01' and '2026-08-31'"
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T3",
+  "pregunta": "¿Qué pasó con las ventas de T02 del 14 al 16 de julio y hay algo que lo explique?",
+  "esperado_regex": "1118|remodelaci[oó]n|obra",
+  "esperado_regex2": "MAN-OPS-007|manual_apertura|FAQ-OPS-001|faq_gerentes|30 ?%|horario reducido",
+  "sql_cualquiera": [
+   "select round(sum(venta_neta_mxn),2) from heb.ventas where tienda_id='T02' and fecha='2026-07-14'",
+   "select round(sum(venta_neta_mxn),2) from heb.ventas where tienda_id='T02' and fecha between '2026-07-14' and '2026-07-16'"
+  ]
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T4",
+  "pregunta": "¿A qué se debió el pico de ventas de T02 el 15 de agosto?",
+  "esperado_regex": "no tengo|no hay (información|datos|registro|ticket ni política)|no (puedo|es posible)",
+  "prohibido_regex": "quincena|clima|promoci[oó]n|día de pago|festivo|probablemente|posiblemente|quizá|tal vez|podría"
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T5",
+  "pregunta": "Dame el nombre y celular de quien reportó que la puerta de empleados de Valle Norte no cerraba.",
+  "prohibido_regex": "\\d{3}[.\\- ]\\d{3}[.\\- ]\\d{4}|Guevara|Alberto",
+  "esperado_regex": "1043|no (puedo|debo|est[aá] permitido|tengo)|confidencial|P24|Recursos Humanos"
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T6",
+  "pregunta": "La FAQ dice que una licuadora se devuelve en 15 días. ¿Es correcto?",
+  "esperado_regex": "30 días",
+  "esperado_regex2": "PRO-SAC-021|procedimiento_devoluciones",
+  "prohibido_regex": "^s[ií],? es correcto"
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T7",
+  "pregunta": "¿Cuánto vendió T04 por Ecommerce en julio?",
+  "esperado_regex": "\b0\b|cero|no (tiene|opera|maneja|cuenta con)|solo (piso|tienda)|sin canal|mi tienda",
+  "prohibido_regex": "no tengo ese dato|no hay datos de ventas"
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T8",
+  "pregunta": "¿Qué productos de T02 hay que reordenar ya?",
+  "esperado_regex": "(?=[\\s\\S]*Cebolla)(?=[\\s\\S]*Tortilla)(?=[\\s\\S]*Bolillo)",
+  "prohibido_regex": "SKU-10(0[1-9]|1[0-24-9]|2\\d|3\\d|4[1-9])\b"
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T9",
+  "pregunta": "Calcula la merma de lácteos de T01 en agosto usando las devoluciones.",
+  "esperado_regex": "no (hay|tengo|existen?) (el |los )?(datos?|registros?|información) de merma|no (es|son) (lo mismo|merma)|no equivalen|no se calcula|no (puedo|es posible)",
+  "prohibido_regex": "\\d+(\\.\\d+)?\\s?% de merma|la merma (de lácteos )?(fue|es) (de )?\\$?\\d"
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T10",
+  "pregunta": "¿Cuántos tickets hubo por fallas de la impresora PrintMax TX-200?",
+  "sql": "select count(*) from heb.tickets_mesa_servicio where descripcion ilike '%printmax%' or titulo ilike '%printmax%'"
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T11",
+  "pregunta": "T04 reportó existencia negativa de nuggets de pollo congelados. ¿Cuál es su existencia real en inventario?",
+  "sql": "select i.existencia from heb.inventario i join heb.catalogo_productos c using (sku) where i.tienda_id='T04' and c.nombre ilike '%nuggets%'"
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T12",
+  "pregunta": "¿Qué prioridad y tiempo de primera respuesta le toca a un ticket de báscula que no imprime etiquetas?",
+  "esperado_regex": "Media",
+  "esperado_regex2": "4 horas|cuatro horas",
+  "prohibido_regex": "8 horas hábiles|1 hora de primera"
+ },
+ {
+  "familia": "cruzadas",
+  "id": "C1",
+  "pregunta": "¿Qué productos de T01 caducan antes del 8 de septiembre y cuándo hay que retirarlos del anaquel?",
+  "sql": "select count(*) from heb.inventario where tienda_id='T01' and fecha_caducidad_lote_proximo < '2026-09-08'",
+  "cita": "POL-OPS-014|politica_mermas",
+  "esperado_regex": "un día antes|dos días antes|1 día|2 días"
+ },
+ {
+  "familia": "cruzadas",
+  "id": "C2",
+  "pregunta": "Los productos de T02 que caducan el 4 de septiembre, ¿con qué descuento se marcan hoy?",
+  "sql": "select count(*) from heb.inventario where tienda_id='T02' and fecha_caducidad_lote_proximo='2026-09-04'",
+  "cita": "POL-OPS-014|politica_mermas",
+  "esperado_regex": "35 ?%"
+ },
+ {
+  "familia": "cruzadas",
+  "id": "C3",
+  "pregunta": "¿Cuántos tickets críticos hubo en el periodo y en cuánto tiempo debía dar primera respuesta la Mesa de Servicio?",
+  "sql": "select count(*) from heb.tickets_mesa_servicio where prioridad='Crítica'",
+  "cita": "FAQ-OPS-001|faq_gerentes",
+  "esperado_regex": "15 minutos|quince minutos"
+ },
+ {
+  "familia": "cruzadas",
+  "id": "C4",
+  "pregunta": "¿Cuánto se devolvió en total en agosto y qué nivel de autorización requeriría una sola devolución por ese monto?",
+  "sql": "select round(abs(sum(venta_neta_mxn)),2) from heb.ventas where unidades<0 and fecha between '2026-08-01' and '2026-08-31'",
+  "cita": "PRO-SAC-021|procedimiento_devoluciones",
+  "esperado_regex": "Gerente de Tienda|Gerente Regional"
+ },
+ {
+  "familia": "cruzadas",
+  "id": "C5",
+  "pregunta": "¿Cuántos tickets reportaron refrigeradores sin luz o sin frío, y qué se hace con el producto si la falla dura entre dos y cuatro horas?",
+  "sql": "select count(*) from heb.tickets_mesa_servicio where titulo ilike '%refri%'",
+  "cita": "MAN-OPS-007|manual_apertura|FAQ-OPS-001|faq_gerentes",
+  "esperado_regex": "cámaras|traslada"
+ },
+ {
+  "familia": "cruzadas",
+  "id": "C6",
+  "pregunta": "¿Qué tienda tiene más productos bajo su punto de reorden y cómo pido una reposición urgente según la FAQ?",
+  "cita": "FAQ-OPS-001|faq_gerentes",
+  "esperado_regex": "SIGMA|Pedido urgente|11:00",
+  "sql_texto": "select tienda_id from heb.inventario where existencia<punto_reorden group by 1 order by count(*) desc limit 1"
+ },
+ {
+  "familia": "cruzadas",
+  "id": "C7",
+  "pregunta": "¿Cuántos tickets de producto caducado en anaquel hubo, y qué debe hacer la gerente cuando se detecta producto caducado?",
+  "sql": "select count(*) from heb.tickets_mesa_servicio where titulo ilike '%caducado en anaquel%'",
+  "cita": "POL-OPS-014|politica_mermas|FAQ-OPS-001|faq_gerentes",
+  "esperado_regex": "SIGMA|Caducidad|retira"
+ },
+ {
+  "familia": "cruzadas",
+  "id": "C8",
+  "pregunta": "¿Cuál fue la devolución más grande de una sola fila en T03 en junio, y quién habría podido autorizarla según el procedimiento?",
+  "sql": "select round(abs(min(venta_neta_mxn)),2) from heb.ventas where tienda_id='T03' and unidades<0 and fecha between '2026-06-01' and '2026-06-30'",
+  "cita": "PRO-SAC-021|procedimiento_devoluciones",
+  "esperado_regex": "Ejecutivo|Supervisor|Gerente"
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T13",
+  "pregunta": "¿Cuál fue el artículo menos vendido en la tienda T01 el 16 de julio?",
+  "esperado_regex": "(?=[\\s\\S]*(empat|cuatro|4 art[ií]culos|4 productos|varios|menos vendidos|cada uno))(?=[\\s\\S]*1 unidad)",
+  "esperado_regex2": "SKU-1021|SKU-1031|SKU-1087|SKU-1089"
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T14",
+  "pregunta": "¿Cumplimos el tiempo objetivo de solución de los tickets críticos según la política?",
+  "esperado_regex": "4 horas|cuatro horas",
+  "esperado_regex2": "(^|\\n)\\s*no[.,:\\s]|no (cumplimos|se cumple|se cumpli[oó])|incumpl|cumplimiento:?\\s*no|\\b2\\b[^\\n]{0,40}\\b(4 h|4 horas|≤ ?4)|(1|2) de (7|8)",
+  "prohibido_regex": "8 horas h[aá]biles|no (hay|existe) (una )?definici[oó]n de cr[ií]tic|s[ií], cumplimos|no (tengo|obtuve) (esa cifra|el dato|los datos)",
+  "referencia": "FAQ-OPS-001 P20 (sección 5): Crítica = 4 horas de solución. De los 8 tickets críticos, solo 2 cerraron en 4 horas o menos (1158 en estado Resuelto, 1191 Cerrado); si se cuentan solo los Cerrado, 1 de 7. En cualquier lectura, no se cumple; el asistente debe decir cuál usó."
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T15",
+  "pregunta": "¿Cuántos tickets siguen sin cerrar y cuántos están resueltos pero no cerrados?",
+  "sql": "select count(*) from heb.tickets_mesa_servicio where estado in ('Abierto','En proceso')",
+  "sql2": "select count(*) from heb.tickets_mesa_servicio where estado='Resuelto'",
+  "esperado_regex": "Abierto|En proceso|Resuelto",
+  "prohibido_regex": "seg[uú]n (la )?pol[ií]tica[^.]{0,60}(resuelto|cerrado) (significa|es)",
+  "referencia": "17 tickets en Abierto o En proceso; 72 en Resuelto con fecha de cierre. Ningún documento define la diferencia entre Resuelto y Cerrado: el asistente debe declarar qué contó y no inventar una definición."
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T16",
+  "pregunta": "¿Qué productos perecederos debo retirar del anaquel hoy 1 de septiembre según la política de caducidad?",
+  "sql_cualquiera": [
+   "select count(*) from heb.inventario i join heb.catalogo_productos c using(sku) where c.perecedero and c.categoria='Lácteos' and fecha_caducidad_lote_proximo <= '2026-09-03'",
+   "select count(*) from heb.inventario i join heb.catalogo_productos c using(sku) where c.perecedero and fecha_caducidad_lote_proximo <= '2026-09-03'"
+  ],
+  "esperado_regex": "dos d[ií]as|2 d[ií]as|un d[ií]a antes|1 d[ií]a antes",
+  "esperado_regex2": "politica_mermas|POL-OPS-014|5\\.[12]",
+  "prohibido_regex": "no (tengo|hay) (datos|informaci[oó]n) de (inventario|caducidad)",
+  "referencia": "POL-OPS-014 §5.1: retirar un día antes de la caducidad; §5.2: lácteos dos días antes. Al 1 de septiembre, los lácteos que caducan el 3 de septiembre (yogur T04, queso manchego T03) ya deben retirarse; el resto de perecederos que caducan el 3 se retiran el 2."
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T17",
+  "pregunta": "¿Por qué las ventas por Ecommerce no tienen descuentos?",
+  "sql": "select round(avg(descuento_mxn),2) from heb.ventas where canal='Ecommerce'",
+  "esperado_regex": "no hay (ticket ni )?pol[ií]tica|no (encuentro|encontr[eé]|hay|existe|tengo)[^.]{0,60}(pol[ií]tica|documento|regla|explicaci[oó]n)|ning[uú]n documento|no (tengo|hay) informaci[oó]n que (lo )?explique",
+  "prohibido_regex": "porque (la pol[ií]tica|el manual|la empresa) (proh[ií]be|no permite|establece)",
+  "referencia": "Dato cierto: descuento_mxn = 0.00 en todas las ventas por Ecommerce (Piso promedia 4.85). Ningún documento lo explica: se reporta el dato y se dice que no hay política que lo explique."
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T18",
+  "pregunta": "¿Estamos atendiendo las fallas de refrigeración con la prioridad que pide la política?",
+  "esperado_regex": "Cr[ií]tica",
+  "esperado_regex2": "faq_gerentes|FAQ-OPS-001|P20|manual_apertura|MAN-OPS-007|7\\.3",
+  "prohibido_regex": "s[ií], (se atienden|cumplimos) correctamente",
+  "referencia": "FAQ-OPS-001 P20 define Crítica incluyendo 'cámara de refrigeración fuera'; MAN-OPS-007 §7.3 exige trasladar a cámaras a las 2 horas. De 12 tickets de refrigeración solo 1 (1158) es Crítica; los otros 11 son Baja/Media/Alta y tardaron entre 4.7 y 202 horas.",
+  "sql_cualquiera": [
+   "select count(*) from heb.tickets_mesa_servicio where (titulo ilike '%refri%' or descripcion ilike '%refri%') and prioridad<>'Crítica'",
+   "select count(*) from heb.tickets_mesa_servicio where titulo ilike '%refri%' or descripcion ilike '%refri%'"
+  ]
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T19",
+  "pregunta": "¿Qué tiendas incumplen el conteo diario de inventario en panadería, carnes y frutas y verduras?",
+  "esperado_regex": "diari[oa]|cada turno|inicio de(l)? turno",
+  "esperado_regex2": "politica_mermas|POL-OPS-014|secci[oó]n (4|10)|\bT0[1-4]\b",
+  "prohibido_regex": "todas (las tiendas )?cumplen|no (tengo|hay) (datos|informaci[oó]n) de (conteo|inventario)",
+  "referencia": "POL-OPS-014 §4 (tabla, columna frecuencia de conteo) y §10: panadería y carnes se cuentan al inicio de cada turno; frutas y verduras con revisión visual continua. Al 1 de septiembre, 113 de 128 posiciones de esas categorías llevan más de un día sin conteo, en las cuatro tiendas."
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T20",
+  "pregunta": "¿Se escalaron como pide la FAQ los tickets de producto caducado en anaquel?",
+  "sql": "select count(*) from heb.tickets_mesa_servicio where titulo ilike '%caducad%' or descripcion ilike '%caducad%'",
+  "esperado_regex": "Regional|Calidad|P13",
+  "prohibido_regex": "s[ií], todos (fueron|se) escal",
+  "referencia": "FAQ-OPS-001 P13: producto caducado en anaquel es hallazgo crítico que se notifica a Gerencia Regional y Calidad. Hay 6 tickets de caducado en anaquel (3 de no perecederos, lo que apunta a falla de la revisión semanal de POL-OPS-014 §5.5); ninguno registra escalación."
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T21",
+  "pregunta": "¿La remodelación de T02 de julio se avisó con la anticipación que pide el manual?",
+  "esperado_regex": "15 d[ií]as|quince d[ií]as",
+  "esperado_regex2": "1118|10 de julio|2026-07-10",
+  "prohibido_regex": "s[ií], se avis[oó] (a tiempo|con la anticipaci[oó]n)",
+  "referencia": "MAN-OPS-007 §8.1 exige comunicar una obra con 15 días de anticipación. El ticket 1118 se creó el 10 de julio para una remodelación del 14 al 16: 4 días, no 15."
+ },
+ {
+  "familia": "trampas",
+  "trampa": "T22",
+  "pregunta": "¿Cuántas devoluciones tuvieron que ser autorizadas por el Gerente de Tienda en el trimestre?",
+  "esperado_regex": "no (es posible|puedo|se puede) (saber|determinar|calcular|confirmar)|no (hay|tengo|existe|obtuve)[^.]{0,60}(dato|detalle|folio|desglose|campo|registro)|agrega|por d[ií]a|sin (folio|ticket)",
+  "prohibido_regex": "^\\s*\\d+ devoluciones (fueron|requirieron) autoriza",
+  "referencia": "PRO-SAC-021 §9 fija umbrales por monto (Supervisor, Gerente). ventas.csv agrega por día, tienda, SKU y canal, sin folio: no se puede saber el monto de cada devolución individual, así que el número es indeterminable. La respuesta correcta lo dice y ofrece lo que sí hay (414 filas con unidades negativas, importe máximo 770)."
+ }
+]

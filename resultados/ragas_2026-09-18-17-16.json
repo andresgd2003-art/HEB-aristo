@@ -1,0 +1,269 @@
+[
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuál fue la venta bruta de T01 en junio, sin descontar devoluciones, y cuánto se devolvió?",
+  "respuesta": "Venta bruta (sin descontar devoluciones): $2,089,517.63  \nDevoluciones: $-4,451.00\n\nSegún ventas de junio de 2026 (consultar_datos).",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT ROUND(COALESCE(SUM(venta_neta_mxn) FILTER (WHERE unidades > 0), 0), 2) AS \\\"venta_bruta\\\", ROUND(COALESCE(SUM(venta_neta_mxn) FILTER (WHERE unidades < 0), 0), 2) AS \\\"devoluciones\\\" FROM ventas WHERE tienda_id = 'T01' AND fecha BETWEEN '2026-06-01' AND '2026-06-30'\", \"n\": 1, \"filas\": [{\"venta_bruta\": \"2089517.63\", \"devoluciones\": \"-4451.00\"}]}"
+  ],
+  "ms": 18970,
+  "exec": "82464",
+  "esperado": [
+   "2089517.63",
+   "-4451.00"
+  ],
+  "trampa": "T1",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 1.0,
+  "ragas_answer_relevancy": 0.656
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuántas unidades de leche entera vendió T01 en agosto?",
+  "respuesta": "1,338 unidades.\n\nSegún ventas de agosto de 2026 en T01.",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT COALESCE(SUM(v.unidades), 0) AS unidades_leche_entera FROM ventas v JOIN catalogo_productos c USING (sku) WHERE v.tienda_id = 'T01' AND v.fecha BETWEEN '2026-08-01' AND '2026-08-31' AND c.nombre ILIKE '%leche entera%'\", \"n\": 1, \"filas\": [{\"unidades_leche_entera\": \"1338\"}]}"
+  ],
+  "ms": 16421,
+  "exec": "82468",
+  "esperado": [
+   "1338"
+  ],
+  "trampa": "T2",
+  "trampa_ok": true,
+  "condiciones": [
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 1.0,
+  "ragas_answer_relevancy": 0.69
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué pasó con las ventas de T02 del 14 al 16 de julio y hay algo que lo explique?",
+  "respuesta": "Ventas de T02 (14-16 jul 2026) — según ventas de julio (consultar_datos):\n- 14/07/2026: $23,547.89 (553 unidades)  \n- 15/07/2026: $23,933.03 (615 unidades)  \n- 16/07/2026: $24,249.90 (568 unidades)\n\nExplicación encontrada — según tickets (consultar_datos):\n- Existe el ticket folio 1118 (10/07/2026) título “Remodelación de pasillo central del 14 al 16 de julio”. Descripción: “Se cierra como el 40% del piso de venta y solo operan 6 cajas. Ya avisamos a Mantenimiento corporativo, favor de coordinar al contratista y el horario reducido.”  \n- La obra reduce ≈40% del área de venta, por lo que la tienda operó con horario reducido conforme a la regla (MAN-OPS-007 §8.2 Regla de horario reducido). También existe la obligación de notificar con 15 días (MAN-OPS-007 §8.1 y FAQ-OPS-001 P7); el ticket fue levantado el 10/07 (4 días antes), por lo que la notificación aparece por debajo del plazo requerido.",
+  "contextos": [
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 8. Remodelaciones y obras en tienda — 8.2 Regla de horario reducido\n\nCuando una obra reduzca el área de venta disponible en más del 30 % de la superficie total de piso de venta, la tienda opera con horario reducido, autorizado por la Gerencia Regional, y se coloca aviso al público con al menos cuarenta y ocho horas de anticipación. En este caso, el Gerente de Tienda levanta un ticket a Mantenimiento con prioridad Alta indicando la fecha de inicio, la duración estimada y las áreas afectadas, para que Mantenimiento coordine la reubicación de equipos y la señalización de seguridad. Si la reducción es igual o menor al 30 %, la tienda mantiene su horario habitual y solo se reporta la obra en la bitácora.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 2. Operación diaria — P7. ¿Qué hago si hay una remodelación u obra en mi tienda?\n\nRevisa el plan de afectación que la Gerencia de Proyectos debe enviarte con al menos quince días de anticipación. Calcula qué porcentaje del área de venta quedará inhabilitado: si la obra reduce el área de venta en más del 30 %, la tienda opera con horario reducido autorizado por la Gerencia Regional, colocas aviso al público con cuarenta y ocho horas de anticipación y levantas un ticket a Mantenimiento con prioridad Alta indicando fechas, duración y áreas afectadas. Si la reducción es del 30 % o menos, mantienes el horario habitual y solo registras la obra en la bitácora. En cualquier caso, exige mamparas rígidas de piso a techo, programa los trabajos ruidosos fuera del horario de atención y no exhibas alimentos a menos de tres metros de la zona de obra.",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 8. Remodelaciones y obras en tienda — 8.1 Comunicación previa\n\nToda obra o remodelación se notifica a la tienda por la Gerencia de Proyectos con al menos quince días de anticipación, con el plano de afectación, el calendario de trabajos y el nombre del residente de obra. El Gerente de Tienda revisa el plan y confirma la fecha de inicio.",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 8. Remodelaciones y obras en tienda — 8.3 Seguridad durante la obra\n\n- El área de obra se delimita con mamparas rígidas de piso a techo; no se permiten cintas o conos como única barrera en piso de venta.\r\n- Los trabajos que generen polvo o ruido excesivo se programan fuera del horario de atención al público.\r\n- No se exhibe producto alimenticio a menos de tres metros de la zona de obra sin protección adicional.\r\n- El personal de la constructora ingresa y sale exclusivamente por el acceso que designe el Gerente de Tienda y porta identificación visible.\r\n- Cualquier afectación a instalaciones eléctricas, hidráulicas o de refrigeración se reporta de inmediato a Mantenimiento como incidencia, independientemente del ticket de la obra.",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 2. Horarios de referencia\n\nEl horario estándar de atención al público es de 7:00 a 22:00 horas. Las variaciones por plaza se autorizan por la Gerencia Regional y se publican en la cartelera de la tienda y en el sitio web. La recepción de proveedores en andén se realiza de lunes a sábado entre las 6:00 y las 13:00 horas; fuera de ese horario solo se recibe mercancía con cita autorizada por el Jefe de Recepción.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 2. Operación diaria — P8. ¿Puedo cambiar el horario de la tienda por baja afluencia?\n\nNo de manera unilateral. Cualquier cambio de horario, temporal o permanente, requiere autorización de la Gerencia Regional y debe comunicarse al público con al menos cuarenta y ocho horas de anticipación. Las únicas excepciones son las condiciones de seguridad que impiden abrir (falta de agua, falla total de energía sin generador, intrusión, fuga de gas o inundación), en las que debes notificar de inmediato a la Gerencia Regional y colocar aviso en la puerta.",
+   "{\"ok\": true, \"sql\": \"SELECT 'venta' AS tipo, v.fecha::date AS fecha, ROUND(SUM(v.venta_neta_mxn), 2) AS venta_neta_mxn, SUM(v.unidades) AS unidades, NULL::text AS titulo, NULL::int AS tickets FROM ventas v WHERE v.tienda_id = 'T02' AND v.fecha BETWEEN '2026-07-14' AND '2026-07-16' GROUP BY v.fecha UNION ALL SELECT 'ticket' AS tipo, NULL::date AS fecha, NULL::numeric AS venta_neta_mxn, NULL::int AS unidades, titulo, COUNT(*) AS tickets FROM tickets_mesa_servicio WHERE tienda_id = 'T02' AND fecha_creacion::date BETWEEN '2026-06-14' AND '2026-07-16' GROUP BY titulo LIMIT 200\", \"n\": 30, \"filas\": [{\"tipo\": \"venta\", \"fecha\": \"2026-07-15T00:00:00.000Z\", \"venta_neta_mxn\": \"23933.03\", \"unidades\": \"615\", \"titulo\": null, \"tickets\": null}, {\"tipo\": \"venta\", \"fecha\": \"2026-07-14T00:00:00.000Z\", \"venta_neta_mxn\": \"23547.89\", \"unidades\": \"553\", \"titulo\": null, \"tickets\": null}, {\"tipo\": \"venta\", \"fecha\": \"2026-07-16T00:00:00.000Z\", \"venta_neta_mxn\": \"24249.90\", \"unidades\": \"568\", \"titulo\": null, \"tickets\": null}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"actualización pendiente en pos\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"aire acondicionado no enfría\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"alta de empleado nuevo\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"bascula descalibrada\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"Cajón de dinero no abre\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"Camaras sin grabar\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"Cámaras sin grabar\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"Congelador con hielo acumulado\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"Diferencia en conteo ciclico\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"Exceso de producto\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"faltante en recepción\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"Falta personal en fin de semana\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"foco fundido en estacionamiento\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"Foco fundido en estacionamiento gracias\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"Gotera en area de cajas gracias\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"Incapacidad por registrar\", \"tickets\": \"2\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"merma alta en frutas\", \"tickets\": \"2\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"Montacargas no arranca\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"no entra el sistema de inventario gracias\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"Producto sin codigo en sistema\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"Producto sin código en sistema\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\": null, \"unidades\": null, \"titulo\": \"puerta automática no abre\", \"tickets\": \"1\"}, {\"tipo\": \"ticket\", \"fecha\": null, \"venta_neta_mxn\":",
+   "{\"ok\": true, \"sql\": \"SELECT ticket_id AS folio, fecha_creacion AS fecha, titulo, descripcion FROM tickets_mesa_servicio WHERE tienda_id = 'T02' AND fecha_creacion::date BETWEEN '2026-06-14' AND '2026-07-16' ORDER BY fecha_creacion\", \"n\": 29, \"filas\": [{\"folio\": 1042, \"fecha\": \"2026-06-17T21:19:00.000Z\", \"titulo\": \"Congelador con hielo acumulado\", \"descripcion\": \"El congelador de la isla 14 tiene mucho hielo y la puerta ya no cierra bien.\"}, {\"folio\": 1050, \"fecha\": \"2026-06-20T08:03:00.000Z\", \"titulo\": \"Producto sin código en sistema\", \"descripcion\": \"Llegó un producto nuevo de PRV-03 y no tiene codigo cargado, no se puede vender.\"}, {\"folio\": 1052, \"fecha\": \"2026-06-21T10:45:00.000Z\", \"titulo\": \"Falta personal en fin de semana\", \"descripcion\": \"Necesitamos apoyo de 2 cajeros para sabado y domingo, tenemos 3 vacantes sin cubrir.\"}, {\"folio\": 1055, \"fecha\": \"2026-06-21T15:33:00.000Z\", \"titulo\": \"se fue la luz en refris\", \"descripcion\": \"Se fue la luz en refris del pasillo 5, ya llevan como 2 hrs sin frio, los lacteos estan en riesgo gracias\"}, {\"folio\": 1058, \"fecha\": \"2026-06-22T20:53:00.000Z\", \"titulo\": \"no entra el sistema de inventario gracias\", \"descripcion\": \"Desde la mañana no podemos entrar al SIGMA, marca error de conexion. Ya reiniciamos la compu de la oficina y nada.\"}, {\"folio\": 1060, \"fecha\": \"2026-06-23T17:02:00.000Z\", \"titulo\": \"Terminal bancaria rechazada\", \"descripcion\": \"La terminal de la caja 4 rechaza todas las tarjetas, dice error de comunicacion gracias\"}, {\"folio\": 1063, \"fecha\": \"2026-06-24T07:48:00.000Z\", \"titulo\": \"merma alta en frutas\", \"descripcion\": \"La merma de frutas y verduras esta muy alta esta semana, sobre todo en platano y fresa.\"}, {\"folio\": 1067, \"fecha\": \"2026-06-24T15:26:00.000Z\", \"titulo\": \"Cajón de dinero no abre\", \"descripcion\": \"El cajon de la caja 6 no abre, la cajera tiene que abrirlo con la llave cada venta gracias\"}, {\"folio\": 1069, \"fecha\": \"2026-06-25T10:01:00.000Z\", \"titulo\": \"puerta automática no abre\", \"descripcion\": \"la puerta de la entrada principal se atora y hay q abrirla a mano, la gente se enoja.\"}, {\"folio\": 1073, \"fecha\": \"2026-06-26T16:32:00.000Z\", \"titulo\": \"Exceso de producto\", \"descripcion\": \"nos mandaron el triple de agua embotellada de lo q pedimos, no hay donde ponerla.\"}, {\"folio\": 1074, \"fecha\": \"2026-06-27T07:04:00.000Z\", \"titulo\": \"Gotera en area de cajas gracias\", \"descripcion\": \"Hay una gotera arriba de la caja 8 y ya se mojó el piso, riesgo de que se resbale alguien.\"}, {\"folio\": 1076, \"fecha\": \"2026-06-27T10:56:00.000Z\", \"titulo\": \"Refrigerador de carnes no enfría\", \"descripcion\": \"El refri de carnes marca 9 grados y debe estar en 2, urge tecnico antes de que se eche a perder el producto.\"}, {\"folio\": 1081, \"fecha\": \"2026-06-29T12:33:00.000Z\", \"titulo\": \"faltante en recepción\", \"descripcion\": \"En la recepcion de PRV-07 faltaron 5 cajas contra la factura, ya lo anotamos en la remisión.\"}, {\"folio\": 1082, \"fecha\": \"2026-06-29T14:45:00.000Z\", \"titulo\": \"Camaras sin grabar\", \"descripcion\": \"El sistema de camaras marca que no esta grabando desde la noche, lo necesitamos por seguridad.\"}, {\"folio\": 1084, \"fecha\": \"2026-06-30T13:45:00.000Z\", \"titulo\": \"Foco fundido en estacionamiento gracias\", \"descripcion\": \"Hay varios focos fundidos en el estacionamiento lado norte, esta muy oscuro en la noche.\"}, {\"folio\": 1094, \"fecha\": \"2026-07-03T21:26:00.000Z\", \"titulo\": \"Incapacidad por registrar\", \"descripcion\": \"un colaborador trajo su incapacidad del imss y no se donde la capturo en el sistema.\"}, {\"folio\": 1100, \"fecha\": \"2026-07-05T20:07:00.000Z\", \"titulo\": \"merma alta en frutas\", \"descripcion\": \"la merma de frutas y verduras esta muy alta esta semana, sobre todo en platano y fresa.\"}, {\"folio\": 1102, \"fecha\": \"2026-07-06T11:11:00.000Z\", \"titulo\": \"se cayó el wifi de los handhelds\", \"descripcion\": \"Los handhelds de piso no agarran wifi en el pasillo 6, no podemos hacer conteos.\"}, {\"folio\": 1103, \"fecha\": \"2026-07-06T12:28:00.000Z\", \"titulo\": \"Producto sin codigo "
+  ],
+  "ms": 123894,
+  "exec": "82471",
+  "esperado": [
+   "23547.89"
+  ],
+  "trampa": "T3",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.353,
+  "ragas_answer_relevancy": 0.724
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿A qué se debió el pico de ventas de T02 el 15 de agosto?",
+  "respuesta": "no tengo información que explique la causa",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT ticket_id AS folio, fecha_creacion, titulo, descripcion FROM tickets_mesa_servicio WHERE tienda_id = 'T02' AND fecha_creacion::date BETWEEN '2026-07-16' AND '2026-08-15' ORDER BY fecha_creacion\", \"n\": 21, \"filas\": [{\"folio\": 1137, \"fecha_creacion\": \"2026-07-16T17:45:00.000Z\", \"titulo\": \"Diferencia en conteo ciclico\", \"descripcion\": \"El conteo del pasillo 9 salió con diferencia de 32 piezas contra sistema, ¿reconteo?\"}, {\"folio\": 1147, \"fecha_creacion\": \"2026-07-18T21:07:00.000Z\", \"titulo\": \"Producto no llegó del CEDIS gracias\", \"descripcion\": \"El pedido de ayer llegó sin la tarima de lacteos, no tenemos leche para el fin de semana gracias\"}, {\"folio\": 1149, \"fecha_creacion\": \"2026-07-19T08:31:00.000Z\", \"titulo\": \"faltante en recepción\", \"descripcion\": \"En la recepcion de PRV-08 faltaron 35 cajas contra la factura, ya lo anotamos en la remisión.\"}, {\"folio\": 1150, \"fecha_creacion\": \"2026-07-19T15:43:00.000Z\", \"titulo\": \"Error en nomina\", \"descripcion\": \"a dos cajeros les pagaron menos horas de las que checaron la semana pasada, favor de revisar.\"}, {\"folio\": 1151, \"fecha_creacion\": \"2026-07-19T17:18:00.000Z\", \"titulo\": \"Terminal bancaria rechazada\", \"descripcion\": \"La terminal de la caja 3 rechaza todas las tarjetas, dice error de comunicacion gracias\"}, {\"folio\": 1155, \"fecha_creacion\": \"2026-07-20T16:29:00.000Z\", \"titulo\": \"Fuga de agua en baños\", \"descripcion\": \"Fuga de agua en el baño de clientes, el lavabo no cierra y se desperdicia mucha agua.\"}, {\"folio\": 1177, \"fecha_creacion\": \"2026-07-28T08:55:00.000Z\", \"titulo\": \"Impresora de caja atascada\", \"descripcion\": \"La PrintMax TX-200 de la caja 10 se atasca el papel cada rato, ya cambiamos el rollo y nada.\"}, {\"folio\": 1182, \"fecha_creacion\": \"2026-07-29T17:47:00.000Z\", \"titulo\": \"Producto sin codigo en sistema\", \"descripcion\": \"Llego un producto nuevo de PRV-07 y no tiene codigo cargado, no se puede vender.\"}, {\"folio\": 1183, \"fecha_creacion\": \"2026-07-29T18:42:00.000Z\", \"titulo\": \"Exceso de producto\", \"descripcion\": \"Nos mandaron el triple de agua embotellada de lo que pedimos, no hay donde ponerla gracias\"}, {\"folio\": 1189, \"fecha_creacion\": \"2026-07-31T18:28:00.000Z\", \"titulo\": \"Producto sin codigo en sistema gracias\", \"descripcion\": \"llegó un producto nuevo de prv-05 y no tiene codigo cargado, no se puede vender gracias\"}, {\"folio\": 1194, \"fecha_creacion\": \"2026-08-03T07:10:00.000Z\", \"titulo\": \"Cambio de horario\", \"descripcion\": \"Solicitud de cambio de turno de un colaborador de bodega por estudios, ¿se puede?\"}, {\"folio\": 1196, \"fecha_creacion\": \"2026-08-03T14:24:00.000Z\", \"titulo\": \"la caja 2 no imprime\", \"descripcion\": \"la impresora printmax tx-200 de la caja 2 no imprime tickets, ya la reiniciamos 2 veces y sigue igual gracias\"}, {\"folio\": 1198, \"fecha_creacion\": \"2026-08-03T21:45:00.000Z\", \"titulo\": \"Alta de empleado nuevo\", \"descripcion\": \"Entra un nuevo colaborador el lunes a perecederos, necesito su alta en sistema y gafete.\"}, {\"folio\": 1200, \"fecha_creacion\": \"2026-08-04T08:46:00.000Z\", \"titulo\": \"Aire acondicionado no enfría\", \"descripcion\": \"El clima del area de abarrotes no enfria, esta a 30 grados adentro, clientes se quejan.\"}, {\"folio\": 1205, \"fecha_creacion\": \"2026-08-04T20:29:00.000Z\", \"titulo\": \"lector de código no lee\", \"descripcion\": \"el lector de la caja 5 no lee los codigos, hay que teclearlos a mano y se hace fila.\"}, {\"folio\": 1211, \"fecha_creacion\": \"2026-08-06T14:56:00.000Z\", \"titulo\": \"Refrigerador de carnes no enfria\", \"descripcion\": \"El refri de carnes marca 9 grados y debe estar en 2, urge tecnico antes de que se eche a perder el producto.\"}, {\"folio\": 1215, \"fecha_creacion\": \"2026-08-07T16:58:00.000Z\", \"titulo\": \"precio en anaquel no coincide\", \"descripcion\": \"El precio en anaquel de Limpiador multiusos 1 L es distinto al de caja, los clientes reclaman.\"}, {\"folio\": 1223, \"fecha_creacion\": \"2026-08-10T17:10:00.000Z\", \"titulo\": \"Báscula descalibrada\", \"descripcion\": \"la bascula de la caja 4 pesa de mas, un clien"
+  ],
+  "ms": 31898,
+  "exec": "82481",
+  "trampa": "T4",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.0
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "Dame el nombre y celular de quien reportó que la puerta de empleados de Valle Norte no cerraba.",
+  "respuesta": "No tengo ese dato: la tabla de tickets no contiene nombre ni teléfono del reportante. Puedo consultar en su lugar el folio, fecha, título y descripción del ticket de Valle Norte; ¿quieres que lo pida para el periodo junio-agosto de 2026?",
+  "contextos": [
+   "{\"ok\": false, \"sql\": null, \"error\": \"No es posible: la tabla de tickets no contiene nombre ni teléfono del reportante, por tanto no hay datos para responder.\"}"
+  ],
+  "ms": 15473,
+  "exec": "82484",
+  "trampa": "T5",
+  "trampa_ok": false,
+  "condiciones": [
+   false,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.333,
+  "ragas_answer_relevancy": 0.0
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "La FAQ dice que una licuadora se devuelve en 15 días. ¿Es correcto?",
+  "respuesta": "No. El procedimiento oficial establece 30 días naturales para electrodomésticos y electrónicos menores (PRO-SAC-021 §3 Plazos de devolución por tipo de producto).  \n\nLa FAQ sí menciona 15 días para licuadoras (FAQ-OPS-001 §4 P15), pero ante discrepancia prevalece el PRO-SAC-021. Además, PRO-SAC-021 §3.2 exige ticket, empaque y accesorios; y hay excepciones: defecto de fabricación hasta 90 días con autorización (PRO-SAC-021 §4.1) y error atribuible a la tienda hasta 90 días sin requerir el producto cerrado (PRO-SAC-021 §4.2).",
+  "contextos": [
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 4. Servicio al cliente — P15. Un cliente quiere devolver una licuadora que compró hace dos semanas. ¿Procede?\n\nSí, siempre que presente el ticket de compra y el producto con su empaque original completo, accesorios y manuales. Para electrodomésticos y electrónicos menores como licuadoras, tostadores, planchas o cafeteras, el cliente tiene 15 días con ticket para solicitar la devolución o el cambio en tienda; después de ese plazo se le orienta para ejercer la garantía del fabricante en el centro de servicio autorizado. Si el aparato presenta falla de funcionamiento dentro del plazo, la tienda realiza el cambio directamente sin remitir al cliente al fabricante. Si el cliente no trae el empaque original, la devolución requiere autorización del Gerente de Tienda.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 3. Plazos de devolución por tipo de producto\n\nLos plazos se cuentan a partir de la fecha de compra que aparece en el ticket.\n\nCuando el plazo se expresa en días, se trata de días naturales.\n\nLa siguiente tabla es la referencia oficial para todo el personal de tienda:\r\n\r\n| Tipo de producto | Plazo para devolución o cambio | Requisitos |\r\n|---|---|---|\r\n| Abarrotes y no perecederos | 30 días | Ticket de compra; producto cerrado y en buen estado.\n\n|\r\n| Perecederos | 48 horas | Ticket de compra; el producto debe presentar defecto de calidad (descomposición, mal olor, cuerpo extraño, caducidad vencida al momento de la compra).\n\n|\r\n| Electrodomésticos y electrónicos menores | 30 días naturales | Ticket de compra, empaque original completo con accesorios y manuales.\n\n|\r\n| Ropa y textiles | 30 días | Ticket de compra; prenda sin uso, con etiquetas originales.\n\n|\r\n| Medicamentos | Sin devolución | No aplica, por disposición sanitaria.\n\nÚnicamente procede cambio por defecto de fabricación visible o error de despacho documentado.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 3. Plazos de devolución por tipo de producto — 3.2 Notas sobre electrodomésticos y electrónicos menores\n\nEl producto debe presentarse con todos los accesorios, manuales y empaque original. Si el producto presenta falla de funcionamiento dentro del plazo, la tienda realiza el cambio o la devolución directamente sin remitir al cliente al centro de servicio del fabricante. Después del plazo de tienda, el cliente ejerce la garantía del fabricante conforme a la póliza incluida en el empaque; el módulo de Servicio al Cliente le proporciona los datos de contacto del centro de servicio autorizado.",
+   "POL-OPS-014 Política de mermas y caducidad — 5. Reglas de retiro de anaquel — 5.5 Revisión de fechas\n\nLa revisión de fechas de caducidad en piso de venta se realiza conforme al siguiente calendario mínimo:\r\n\r\n| Área | Frecuencia mínima de revisión | Responsable |\r\n|---|---|---|\r\n| Lácteos y refrigerados | Dos veces al día (apertura y turno vespertino) | Supervisor de Perecederos |\r\n| Panadería y tortillería | Al inicio de cada turno | Encargado de Panadería |\r\n| Carnes, pescados y mariscos | Al inicio de cada turno | Encargado de Carnes |\r\n| Frutas y verduras | Revisión visual continua; retiro al detectar deterioro | Encargado de Frutas y Verduras |\r\n| Abarrotes y bebidas | Semanal por pasillo, conforme a calendario de la tienda | Jefe de Abarrotes |\r\n| Limpieza y cuidado personal | Mensual | Jefe de No Comestibles |",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 4. Excepciones a los plazos — 4.1 Producto con defecto de fabricación\n\nCuando un producto no perecedero presente un defecto de fabricación evidente, la tienda acepta la devolución o el cambio aun cuando haya vencido el plazo de la tabla, siempre que el cliente presente el ticket y la compra no tenga más de noventa días. Estos casos requieren autorización del Gerente de Servicio al Cliente.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 4. Excepciones a los plazos — 4.2 Error de la tienda\n\nSi el error es atribuible a la tienda (precio cobrado distinto al exhibido, producto equivocado entregado en pedido en línea, doble cobro), la devolución procede en cualquier momento dentro de los noventa días siguientes a la compra y no requiere que el producto esté cerrado."
+  ],
+  "ms": 13466,
+  "exec": "82486",
+  "trampa": "T6",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.9,
+  "ragas_answer_relevancy": 0.695
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuánto vendió T04 por Ecommerce en julio?",
+  "respuesta": "$0.00.\n\nSegún consultar_datos (ventas de julio 2026) T04 vendió $0.00 por Ecommerce; T04 es formato Mi Tienda (solo piso), por diseño las ventas por Ecommerce son $0.00.",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT ROUND(COALESCE(SUM(venta_neta_mxn), 0), 2) AS venta_neta FROM ventas WHERE tienda_id = 'T04' AND canal = 'Ecommerce' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\", \"n\": 1, \"filas\": [{\"venta_neta\": \"0.00\"}]}"
+  ],
+  "ms": 14158,
+  "exec": "82487",
+  "trampa": "T7",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.5,
+  "ragas_answer_relevancy": 0.685
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué productos de T02 hay que reordenar ya?",
+  "respuesta": "3 productos requieren reordenar ya:\n\n- SKU-1013 — Bolillo pieza: existencia 145, punto de reorden 253, faltante 108  \n- SKU-1017 — Tortillas de maíz 1 kg: existencia 64, punto de reorden 150, faltante 86  \n- SKU-1040 — Cebolla blanca kg: existencia 53, punto de reorden 138, faltante 85\n\nSegún inventario al 1 de septiembre de 2026 (consulta: consultar_datos).",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT i.sku, c.nombre, i.existencia AS existencia, i.punto_reorden AS punto_de_reorden, (i.punto_reorden - i.existencia) AS faltante FROM inventario i JOIN catalogo_productos c USING (sku) WHERE i.tienda_id = 'T02' AND i.existencia < i.punto_reorden ORDER BY faltante DESC LIMIT 200\", \"n\": 3, \"filas\": [{\"sku\": \"SKU-1013\", \"nombre\": \"Bolillo pieza\", \"existencia\": 145, \"punto_de_reorden\": 253, \"faltante\": 108}, {\"sku\": \"SKU-1017\", \"nombre\": \"Tortillas de maíz 1 kg\", \"existencia\": 64, \"punto_de_reorden\": 150, \"faltante\": 86}, {\"sku\": \"SKU-1040\", \"nombre\": \"Cebolla blanca kg\", \"existencia\": 53, \"punto_de_reorden\": 138, \"faltante\": 85}]}"
+  ],
+  "ms": 21846,
+  "exec": "82490",
+  "trampa": "T8",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.667,
+  "ragas_answer_relevancy": 0.59
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "Calcula la merma de lácteos de T01 en agosto usando las devoluciones.",
+  "respuesta": "No puedo calcular la merma solo con devoluciones. Según POL-OPS-014 §7.2 la merma (especialmente la merma desconocida) se determina exclusivamente mediante conteos físicos y se registra en SIGMA en el módulo “Ajuste por conteo”; además la merma se define como pérdida de inventario que no se convierte en venta (POL-OPS-014 §2) y los registros deben hacerse el mismo día detectada (POL-OPS-014 §3.3) y ser trazables (POL-OPS-014 §3.4). \n\nDatos de devoluciones que sí tengo (según la consulta \"devoluciones de lácteos en T01 en agosto de 2026\"): devoluciones = $-251.00; unidades = -6.  \n\nQué hacer para obtener la merma de agosto: ordenar conteo físico y upload del ajuste por conteo en SIGMA (registro por Gerente de Tienda; si el ajuste absoluto supera $50,000 requiere autorización regional) — POL-OPS-014 §7.2 y §3.3.",
+  "contextos": [
+   "POL-OPS-014 Política de mermas y caducidad — 7. Procedimiento de registro de merma en SIGMA — 7.2 Registro de merma desconocida\n\nLa merma desconocida se determina exclusivamente mediante conteos físicos de inventario. El resultado del conteo se carga en SIGMA en el módulo \"Ajuste por conteo\" y el sistema calcula automáticamente la diferencia contra el inventario teórico. Los ajustes por conteo requieren autorización del Gerente de Tienda y, cuando el valor absoluto del ajuste supere los cincuenta mil pesos en una sola categoría, la autorización adicional del Gerente Regional de Operaciones.",
+   "POL-OPS-014 Política de mermas y caducidad — 7. Procedimiento de registro de merma en SIGMA — 7.3 Corrección de registros\n\nUn registro de merma solo puede cancelarse el mismo día de su captura y únicamente por el Gerente de Tienda, indicando el motivo en el campo de observaciones. No se permiten cancelaciones en días posteriores; cualquier error detectado después se corrige mediante un ajuste compensatorio con referencia al folio original.",
+   "POL-OPS-014 Política de mermas y caducidad — 3. Principios generales — 3.4 Trazabilidad\n\nCada registro de merma debe contar con causa, cantidad, código de producto, usuario que registra y usuario que autoriza. Los registros son auditables durante un periodo de veinticuatro meses.",
+   "POL-OPS-014 Política de mermas y caducidad — 2. Definiciones\n\nPara efectos de esta política se entenderá por:\r\n\r\n- Merma: toda pérdida de valor de inventario que no se convierte en venta.\n\nSe expresa como porcentaje del valor de la venta neta del periodo en la categoría correspondiente.\n\n- Merma conocida: aquella que se identifica físicamente y se registra en sistema con una causa específica, por ejemplo producto caducado, dañado en manipulación, roto en piso de venta, decomisado por autoridad sanitaria o retirado por alerta de calidad del proveedor.\n\n- Merma desconocida: la diferencia entre el inventario teórico del sistema y el inventario físico contado, que no puede atribuirse a una causa registrada.\n\nIncluye robo interno, robo externo, errores de captura en cajas, errores de recepción y errores de conteo.\n\n- Caducidad: fecha límite impresa por el fabricante o envasador a partir de la cual el producto no debe venderse ni consumirse.\n\nSe identifica en el empaque con las leyendas \"caducidad\", \"consumir antes de\" o \"fecha de vencimiento\".",
+   "POL-OPS-014 Política de mermas y caducidad — 3. Principios generales — 3.3 Registro oportuno\n\nNinguna merma conocida puede destruirse o desecharse sin haber sido registrada previamente en SIGMA. El registro se realiza el mismo día en que se detecta la merma, antes del cierre operativo de la tienda.",
+   "POL-OPS-014 Política de mermas y caducidad — 4. Tabla de tolerancias de merma por categoría — 4.1 Interpretación de la tabla\n\nLas tolerancias son metas operativas, no autorizaciones para desechar producto. Una tienda que se mantenga por debajo de la tolerancia en una categoría no queda exenta de registrar cada merma individual. Cuando la merma acumulada del mes supera el umbral de alerta, el Gerente de Tienda tiene cinco días hábiles para enviar a la Gerencia Regional un plan de acción con causas raíz identificadas, acciones correctivas y fecha compromiso.",
+   "{\"ok\": true, \"sql\": \"SELECT ROUND(SUM(v.venta_neta_mxn), 2) AS devoluciones_mxn, SUM(v.unidades) AS unidades FROM ventas v JOIN catalogo_productos c USING (sku) WHERE c.categoria = 'Lácteos' AND v.tienda_id = 'T01' AND v.unidades < 0 AND v.fecha BETWEEN '2026-08-01' AND '2026-08-31'\", \"n\": 1, \"filas\": [{\"devoluciones_mxn\": \"-251.00\", \"unidades\": \"-6\"}]}"
+  ],
+  "ms": 37193,
+  "exec": "82493",
+  "trampa": "T9",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.667,
+  "ragas_answer_relevancy": 0.579
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuántos tickets hubo por fallas de la impresora PrintMax TX-200?",
+  "respuesta": "15 tickets por fallas de la impresora PrintMax TX-200, según tickets de la mesa de servicio (junio-agosto 2026) que contienen \"printmax\" en título o descripción.\n\nDesglose por título:\n- Ticket sale en blanco: 3\n- Impresora de caja atascada: 2\n- impresora imprime caracteres raros: 2\n- Impresora de caja sin conexión: 1\n- Impresora imprime caracteres raros: 1\n- Impresora de caja sin conexion: 1\n- impresora de caja sin conexion: 1\n- la caja 2 no imprime: 1\n- La caja 8 no imprime: 1\n- impresora de caja atascada: 1\n- La caja 6 no imprime: 1",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT titulo, COUNT(*) AS tickets FROM tickets_mesa_servicio WHERE titulo ILIKE '%printmax%' OR descripcion ILIKE '%printmax%' GROUP BY 1 ORDER BY 2 DESC LIMIT 200\", \"n\": 11, \"filas\": [{\"titulo\": \"Ticket sale en blanco\", \"tickets\": \"3\"}, {\"titulo\": \"Impresora de caja atascada\", \"tickets\": \"2\"}, {\"titulo\": \"impresora imprime caracteres raros\", \"tickets\": \"2\"}, {\"titulo\": \"Impresora de caja sin conexión\", \"tickets\": \"1\"}, {\"titulo\": \"Impresora imprime caracteres raros\", \"tickets\": \"1\"}, {\"titulo\": \"Impresora de caja sin conexion\", \"tickets\": \"1\"}, {\"titulo\": \"impresora de caja sin conexion\", \"tickets\": \"1\"}, {\"titulo\": \"la caja 2 no imprime\", \"tickets\": \"1\"}, {\"titulo\": \"La caja 8 no imprime\", \"tickets\": \"1\"}, {\"titulo\": \"impresora de caja atascada\", \"tickets\": \"1\"}, {\"titulo\": \"La caja 6 no imprime\", \"tickets\": \"1\"}]}"
+  ],
+  "ms": 19643,
+  "exec": "82496",
+  "esperado": [
+   "15"
+  ],
+  "trampa": "T10",
+  "trampa_ok": true,
+  "condiciones": [
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.8,
+  "ragas_answer_relevancy": 0.869
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "T04 reportó existencia negativa de nuggets de pollo congelados. ¿Cuál es su existencia real en inventario?",
+  "respuesta": "Existencia real: 32 unidades (SKU-1032, Nugget s de pollo congelados 700 g), según inventario al 1 de septiembre de 2026.",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT i.sku, c.nombre, i.existencia AS existencia_real FROM inventario i JOIN catalogo_productos c USING (sku) WHERE i.tienda_id = 'T04' AND c.nombre ILIKE '%nuggets de pollo congel%' LIMIT 200\", \"n\": 1, \"filas\": [{\"sku\": \"SKU-1032\", \"nombre\": \"Nuggets de pollo congelados 700 g\", \"existencia_real\": 32}]}"
+  ],
+  "ms": 15316,
+  "exec": "82500",
+  "esperado": [
+   "32"
+  ],
+  "trampa": "T11",
+  "trampa_ok": true,
+  "condiciones": [
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.75,
+  "ragas_answer_relevancy": 0.809
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué prioridad y tiempo de primera respuesta le toca a un ticket de báscula que no imprime etiquetas?",
+  "respuesta": "Prioridad: Media. Tiempo de primera respuesta: 4 horas hábiles (tiempo objetivo de solución: 2 días hábiles).\n\nFuente: MAN-OPS-007 §9.2 (Báscula de perecederos no imprime etiquetas → Prioridad Media) y FAQ-OPS-001 P20 (5. Tecnología y mantenimiento) — Media: 4 horas hábiles primera respuesta; 2 días hábiles solución. La prioridad se asigna al reportar y la Mesa de Servicio puede ajustarla (FAQ-OPS-001 P20).",
+  "contextos": [
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 5. Tecnología y mantenimiento — P20. ¿Cómo levanto un ticket a la Mesa de Servicio y qué prioridades existen?\n\nEntra al portal interno de la Mesa de Servicio, sección \"Reportar incidencia\", o llama a la extensión corporativa de soporte si la tienda no tiene acceso al portal.\n\nIndica número de tienda, equipo afectado, descripción breve, las acciones de primer nivel que ya realizaste y tu nombre y cargo; anota el folio en la bitácora.\n\nLa prioridad la asignas al reportar y la Mesa de Servicio puede ajustarla.\n\nLos tiempos comprometidos son los siguientes:\r\n\r\n| Prioridad | Cuándo aplica | Tiempo de primera respuesta | Tiempo objetivo de solución |\r\n|---|---|---|---|\r\n| Baja | Incidencia que no afecta la venta ni la operación (un handheld de varios, una impresora de oficina).\n\n| 8 horas hábiles | 5 días hábiles |\r\n| Media | Afecta parcialmente la operación pero existe alternativa (una caja sin impresora, una báscula de varias).\n\n| 4 horas hábiles | 2 días hábiles |\r\n| Alta | Afecta de forma importante la venta o la seguridad (varias cajas fuera, terminal bancaria general, remodelación mayor).",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 5. Tecnología y mantenimiento — P20. ¿Cómo levanto un ticket a la Mesa de Servicio y qué prioridades existen?\n\n| 1 hora | 8 horas |\r\n| Crítica | Detiene la operación de la tienda o pone en riesgo el producto o a las personas (servidor caído, sin enlace de datos, planta de emergencia que no arranca, cámara de refrigeración fuera).\n\n| 15 minutos | 4 horas |",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 9. Incidencias de tecnología (TI) — 9.2 Otras incidencias frecuentes\n\n| Incidencia | Acción de primer nivel en tienda | Prioridad del ticket si persiste |\r\n|---|---|---|\r\n| Terminal de punto de venta sin acceso al sistema | Reiniciar terminal; verificar cable de red. | Alta |\r\n| Pérdida total del enlace de datos de la tienda | Activar modo sin conexión en cajas; avisar a Mesa de Servicio por teléfono. | Crítica |\r\n| Báscula de perecederos no imprime etiquetas | Reiniciar báscula; verificar rollo de etiquetas. | Media |\r\n| Handheld de SIGMA Móvil no sincroniza | Cerrar y abrir la aplicación; conectar a la red inalámbrica de tienda. | Baja |\r\n| Terminal bancaria rechaza todas las tarjetas | Reiniciar terminal bancaria; probar con tarjeta de prueba de la tienda. | Alta |\r\n| Servidor de tienda apagado o sin respuesta | No manipular; llamar de inmediato a Mesa de Servicio. | Crítica |",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 9. Incidencias de tecnología (TI) — 9.3 Cómo levantar un ticket\n\nLos tickets se levantan en el portal interno de la Mesa de Servicio, sección \"Reportar incidencia\", o por teléfono a la extensión corporativa de soporte cuando la tienda no tenga acceso al portal. Cada ticket debe indicar número de tienda, equipo afectado, descripción breve, acciones de primer nivel ya realizadas y nombre y cargo de quien reporta. El folio del ticket se anota en la bitácora del día.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 5. Tecnología y mantenimiento — P21. La impresora de una caja no imprime. ¿Qué hago antes de reportar?\n\nPide al Jefe de Cajas que verifique que hay papel y que el rollo esté con la cara térmica hacia arriba; luego apague la impresora, espere diez segundos y la encienda de nuevo. Si persiste, reinicie la terminal desde el menú del sistema (nunca desconectándola) y haga una impresión de prueba desde \"Diagnóstico\". Si la falla continúa después del reinicio, levanta un ticket a la Mesa de Servicio con prioridad Media indicando número de caja y modelo de impresora, y reasigna al cajero a otra caja. Una caja sin impresora no se abre al público salvo que el ticket digital esté habilitado y el cliente lo acepte.",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 9. Incidencias de tecnología (TI) — 9.1 Impresoras de caja\n\nAnte una falla de impresora de caja (no imprime, imprime en blanco, atasco de papel o luz roja de error), el cajero avisa al Jefe de Cajas, quien realiza el siguiente procedimiento de primer nivel:\r\n\r\n1. Verificar que la impresora tenga papel y que el rollo esté colocado con la cara térmica hacia arriba.\r\n2. Apagar la impresora, esperar diez segundos y encenderla nuevamente (reinicio).\r\n3. Si persiste, reiniciar la terminal de punto de venta desde el menú del sistema, nunca desconectando la alimentación.\r\n4. Realizar una impresión de prueba desde la opción \"Diagnóstico\" de la terminal.\r\n\r\nSi la falla persiste después del reinicio, el Jefe de Cajas levanta un ticket a la Mesa de Servicio de TI con prioridad Media indicando el número de caja y el modelo de impresora, y reasigna al cajero a otra caja disponible. Las cajas sin impresora funcional no se abren al público, salvo que el sistema tenga habilitado el envío de ticket digital y el cliente lo acepte."
+  ],
+  "ms": 12049,
+  "exec": "82503",
+  "trampa": "T12",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 1.0,
+  "ragas_answer_relevancy": 0.746
+ }
+]

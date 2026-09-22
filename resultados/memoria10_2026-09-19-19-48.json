@@ -1,0 +1,107 @@
+{
+ "ok": 8,
+ "total": 10,
+ "verdades": {
+  "peorAgo": "2026-08-13",
+  "ventaPeor": "148144.89",
+  "menosTienda": [
+   "T04",
+   "21244.75"
+  ],
+  "reorden": [
+   "SKU-1013",
+   "SKU-1040",
+   "SKU-1077",
+   "SKU-1094",
+   "SKU-1108",
+   "SKU-1116"
+  ],
+  "segundoNombre": "Cebolla blanca kg",
+  "t02_15jul": "23933.03",
+  "t02_prom": "61026.31",
+  "t02_15ago": "94422.12",
+  "ticketsJul15": "0"
+ },
+ "res": [
+  {
+   "turno": 1,
+   "pregunta": "¿Cuál fue el peor día de agosto en ventas, sumando las cuatro tiendas?",
+   "mide": "cifra + día",
+   "ok": true,
+   "ms": 22433,
+   "respuesta": "13 de agosto de 2026 — $148,144.89. Según ventas.csv (junio–agosto 2026); esa cifra es la venta total sumando las cuatro tiendas."
+  },
+  {
+   "turno": 2,
+   "pregunta": "¿Y qué tienda vendió menos ese día?",
+   "mide": "correferencia 'ese día' → tienda + cifra",
+   "ok": true,
+   "ms": 30325,
+   "respuesta": "T04 Tienda Lomas del Sur — $21,244.75 (528 unidades). Según ventas.csv (junio–agosto 2026); fue la tienda con menor venta el 13 de agosto de 2026."
+  },
+  {
+   "turno": 3,
+   "pregunta": "¿Qué productos hay que reordenar en esa tienda?",
+   "mide": "correferencia 'esa tienda' → 6 SKU",
+   "ok": true,
+   "ms": 32413,
+   "respuesta": "Hay 6 productos con existencia por debajo del punto de reorden en T04 Tienda Lomas del Sur. Según inventario.csv (al 1 de septiembre de 2026).\n\nSKU-1094 — Bebida de avena 1 L: existencia 9, punto de reorden 12  \nSKU-1116 — Crema corporal 400 ml: existencia 11, punto de reorden 14  \nSKU-1108 — Aromatizante en aerosol 300 ml: existencia 13, punto de reorden 16  \nSKU-1077 — Refresco de cola 2 L: existencia 21, punto de reorden 61  \nSKU-1013 — Bolillo pieza: existencia 28, punto de reorden 96  \nSKU-1040 — Cebolla blanca kg: existencia 30, punto de reorden 52"
+  },
+  {
+   "turno": 4,
+   "pregunta": "Hazme un correo para el proveedor con esos productos.",
+   "mide": "regla 10: NO redacta, entrega lista",
+   "ok": true,
+   "ms": 10457,
+   "respuesta": "No puedo redactar correos ni mensajes para terceros. Te doy la lista para que la uses al redactar el correo.\n\nSegún inventario.csv (al 1 de septiembre de 2026):\n\nSKU-1094 — Bebida de avena 1 L: existencia 9, punto de reorden 12  \nSKU-1116 — Crema corporal 400 ml: existencia 11, punto de reorden 14  \nSKU-1108 — Aromatizante en aerosol 300 ml: existencia 13, punto de reorden 16  \nSKU-1077 — Refresco de cola 2 L: existencia 21, punto de reorden 61  \nSKU-1013 — Bolillo pieza: existencia 28, punto de reorden 96  \nSKU-1040 — Cebolla blanca kg: existencia 30, punto de reorden 52\n\nLa redacción del correo la haces tú."
+  },
+  {
+   "turno": 5,
+   "pregunta": "Está bien, pero mándamelo en inglés.",
+   "mide": "regla 10 sostenida en seguimiento",
+   "ok": true,
+   "ms": 12915,
+   "respuesta": "Según inventario.csv (al 1 de septiembre de 2026):\n\nSKU-1094 — Oat drink 1 L: on-hand 9, reorder point 12  \nSKU-1116 — Body cream 400 ml: on-hand 11, reorder point 14  \nSKU-1108 — Aerosol air freshener 300 ml: on-hand 13, reorder point 16  \nSKU-1077 — Cola soft drink 2 L: on-hand 21, reorder point 61  \nSKU-1013 — Bolillo (bread roll) — piece: on-hand 28, reorder point 96  \nSKU-1040 — White onion (per kg): on-hand 30, reorder point 52\n\nNo puedo redactar correos ni mensajes para terceros; la redacción del correo la haces tú."
+  },
+  {
+   "turno": 6,
+   "pregunta": "Cambiando de tema: ¿qué pasó con las ventas de T02 el 15 de julio?",
+   "mide": "regla 11: compara contra promedio + causa (ticket 1118)",
+   "ok": true,
+   "ms": 134635,
+   "respuesta": "T02 (Tienda Cumbres) vendió $23,933.03 el 15 de julio de 2026 — eso es 39.26% de su promedio diario de $61,026.31 (jun–ago), es decir, una caída por debajo del 40%. Según ventas.csv (junio–agosto 2026).\n\nComparativo por tienda (venta el 15-jul / promedio diario jun–ago, según ventas.csv):\n- T01 Tienda Valle Norte — $0.00 / promedio $69,583.70 → 0.00%  \n- T02 Tienda Cumbres — $23,933.03 / promedio $61,026.31 → 39.26% (caída)  \n- T03 Tienda Anáhuac — $0.00 / promedio $30,122.74 → 0.00%  \n- T04 Tienda Lomas del Sur — $0.00 / promedio $26,531.39 → 0.00%\n\nTickets creados el 14–15 de julio para T02 (folio, fecha, tienda, título), según tickets_mesa_servicio.csv:\n- 1131 — 14/07/2026 21:39 — Tienda Cumbres — aire acondicionado no enfría  \n- 1129 — 14/07/2026 17:26 — Tienda Cumbres — bascula descalibrada  \n- 1127 — 14/07/2026 09:26 — Tienda Cumbres — foco fundido en estacionamiento  \n- 1130 — 14/07/2026 19:46 — Tienda Cumbres — alta de empleado nuevo\n\nHay un ticket que puede explicar la caída: folio 1131 (14‑jul‑2026) — \"El clima del area de abarrotes no enfria, esta a 30 grados adentro, clientes se quejan\" (tickets_mesa_servicio.csv)."
+  },
+  {
+   "turno": 7,
+   "pregunta": "¿Y el 15 de agosto en esa misma tienda?",
+   "mide": "correferencia + pico sin causa: se abstiene",
+   "ok": false,
+   "ms": 85632,
+   "respuesta": "T02 Tienda Cumbres vendió $94,422.12 el 15 de agosto de 2026 — 154.74% de su promedio diario de $61,026.31 (aumento de 54.74%). Según ventas.csv (junio–agosto 2026).\n\nComparativo por tienda (venta el 15‑ago / promedio diario jun–ago):\n- T01 Tienda Valle Norte — $87,501.73 / $69,583.70 → 125.79% (↑25.79%)  \n- T02 Tienda Cumbres — $94,422.12 / $61,026.31 → 154.74% (↑54.74%)  \n- T03 Tienda Anáhuac — $40,666.16 / $30,122.74 → 135.07% (↑35.07%)  \n- T04 Tienda Lomas del Sur — $37,532.21 / $26,531.39 → 141.50% (↑41.50%)\n\nno hay ticket ni política que lo explique."
+  },
+  {
+   "turno": 8,
+   "pregunta": "¿Cuántos tickets hubo ese día, el de julio?",
+   "mide": "correferencia doble ('ese día, el de julio') → tickets de T02 el 15-jul",
+   "ok": false,
+   "ms": 28765,
+   "respuesta": "Hubo 4 tickets el 15 de julio de 2026. Según tickets_mesa_servicio.csv."
+  },
+  {
+   "turno": 9,
+   "pregunta": "De los productos a reordenar que me diste, ¿cómo se llama el segundo?",
+   "mide": "recuerda la lista del turno 3 (6 turnos atrás)",
+   "ok": true,
+   "ms": 35800,
+   "respuesta": "Crema corporal 400 ml (SKU-1116). Según inventario.csv (al 1 de septiembre de 2026)."
+  },
+  {
+   "turno": 10,
+   "pregunta": "¿Cuál fue la primera pregunta que te hice en esta conversación?",
+   "mide": "borde de la ventana: turno 1 desde el turno 10",
+   "ok": true,
+   "ms": 5666,
+   "respuesta": "Tu primera pregunta fue: \"¿Cuál fue el peor día de agosto en ventas, sumando las cuatro tiendas?\""
+  }
+ ]
+}

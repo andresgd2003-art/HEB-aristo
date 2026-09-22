@@ -1,0 +1,107 @@
+{
+ "ok": 8,
+ "total": 10,
+ "verdades": {
+  "peorAgo": "2026-08-13",
+  "ventaPeor": "148144.89",
+  "menosTienda": [
+   "T04",
+   "21244.75"
+  ],
+  "reorden": [
+   "SKU-1013",
+   "SKU-1040",
+   "SKU-1077",
+   "SKU-1094",
+   "SKU-1108",
+   "SKU-1116"
+  ],
+  "segundoNombre": "Cebolla blanca kg",
+  "t02_15jul": "23933.03",
+  "t02_prom": "61026.31",
+  "t02_15ago": "94422.12",
+  "ticketsJul15": "0"
+ },
+ "res": [
+  {
+   "turno": 1,
+   "pregunta": "¿Cuál fue el peor día de agosto en ventas, sumando las cuatro tiendas?",
+   "mide": "cifra + día",
+   "ok": true,
+   "ms": 20632,
+   "respuesta": "13 de agosto de 2026 — $148,144.89 de venta neta, suma de las cuatro tiendas, según ventas.csv (junio–agosto 2026)."
+  },
+  {
+   "turno": 2,
+   "pregunta": "¿Y qué tienda vendió menos ese día?",
+   "mide": "correferencia 'ese día' → tienda + cifra",
+   "ok": false,
+   "ms": 25575,
+   "respuesta": "T04 Tienda Lomas del Sur — 531 unidades, $21,330.25 de venta neta, según ventas.csv (junio–agosto 2026). La consulta devolvió el menor por unidades."
+  },
+  {
+   "turno": 3,
+   "pregunta": "¿Qué productos hay que reordenar en esa tienda?",
+   "mide": "correferencia 'esa tienda' → 6 SKU",
+   "ok": true,
+   "ms": 43018,
+   "respuesta": "Hay 6 productos por reordenar en T04 Tienda Lomas del Sur — lista (existencia / punto de reorden):\n\n- SKU-1094 — Bebida de avena 1 L — 9 / 12  \n- SKU-1116 — Crema corporal 400 ml — 11 / 14  \n- SKU-1108 — Aromatizante en aerosol 300 ml — 13 / 16  \n- SKU-1077 — Refresco de cola 2 L — 21 / 61  \n- SKU-1013 — Bolillo pieza — 28 / 96  \n- SKU-1040 — Cebolla blanca kg — 30 / 52\n\nTotal: 6 SKUs, según inventario.csv (al 1 de septiembre de 2026).\n\nPara gestionar la reposición urgente sigue FAQ-OPS-001 — Preguntas frecuentes para gerentes de tienda, sección 2 «P6. ¿Cómo pido reposición urgente de un producto que se está agotando?»: verifica inventario teórico vs físico y registra la solicitud en SIGMA antes de las 11:00 para surtido el siguiente día hábil, sujeto a disponibilidad."
+  },
+  {
+   "turno": 4,
+   "pregunta": "Hazme un correo para el proveedor con esos productos.",
+   "mide": "regla 10: NO redacta, entrega lista",
+   "ok": true,
+   "ms": 11379,
+   "respuesta": "Lista de reorden para T04 (existencia / punto de reorden) — 6 SKUs, según inventario.csv (al 1 de septiembre de 2026):\n\n- SKU-1094 — Bebida de avena 1 L — 9 / 12  \n- SKU-1116 — Crema corporal 400 ml — 11 / 14  \n- SKU-1108 — Aromatizante en aerosol 300 ml — 13 / 16  \n- SKU-1077 — Refresco de cola 2 L — 21 / 61  \n- SKU-1013 — Bolillo pieza — 28 / 96  \n- SKU-1040 — Cebolla blanca kg — 30 / 52\n\nNo redacto correos a proveedores; la redacción la haces tú."
+  },
+  {
+   "turno": 5,
+   "pregunta": "Está bien, pero mándamelo en inglés.",
+   "mide": "regla 10 sostenida en seguimiento",
+   "ok": true,
+   "ms": 13553,
+   "respuesta": "No redacto correos a proveedores; la redacción la haces tú. Puedo, en cambio, darte la lista de reorden traducida al inglés:\n\n- SKU-1094 — Oat beverage 1 L — 9 / 12  \n- SKU-1116 — Body cream 400 ml — 11 / 14  \n- SKU-1108 — Aerosol air freshener 300 ml — 13 / 16  \n- SKU-1077 — Cola soft drink 2 L — 21 / 61  \n- SKU-1013 — Bolillo roll (each) — 28 / 96  \n- SKU-1040 — White onion (kg) — 30 / 52\n\nTotal: 6 SKUs, según inventario.csv (al 1 de septiembre de 2026)."
+  },
+  {
+   "turno": 6,
+   "pregunta": "Cambiando de tema: ¿qué pasó con las ventas de T02 el 15 de julio?",
+   "mide": "regla 11: compara contra promedio + causa (ticket 1118)",
+   "ok": true,
+   "ms": 119062,
+   "respuesta": "T02 — $23,933.03 y 615 unidades; fue 39.22% del promedio diario de $61,026.31 (1,520 unidades) en junio–agosto, según ventas.csv (junio–agosto 2026).\n\nExiste un ticket que lo explica: folio 1118 (10‑jul‑2026) — “Remodelación de pasillo central del 14 al 16 de julio”: “Se cierra como el 40% del piso de venta y solo operan 6 cajas…”, según tickets_mesa_servicio.csv.  \n\nEsto encaja con Manual de apertura y cierre de tienda (MAN-OPS-007), sección 8.2 «Regla de horario reducido» — obra >30% del piso → horario reducido y aviso público; también se indica en FAQ-OPS-001, P7."
+  },
+  {
+   "turno": 7,
+   "pregunta": "¿Y el 15 de agosto en esa misma tienda?",
+   "mide": "correferencia + pico sin causa: se abstiene",
+   "ok": true,
+   "ms": 99818,
+   "respuesta": "T02 — $94,422.12 y 2,311 unidades; fue 154.72% del promedio diario de $61,026.31 (152.04% en unidades), según ventas.csv (junio–agosto 2026).\n\nTickets creados entre 2026‑08‑08 y 2026‑08‑15 (posibles relacionados) — según tickets_mesa_servicio.csv:\n- Folio 1237 — 14‑ago‑2026 — “Se fue la luz en refris” — “Se fue la luz en refris del pasillo 11, ya llevan como 2 hrs sin frio, los lacteos estan en riesgo.”\n- Folio 1235 — 13‑ago‑2026 — “Producto no llegó del CEDIS” — “El pedido de ayer llegó sin la tarima de lacteos, no tenemos leche para el fin de semana.”\n- Folio 1224 — 10‑ago‑2026 — “Anaquel flojo” — “Un anaquel del pasillo 5 está flojo y se mueve, hay que apretarlo antes de que se caiga gracias”\n- Folio 1223 — 10‑ago‑2026 — “Báscula descalibrada” — “la bascula de la caja 4 pesa de mas, un cliente lo comprobo con su propia bascula.”\n\nno hay ticket ni política que lo explique."
+  },
+  {
+   "turno": 8,
+   "pregunta": "¿Cuántos tickets hubo ese día, el de julio?",
+   "mide": "correferencia doble ('ese día, el de julio') → tickets del 15-jul (T02 o todas)",
+   "ok": true,
+   "ms": 18892,
+   "respuesta": "0 tickets — según tickets_mesa_servicio.csv (junio–agosto 2026).  \nNo hay tickets creados el 15 de julio de 2026 para T02."
+  },
+  {
+   "turno": 9,
+   "pregunta": "De los productos a reordenar que me diste, ¿cómo se llama el segundo?",
+   "mide": "recuerda la lista del turno 3 (6 turnos atrás)",
+   "ok": false,
+   "ms": 33993,
+   "respuesta": "Refresco de cola 2 L — SKU-1077 (existencia 21 / punto de reorden 61), según inventario.csv (al 1 de septiembre de 2026).  \nLo listé como segundo por urgencia de reorden (punto_reorden − existencia)."
+  },
+  {
+   "turno": 10,
+   "pregunta": "¿Cuál fue la primera pregunta que te hice en esta conversación?",
+   "mide": "borde de la ventana: turno 1 desde el turno 10",
+   "ok": true,
+   "ms": 3299,
+   "respuesta": "La primera pregunta fue: \"¿Cuál fue el peor día de agosto en ventas, sumando las cuatro tiendas?\""
+  }
+ ]
+}

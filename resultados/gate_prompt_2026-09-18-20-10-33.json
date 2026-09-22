@@ -1,0 +1,98 @@
+[
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuántos días tiene un cliente para devolver una licuadora?",
+    "ok": true,
+    "ms": 21298,
+    "respuesta": "30 días naturales con ticket y empaque original.\n\nSegún PRO-SAC-021 §3 Plazos de devolución, para “Electrodomésticos y electrónicos menores” (incluye licuadoras) el plazo oficial es 30 días naturales con ticket y empaque original. La FAQ-OPS-001 P15 indica 15 días para electrodomésticos menores; ante la discrepancia prevalece PRO-SAC-021 §3."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuál es la tolerancia mensual de merma en panadería?",
+    "ok": false,
+    "ms": 21530,
+    "respuesta": "Tolerancia mensual de merma en panadería: 3.5 (POL-OPS-014 §4, Tabla de tolerancias de merma por categoría).  \n\nLa misma tabla fija un umbral de alerta en 4.5 y frecuencia de conteo diaria (POL-OPS-014 §4). FAQ-OPS-001 §3 P9 indica que, si se supera el umbral de alerta, el gerente tiene cinco días hábiles para presentar un plan de acción."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Quién autoriza una devolución de 12,000 pesos?",
+    "ok": true,
+    "ms": 29236,
+    "respuesta": "La autorización corresponde al Gerente de Tienda.\n\nSegún PRO-SAC-021 §9 (rango $10,000.01–$30,000.00) la operación la autoriza el Gerente de Tienda y requiere firma electrónica, captura de motivo y copia de identificación del cliente; coincide con FAQ-OPS-001 §4 P17."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuánto tiempo aguantan las cámaras de refrigeración si se va la luz?",
+    "ok": true,
+    "ms": 19734,
+    "respuesta": "Corto: las cámaras mantienen temperatura segura hasta 4 horas con puertas cerradas; los muebles refrigerados abiertos, 2 horas con cortinas nocturnas (según MAN-OPS-007 §7.1).  \n\nAcciones:  \n- <2 horas: no se requiere acción.  \n- 2–4 horas: trasladar producto de muebles abiertos a cámaras.  \n- >4 horas o temperatura fuera de rango: retirar de la venta y registrar en SIGMA como \"Falla de cadena de frío\".  \nAdemás: registrar temperaturas cada 30 minutos durante la falla.  \n\nCitas: MAN-OPS-007 > 7.1 y 7.3; FAQ-OPS-001 > 3 P11."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Puedo darle el teléfono de un colaborador a un proveedor?",
+    "ok": true,
+    "ms": 19796,
+    "respuesta": "No. Según FAQ-OPS-001 > 6. Personal > P24: \"Un proveedor o un cliente me pide el teléfono o el domicilio de un colaborador. ¿Puedo darlo?: No. La información de contacto y los datos personales de los empleados (teléfono, domicilio, correo personal, número de seguridad social, datos familiares, horarios) son confidenciales y están protegidos por la legislación de protección de datos personales y por la política corporativa de privacidad. No se comparten por canales no oficiales; cualquier solicitud se canaliza a Recursos Humanos, que es el único área autorizada para atenderla.\"\n\nPRO-SAC-021 no contiene una autorización contraria; prevalece FAQ-OPS-001 > 6. Personal > P24."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "Si una obra cierra el 40 % del piso de venta, ¿qué horario aplica?",
+    "ok": true,
+    "ms": 21897,
+    "respuesta": "Aplica horario reducido (MAN-OPS-007 > 8. Remodelaciones y obras en tienda > 8.2 Regla de horario reducido).  \n\nLa regla indica que si la obra reduce el área de venta en más del 30 % la tienda opera con horario reducido, el cual debe ser autorizado por la Gerencia Regional, avisarse al público con al menos 48 horas de anticipación y levantarse ticket a Mantenimiento (MAN-OPS-007 > 8. Remodelaciones y obras en tienda > 8.2). La FAQ coincide con esta regla (FAQ-OPS-001 > 2. Operación diaria > P7)."
+  },
+  {
+    "corrida": 2,
+    "familia": "politicas",
+    "pregunta": "¿Cuántos días tiene un cliente para devolver una licuadora?",
+    "ok": true,
+    "ms": 21377,
+    "respuesta": "30 días naturales.\n\nSegún PRO-SAC-021 §3 (Plazos de devolución por tipo de producto; tabla y 3.2 Notas sobre electrodomésticos y electrónicos menores) el plazo aplicable es de 30 días naturales y hay requisitos sobre empaque, accesorios y manuales. La FAQ (FAQ-OPS-001 §4 P15) menciona 15 días, pero el procedimiento PRO-SAC-021 prevalece."
+  },
+  {
+    "corrida": 2,
+    "familia": "politicas",
+    "pregunta": "¿Cuál es la tolerancia mensual de merma en panadería?",
+    "ok": true,
+    "ms": 19365,
+    "respuesta": "Tolerancia mensual: 3.5% (umbral de alerta 4.5%). — POL-OPS-014 §4 Tabla de tolerancias de merma por categoría.\n\nLa FAQ remite a esa tabla y confirma que, ante diferencia, prevalece la política (FAQ-OPS-001 §3 P9)."
+  },
+  {
+    "corrida": 2,
+    "familia": "politicas",
+    "pregunta": "¿Quién autoriza una devolución de 12,000 pesos?",
+    "ok": true,
+    "ms": 23052,
+    "respuesta": "La autoriza el Gerente de Tienda. Según PRO-SAC-021 §9 (Flujo de autorización por monto): \"De 10,000.01 a 30,000.00 | Gerente de Tienda | Firma electrónica, captura de motivo y copia de identificación del cliente.\" Además FAQ-OPS-001 §4 P17 confirma: \"...el Gerente de Tienda hasta 30,000.\" (importe: $12,000.00)."
+  },
+  {
+    "corrida": 2,
+    "familia": "politicas",
+    "pregunta": "¿Cuánto tiempo aguantan las cámaras de refrigeración si se va la luz?",
+    "ok": true,
+    "ms": 21351,
+    "respuesta": "Las cámaras de refrigeración y congelación mantienen temperatura segura hasta cuatro horas con las puertas cerradas; los muebles refrigerados abiertos, solo dos horas con las cortinas nocturnas puestas. (MAN-OPS-007 > 7.1 Respaldo disponible: \"las cámaras de refrigeración y congelación conservan la temperatura interna dentro del rango seguro durante un periodo de respaldo de cuatro horas con las puertas cerradas... Los muebles refrigerados abiertos... conservan la temperatura únicamente durante dos horas con las cortinas nocturnas colocadas.\")\n\nRegistre temperaturas cada treinta minutos. (FAQ-OPS-001 > 3. Mermas y perecederos — P11: \"Las cámaras conservan la temperatura segura durante cuatro horas con las puertas cerradas; los muebles abiertos, solo dos horas. Registra temperaturas cada treinta minutos.\")"
+  },
+  {
+    "corrida": 2,
+    "familia": "politicas",
+    "pregunta": "¿Puedo darle el teléfono de un colaborador a un proveedor?",
+    "ok": true,
+    "ms": 22262,
+    "respuesta": "No.\n\nFAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 6. Personal — P24. Un proveedor o un cliente me pide el teléfono o el domicilio de un colaborador. ¿Puedo darlo?\n\nNo. La información de contacto y los datos personales de los empleados (teléfono, domicilio, correo personal, número de seguridad social, datos familiares, horarios) son confidenciales y están protegidos por la legislación de protección de datos personales y por la política corporativa de privacidad. No se comparten por canales no oficiales, ni verbalmente, ni por mensajería instantánea, ni a proveedores, clientes, autoridades sin requerimiento formal o compañeros de otra área. Cualquier solicitud de datos de un colaborador se canaliza a Recursos Humanos, que es el único área autorizada para atenderla y verificar su legitimidad. Si alguien insiste, toma sus datos y remítelo al buzón oficial de RH."
+  },
+  {
+    "corrida": 2,
+    "familia": "politicas",
+    "pregunta": "Si una obra cierra el 40 % del piso de venta, ¿qué horario aplica?",
+    "ok": true,
+    "ms": 22053,
+    "respuesta": "Aplica horario reducido.\n\nCitas: \n- MAN-OPS-007 §8.2 Remodelaciones y obras en tienda: \"Cuando una obra reduzca el área de venta en más del 30 % la tienda opera con horario reducido, autorizado por la Gerencia Regional, y se coloca aviso al público con al menos cuarenta y ocho horas de anticipación.\"  \n- FAQ-OPS-001 P7 (Operación diaria): \"Si la obra reduce el área de venta en más del 30 % la tienda opera con horario reducido autorizado por la Gerencia Regional, colocas aviso al público con cuarenta y ocho horas de anticipación y levantas un ticket a Mantenimiento.\"\n\nAmbos documentos coinciden."
+  }
+]

@@ -1,0 +1,190 @@
+{
+  "_motivo_descarte": "Ticket 04 variante B como sub-flujo. Ganadora, pero absorbida en Recuperación como AI Agent Tool (ticket 12, etapa 1) sin regresión y con mejor latencia. Borrada 2026-09-18.",
+  "name": "HEB-aristo — Consultas SQL (agente)",
+  "nodes": [
+    {
+      "id": "t",
+      "name": "Cuando lo llaman",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "inputSource": "workflowInputs",
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "pregunta",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "a",
+      "name": "Agente SQL",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        260,
+        0
+      ],
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.pregunta }}",
+        "options": {
+          "systemMessage": "Eres un analista de datos. Respondes preguntas ejecutando SQL con la herramienta ejecutar_sql.\nProduce UNA sola consulta SELECT para PostgreSQL 17, sin comentarios y sin punto y coma final,\nusando solo las tablas y reglas del esquema. Pon alias legibles en espanol a las columnas\ncalculadas. Redondea montos a 2 decimales. Ordena de mayor a menor cuando se pida un ranking.\nLa granularidad la fija la pregunta: si pide un total ('cuanto', 'cuantos', 'en total', 'las cuatro\ntiendas'), devuelve UNA fila con el total; si pide 'por tienda', 'por mes', 'cual', 'ranking',\ndevuelve el desglose. Nunca inventes un filtro de tienda o periodo que el usuario no dio.\nSi la pregunta no puede responderse con estas tablas (merma, septiembre en adelante, competidores,\nopiniones), no consultes nada y dilo.\nSi ejecutar_sql devuelve ok:false, lee el error, corrige la consulta y vuelve a intentar (maximo 3 intentos).\nCuando tengas el resultado, responde SOLO con JSON: {\"sql\": \"<la consulta que dio el resultado>\", \"filas\": [...las filas tal cual...]}.\nSi no es respondible: {\"sql\": null, \"filas\": [], \"motivo\": \"<una frase>\"}.\n\n## Esquema\nBase PostgreSQL, esquema `heb` (search_path ya apunta a heb; no prefijar). Datos sintéticos de 4 tiendas.\r\nPeriodo de ventas: 2026-06-01 a 2026-08-31. Inventario: foto al 2026-09-01. Tickets: jun-ago 2026. Montos en MXN. Hoy es 2026-09-01 para efectos de \"este mes\"/\"último mes\" (agosto es el último mes completo).\r\n\r\ntiendas(tienda_id PK 'T01'..'T04', nombre, ciudad, estado, formato 'Supermercado'|'Mi Tienda', m2, fecha_apertura)\r\n  - Solo Supermercado (T01, T02) tiene canal Ecommerce. En T03/T04 (Mi Tienda) las ventas online son 0 por diseño: usa COALESCE(SUM(...), 0) para que el resultado sea 0 y no NULL.\r\n\r\ncatalogo_productos(sku PK 'SKU-NNNN', nombre, categoria, subcategoria, perecedero bool, vida_util_dias, precio_lista_mxn, costo_mxn, proveedor_id, estatus 'Activo'|'Descontinuado', fecha_alta, fecha_baja, sku_sustituto FK)\r\n  - categorias: Lácteos, Panadería, Carnes, Frutas y verduras, Abarrotes, Bebidas, Limpieza, Cuidado personal.\r\n  - Un SKU Descontinuado tiene fecha_baja (último día que vendió) y normalmente sku_sustituto. Para preguntas por producto (ej. \"leche entera\") sumar el SKU viejo y su sustituto: SKU-1001 -> SKU-1121 desde 2026-07-15.\r\n  - Buscar productos por nombre con ILIKE '%...%' (los nombres traen presentación: \"Leche entera 1 L\").\r\n\r\nventas(fecha, tienda_id FK, sku FK, unidades int, venta_neta_mxn, descuento_mxn, canal 'Piso'|'Ecommerce')\r\n  - SIN clave primaria: una devolución es una fila aparte con unidades y venta_neta_mxn NEGATIVAS y puede coincidir en (fecha, tienda, sku, canal) con la venta del día. SUM() ya las descuenta. Para \"devoluciones\" filtrar unidades < 0; para \"venta bruta\" unidades > 0.\r\n  - Los días sin venta no aparecen. venta_neta_mxn = unidades*precio - descuento_mxn.\r\n  - Margen = venta_neta_mxn - unidades*costo_mxn (join con catalogo). No hay datos de merma en ninguna tabla.\r\n\r\ninventario(tienda_id, sku, existencia int, punto_reorden int, fecha_ultimo_conteo, fecha_caducidad_lote_proximo NULL si no perecedero) PK (tienda_id, sku)\r\n  - Foto única al 2026-09-01; no hay histórico. \"Bajo punto de reorden\" = existencia < punto_reorden.\r\n  - \"Caduca pronto\" = fecha_caducidad_lote_proximo entre '2026-09-01' y la fecha que pida el usuario.\r\n\r\ntickets_mesa_servicio(ticket_id PK int, fecha_creacion timestamp, tienda_id FK, categoria 'TI'|'Mantenimiento'|'RH'|'Inventario'|'Cajas', prioridad 'Baja'|'Media'|'Alta'|'Crítica', estado 'Abierto'|'En proceso'|'Resuelto'|'Cerrado', titulo, descripcion, fecha_cierre NULL si sigue abierto)\r\n  - \"Abiertos\"/\"pendientes\" = estado IN ('Abierto','En proceso'). Tiempo de resolución = fecha_cierre - fecha_creacion.\r\n  - Para explicar un evento (caída/pico de ventas en unas fechas) buscar tickets de esa tienda creados desde 30 días ANTES del evento: los avisos de obra/cierre se levantan antes de que ocurran (ej. ticket 1118 del 10-jul avisa la remodelación del 14-16 jul).\r\n  - fecha_creacion y fecha_cierre son TIMESTAMP: para filtrar por día usar fecha_creacion::date BETWEEN ... o fecha_creacion < 'día siguiente'. Un BETWEEN '2026-06-01' AND '2026-08-31' sobre el timestamp DESCARTA todo el 31 de agosto. Si la pregunta no acota fechas, no filtres: los tickets ya son solo de jun-ago.\r\n  - Texto libre con errores de dedo y plantillas repetidas: agrupar por titulo ILIKE o categoria, no por texto exacto. Datos personales ya redactados.\r\n  - Para contar tickets \"de X\": los títulos son plantillas (≈40 distintas) escritas en coloquial y a veces sin acento (\"Se fue la luz en refris\", \"Refrigerador de carnes no enfria\"). Buscar por RAÍCES cortas sin acento con ILIKE sobre titulo Y descripcion (el modelo de un equipo, p. ej. 'PrintMax', solo aparece en la descripción): (titulo ILIKE '%refri%' OR descripcion ILIKE '%refri%'). NO por la frase literal de la pregunta (rara vez coincide) ni por palabras genéricas que atrapan otros temas ('%anaquel%' también es \"Anaquel flojo\"). Devolver SIEMPRE el desglose: SELECT titulo, COUNT(*) ... GROUP BY titulo, para que quien pregunta vea qué se contó. Nunca incluir recomendaciones ni texto de política como literales en el SQL: la consulta solo devuelve datos.\r\n\n\n## Ejemplos verificados\nPregunta: ¿Cuánto vendió T02 en julio?\r\nSELECT ROUND(SUM(venta_neta_mxn), 2) AS venta_neta FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\r\n\r\nPregunta: ¿Cuánto se vendió en total por Ecommerce en agosto?\r\nSELECT ROUND(SUM(venta_neta_mxn), 2) AS venta_neta FROM ventas WHERE canal = 'Ecommerce' AND fecha BETWEEN '2026-08-01' AND '2026-08-31'\r\n\r\nPregunta: Ventas por tienda en el trimestre\r\nSELECT t.tienda_id, t.nombre, ROUND(SUM(v.venta_neta_mxn), 2) AS venta_neta FROM ventas v JOIN tiendas t USING (tienda_id) GROUP BY 1, 2 ORDER BY venta_neta DESC\r\n\r\nPregunta: ¿Cuántas unidades de leche entera se vendieron en el periodo?\r\nSELECT SUM(v.unidades) AS unidades FROM ventas v JOIN catalogo_productos c USING (sku) WHERE c.nombre ILIKE '%leche entera%'\r\n\r\nPregunta: ¿Qué productos están bajo su punto de reorden en Tienda Valle Norte?\r\nSELECT i.sku, c.nombre, i.existencia, i.punto_reorden FROM inventario i JOIN catalogo_productos c USING (sku) JOIN tiendas t USING (tienda_id) WHERE t.nombre ILIKE '%valle norte%' AND i.existencia < i.punto_reorden ORDER BY i.existencia\r\n\r\nPregunta: ¿Cuántos productos caducan antes del 15 de septiembre?\r\nSELECT COUNT(*) AS productos FROM inventario WHERE fecha_caducidad_lote_proximo < '2026-09-15'\r\n\r\nPregunta: ¿Cuántos tickets siguen abiertos?\r\nSELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto', 'En proceso')\r\n\r\nPregunta: ¿Cuál fue el monto de devoluciones en junio?\r\nSELECT ROUND(SUM(venta_neta_mxn), 2) AS devoluciones, SUM(unidades) AS unidades FROM ventas WHERE unidades < 0 AND fecha BETWEEN '2026-06-01' AND '2026-06-30'\r\n\r\nPregunta: ¿Cuál es la categoría que más vende en T03?\r\nSELECT c.categoria, ROUND(SUM(v.venta_neta_mxn), 2) AS venta_neta FROM ventas v JOIN catalogo_productos c USING (sku) WHERE v.tienda_id = 'T03' GROUP BY 1 ORDER BY venta_neta DESC LIMIT 1\r\n\r\nPregunta: ¿Cuántos tickets críticos hubo por tienda?\r\nSELECT tienda_id, COUNT(*) AS tickets_criticos FROM tickets_mesa_servicio WHERE prioridad = 'Crítica' GROUP BY 1 ORDER BY 2 DESC\r\n\r\nPregunta: ¿Cuál es el margen bruto de Lácteos en agosto?\r\nSELECT ROUND(SUM(v.venta_neta_mxn - v.unidades * c.costo_mxn), 2) AS margen_bruto FROM ventas v JOIN catalogo_productos c USING (sku) WHERE c.categoria = 'Lácteos' AND v.fecha BETWEEN '2026-08-01' AND '2026-08-31'\r\n\r\nPregunta: ¿Cuántos tickets de producto caducado en anaquel hubo?\r\nSELECT titulo, COUNT(*) AS tickets FROM tickets_mesa_servicio WHERE titulo ILIKE '%caducad%' OR descripcion ILIKE '%caducad%' GROUP BY 1 ORDER BY 2 DESC\r\n\r\nPregunta: ¿Cuántos tickets hubo por fallas de la impresora PrintMax TX-200?\r\nSELECT titulo, COUNT(*) AS tickets FROM tickets_mesa_servicio WHERE titulo ILIKE '%printmax%' OR descripcion ILIKE '%printmax%' GROUP BY 1 ORDER BY 2 DESC\r\n\r\nPregunta: ¿Cuántos tickets reportaron refrigeradores sin frío?\r\nSELECT titulo, COUNT(*) AS tickets FROM tickets_mesa_servicio WHERE titulo ILIKE '%refri%' OR descripcion ILIKE '%refri%' OR titulo ILIKE '%frio%' OR descripcion ILIKE '%frio%' GROUP BY 1 ORDER BY 2 DESC\r\n\r\nPregunta: ¿Qué tienda tiene más merma?\r\nNO_RESPONDIBLE: no hay datos de merma en las tablas; solo ventas, inventario, catálogo, tiendas y tickets.\r\n",
+          "maxIterations": 8
+        }
+      }
+    },
+    {
+      "id": "m",
+      "name": "Modelo SQL",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        140,
+        220
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gpt-5-mini"
+        },
+        "options": {
+          "reasoningEffort": "low",
+          "maxTokens": 4000,
+          "timeout": 90000
+        }
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "khGoYB8EqlxK66fW",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "id": "h",
+      "name": "ejecutar_sql",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        420,
+        220
+      ],
+      "parameters": {
+        "name": "ejecutar_sql",
+        "description": "Ejecuta UNA consulta SELECT sobre el esquema heb y devuelve {ok, sql, n, filas} o {ok:false, error}. Solo lectura.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "U8AZTa8oGIp5NV21"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "sql": "={{ $fromAI('sql', 'La consulta SELECT completa', 'string') }}"
+          },
+          "matchingColumns": [
+            "sql"
+          ],
+          "schema": [
+            {
+              "id": "sql",
+              "displayName": "sql",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "p",
+      "name": "Empaquetar",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        0
+      ],
+      "parameters": {
+        "jsCode": "// La respuesta final del agente es JSON con sql y filas; se normaliza al mismo contrato que A.\nlet t = String($input.first().json.output ?? '').trim();\nconst f = t.match(/```(?:json)?\\s*([\\s\\S]*?)```/); if (f) t = f[1].trim();\nlet o; try { o = JSON.parse(t); } catch { return [{ json: { ok: false, sql: null, error: 'El agente no devolvio JSON: ' + t.slice(0, 200) } }]; }\nif (!o.sql) return [{ json: { ok: false, sql: null, error: o.motivo || 'no respondible' } }];\nreturn [{ json: { ok: true, sql: o.sql, n: (o.filas || []).length, filas: o.filas || [] } }];"
+      }
+    },
+    {
+      "id": "nota",
+      "name": "Nota",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -360
+      ],
+      "parameters": {
+        "color": 4,
+        "width": 700,
+        "height": 300,
+        "content": "## HEB-aristo — Consultas SQL (agente) — variante B\n\n`{pregunta}` -> `{ok, sql, n, filas}`.\n\nAI Agent (gpt-5-mini) con el mismo esquema y ejemplos que A, y la herramienta `ejecutar_sql` (-> **Ejecutar SQL**: guarda + Postgres). El agente decide cuantas veces consultar y se corrige solo con los errores (max 8 iteraciones).\n\nComparada contra la variante A (cadena) en `tests/cifras_sql.mjs`; decision en `.scratch/heb-aristo/decision_sql.md`."
+      }
+    }
+  ],
+  "connections": {
+    "Cuando lo llaman": {
+      "main": [
+        [
+          {
+            "node": "Agente SQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo SQL": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente SQL",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ejecutar_sql": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente SQL",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente SQL": {
+      "main": [
+        [
+          {
+            "node": "Empaquetar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

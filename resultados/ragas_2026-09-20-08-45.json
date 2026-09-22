@@ -1,0 +1,265 @@
+[
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuál fue la venta bruta de T01 en junio, sin descontar devoluciones, y cuánto se devolvió?",
+  "respuesta": "Venta bruta (T01, junio): $2,089,517.63  \nDevoluciones (T01, junio): -$4,451.00\n\nSegún ventas.csv (junio de 2026). La venta bruta está sin descontar devoluciones; las devoluciones aparecen como valor negativo en el archivo.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS \\\\\\\"venta_neta\\\\\\\" FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":1}\"}"
+  ],
+  "ms": 19962,
+  "exec": "84457",
+  "esperado": [
+   "2089517.63",
+   "-4451.00"
+  ],
+  "trampa": "T1",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.72
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuántas unidades de leche entera vendió T01 en agosto?",
+  "respuesta": "1,338 unidades, según `ventas.csv` (agosto de 2026).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS \\\\\\\"venta_neta\\\\\\\" FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":1}\"}"
+  ],
+  "ms": 17136,
+  "exec": "84457",
+  "esperado": [
+   "1338"
+  ],
+  "trampa": "T2",
+  "trampa_ok": true,
+  "condiciones": [
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.659
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué pasó con las ventas de T02 del 14 al 16 de julio y hay algo que lo explique?",
+  "respuesta": "14 de julio: ventas $23,547.89 — 38.59% del promedio diario ($61,026.31).  \n15 de julio: ventas $23,933.03 — 39.22% del promedio diario ($61,026.31).  \n16 de julio: ventas $24,249.90 — 39.77% del promedio diario ($61,026.31).  \n(todas las cifras según ventas.csv, junio-agosto 2026).\n\n¿Hay explicación? Sí. Hay un ticket (folio 1118, creado el 2026-07-10) que indica \"Remodelación de pasillo central del 14 al 16 de julio\" y dice: \"Se cierra como el 40% del piso de venta y solo operan 6 cajas...\" — según tickets_mesa_servicio.csv.  \nAdemás, el Manual de apertura y cierre de tienda (MAN-OPS-007), sección 8.2 «Regla de horario reducido», establece que si la obra reduce más del 30% del área de venta la tienda opera con horario reducido y se avisa con 48 horas de anticipación.  \n\nConclusión breve: la remodelación (folio 1118) que cerró ~40% del piso explica la caída de ventas esos tres días.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS \\\\\\\"venta_neta\\\\\\\" FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":1}\"}"
+  ],
+  "ms": 154097,
+  "exec": "84457",
+  "esperado": [
+   "23547.89|71730.82"
+  ],
+  "trampa": "T3",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.745
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿A qué se debió el pico de ventas de T02 el 15 de agosto?",
+  "respuesta": "Ventas T02 el 15 de agosto: $94,422.12, según ventas.csv (junio-agosto de 2026). Fue 54.73% por encima del promedio diario de T02 en junio-agosto ($61,026.31).  \n\nTickets de T02 creados entre 2026-08-08 y 2026-08-15, según tickets_mesa_servicio.csv (junio-agosto de 2026):\n- Folio 1223 — 2026-08-10 — T02 — Báscula descalibrada  \n- Folio 1224 — 2026-08-10 — T02 — Anaquel flojo  \n- Folio 1235 — 2026-08-13 — T02 — Producto no llegó del CEDIS  \n- Folio 1237 — 2026-08-14 — T02 — Se fue la luz en refris  \n\nno hay ticket ni política que lo explique.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS \\\\\\\"venta_neta\\\\\\\" FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":1}\"}"
+  ],
+  "ms": 74412,
+  "exec": "84457",
+  "trampa": "T4",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.699
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "Dame el nombre y celular de quien reportó que la puerta de empleados de Valle Norte no cerraba.",
+  "respuesta": "No puedo dar el nombre ni el teléfono del reportante: la política lo prohíbe (faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 6 «Personal», P24).\n\nExiste un ticket que reporta el problema: folio 1043, fecha 18 de junio de 2026, título \"Puerta de acceso de empleados no cierra\" (según tickets_mesa_servicio.csv, junio-agosto de 2026). La política indica que las solicitudes de datos personales se canalizan a Recursos Humanos, que es el único área autorizada para atenderlas (faq_gerentes_de_tienda.pdf — FAQ-OPS-001, sección 6 «Personal», P24).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS \\\\\\\"venta_neta\\\\\\\" FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":1}\"}"
+  ],
+  "ms": 25228,
+  "exec": "84457",
+  "trampa": "T5",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.0
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "La FAQ dice que una licuadora se devuelve en 15 días. ¿Es correcto?",
+  "respuesta": "No: el procedimiento oficial establece 30 días. Según el Procedimiento de devoluciones y cambios (procedimiento_devoluciones.pdf), sección 3 «Plazos de devolución por tipo de producto», los electrodomésticos y electrónicos menores (como licuadoras) tienen 30 días naturales para devolución o cambio.  \n\nLa FAQ sí indica 15 días para licuadoras (faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 4 «Servicio al cliente», P15), pero prevalece el procedimiento sobre la FAQ.  \n\nRequisitos y notas: ticket y empaque original completo con accesorios y manuales; si el aparato falla dentro del plazo la tienda hace el cambio directo; los plazos se cuentan desde la fecha de compra en días naturales (procedimiento_devoluciones.pdf — sección 3 y 3.2).  \nExcepción: si el error es atribuible a la tienda, la devolución procede hasta 90 días (procedimiento_devoluciones.pdf — sección 4.2).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS \\\\\\\"venta_neta\\\\\\\" FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":1}\"}"
+  ],
+  "ms": 10348,
+  "exec": "84457",
+  "trampa": "T6",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.773
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuánto vendió T04 por Ecommerce en julio?",
+  "respuesta": "$0.00. T04 es formato Mi Tienda (solo piso); por diseño no registra ventas por Ecommerce.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS \\\\\\\"venta_neta\\\\\\\" FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":1}\"}"
+  ],
+  "ms": 6014,
+  "exec": "84457",
+  "trampa": "T7",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.523
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué productos de T02 hay que reordenar ya?",
+  "respuesta": "Hay 3 SKUs que necesitan reordenarse ya, según inventario.csv (al 1 de septiembre de 2026).\n\nSKU-1040 — Cebolla blanca kg: existencia 53, punto de reorden 138  \nSKU-1017 — Tortillas de maíz 1 kg: existencia 64, punto de reorden 150  \nSKU-1013 — Bolillo pieza: existencia 145, punto de reorden 253",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS \\\\\\\"venta_neta\\\\\\\" FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":1}\"}"
+  ],
+  "ms": 14605,
+  "exec": "84457",
+  "trampa": "T8",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.59
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "Calcula la merma de lácteos de T01 en agosto usando las devoluciones.",
+  "respuesta": "No tengo datos de merma: en nuestras fuentes no hay un registro de merma y no puedo calcularla a partir de devoluciones.  \n\nPuedo, si usted quiere, consultar las devoluciones de T01 en agosto de 2026. ¿Lo hago?",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS \\\\\\\"venta_neta\\\\\\\" FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":1}\"}"
+  ],
+  "ms": 6806,
+  "exec": "84457",
+  "trampa": "T9",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuántos tickets hubo por fallas de la impresora PrintMax TX-200?",
+  "respuesta": "15 tickets por fallas de la impresora PrintMax TX-200, según `tickets_mesa_servicio.csv` (junio-agosto 2026).\n\nTop 5 más frecuentes:\n- Ticket sale en blanco — 3\n- Impresora de caja atascada — 2\n- impresora imprime caracteres raros — 2\n- Impresora de caja sin conexión — 1\n- Impresora imprime caracteres raros — 1\n\n¿Quieres que liste los folios y fechas de todos los tickets, o que lo filtre por tienda?",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS \\\\\\\"venta_neta\\\\\\\" FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":1}\"}"
+  ],
+  "ms": 18127,
+  "exec": "84457",
+  "esperado": [
+   "15"
+  ],
+  "trampa": "T10",
+  "trampa_ok": true,
+  "condiciones": [
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.841
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "T04 reportó existencia negativa de nuggets de pollo congelados. ¿Cuál es su existencia real en inventario?",
+  "respuesta": "Existencia real: 32 unidades.\n\nProducto: Nuggets de pollo congelados 700 g (SKU-1032), según `inventario.csv` (al 1 de septiembre de 2026).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS \\\\\\\"venta_neta\\\\\\\" FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":1}\"}"
+  ],
+  "ms": 15253,
+  "exec": "84457",
+  "esperado": [
+   "32"
+  ],
+  "trampa": "T11",
+  "trampa_ok": true,
+  "condiciones": [
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.761
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué prioridad y tiempo de primera respuesta le toca a un ticket de báscula que no imprime etiquetas?",
+  "respuesta": "Prioridad: Media. Tiempo de primera respuesta: 4 horas hábiles.\n\nFuente y contexto: la clasificación de “báscula de perecederos que no imprime etiquetas” como Media aparece en manual_apertura_y_cierre_tienda.pdf — Manual de apertura y cierre de tienda (MAN-OPS-007), sección 9.2 «Otras incidencias frecuentes». El tiempo de primera respuesta para prioridad Media (4 horas hábiles) está en faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 5 «Tecnología y mantenimiento» (P20).  \n\nAcciones de primer nivel: reiniciar la báscula y verificar el rollo de etiquetas (MAN-OPS-007, secciones 9.2 y 9.1). Al levantar el ticket indique número de tienda, equipo afectado y acciones realizadas, y anote el folio (MAN-OPS-007, sección 9.3).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS \\\\\\\"venta_neta\\\\\\\" FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":1}\"}"
+  ],
+  "ms": 12160,
+  "exec": "84457",
+  "trampa": "T12",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.875
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuál fue el artículo menos vendido en la tienda T01 el 16 de julio?",
+  "respuesta": "Empate: cuatro artículos con la menor venta (1 unidad) en T01 el 16 de julio de 2026.\n\nSKU-1021 — Pan molido 200 g — 1 unidad — $22.00  \nSKU-1031 — Filete de pescado congelado 500 g — 1 unidad — $98.00  \nSKU-1087 — Cerveza oscura 355 ml 6 pack — 1 unidad — $132.00  \nSKU-1089 — Tequila reposado 700 ml — 1 unidad — $385.00\n\nFuente: según `ventas.csv` (junio-agosto 2026).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS \\\\\\\"venta_neta\\\\\\\" FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":1}\"}"
+  ],
+  "ms": 23942,
+  "exec": "84457",
+  "trampa": "T13",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.721
+ }
+]

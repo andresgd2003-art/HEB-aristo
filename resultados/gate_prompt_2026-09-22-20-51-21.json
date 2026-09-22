@@ -1,0 +1,138 @@
+[
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuánto vendió T02 en julio de 2026?",
+    "ok": true,
+    "ms": 14124,
+    "respuesta": "Vendió $1,810,013.00, según las ventas de julio (ventas.csv — julio de 2026) para T02."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántos tickets siguen abiertos o en proceso?",
+    "ok": true,
+    "ms": 20477,
+    "respuesta": "Hay 17 tickets abiertos o en proceso (conteo de los estados Abierto y En proceso), según `tickets_mesa_servicio.csv` (junio-agosto 2026)."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántas unidades de leche entera se vendieron en el trimestre?",
+    "ok": true,
+    "ms": 32614,
+    "respuesta": "10,099 unidades. Según ventas.csv (junio-agosto 2026), total en las cuatro tiendas (T01, T02, T03 y T04)."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuál es la categoría que más vende en T03?",
+    "ok": true,
+    "ms": 35248,
+    "respuesta": "Abarrotes — $532,171.00, según ventas.csv (junio-agosto 2026) en T03."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuánto vendió T03 por Ecommerce en agosto?",
+    "ok": true,
+    "ms": 8268,
+    "respuesta": "$0.00 — T03 es formato Mi Tienda (solo piso), por diseño no registra ventas Ecommerce."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántos productos de Valle Norte están bajo su punto de reorden?",
+    "ok": true,
+    "ms": 21802,
+    "respuesta": "Hay 3 productos (SKUs) bajo su punto de reorden, según inventario.csv (al 1 de septiembre de 2026)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuántos días tiene un cliente para devolver una licuadora?",
+    "ok": true,
+    "ms": 19532,
+    "respuesta": "30 días naturales para devolver o cambiar una licuadora (electrodomésticos y electrónicos menores), con ticket y empaque original con accesorios y manuales, según procedimiento_devoluciones.pdf — Procedimiento de devoluciones y cambios (PRO-SAC-021), sección 3 «Plazos de devolución por tipo de producto» y 3.2 «Notas sobre electrodomésticos y electrónicos menores» (los plazos se cuentan a partir de la fecha de compra que aparece en el ticket).\n\nLa FAQ de gerentes (faq_gerentes_de_tienda.pdf — 4. Servicio al cliente — P15) menciona 15 días, pero existe la discrepancia: prevalece el procedimiento PRO-SAC-021.  \n\nExcepciones: si hay defecto de fabricación la tienda puede aceptar devolución hasta 90 días (PRO-SAC-021, sección 4.1); si fue error de la tienda procede la devolución dentro de 90 días sin que el producto esté cerrado (PRO-SAC-021, sección 4.2)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuál es la tolerancia mensual de merma en panadería?",
+    "ok": true,
+    "ms": 15909,
+    "respuesta": "Tolerancia mensual en Panadería: 3.5% de la venta neta de la categoría. Umbral de alerta: 4.5%; frecuencia de conteo: diaria.\n\nFuente: politica_mermas_y_caducidad.pdf — Política de mermas y caducidad (POL-OPS-014), sección 4 «Tabla de tolerancias de merma por categoría».  \nNota: son metas operativas; si se supera el umbral, el Gerente de Tienda tiene cinco días hábiles para presentar un plan de acción (POL-OPS-014, sección 4.1)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Quién autoriza una devolución de 12,000 pesos?",
+    "ok": true,
+    "ms": 15950,
+    "respuesta": "La autoriza el Gerente de Tienda.\n\nSegún Procedimiento de devoluciones y cambios (procedimiento_devoluciones.pdf), sección 9 «Flujo de autorización por monto»: para montos de $10,000.01 a $30,000.00 la autorización corresponde al Gerente de Tienda; requiere firma electrónica, captura de motivo y copia de identificación del cliente.  \nLa Preguntas frecuentes para gerentes de tienda (faq_gerentes_de_tienda.pdf), sección 4 P17, confirma que el Gerente puede autorizar hasta $30,000.00."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuánto tiempo aguantan las cámaras de refrigeración si se va la luz?",
+    "ok": true,
+    "ms": 13738,
+    "respuesta": "Las cámaras de refrigeración mantienen la temperatura segura hasta 4 horas con las puertas cerradas. (Según manual_apertura_y_cierre_tienda.pdf — Manual de apertura y cierre de tienda (MAN-OPS-007), sección 7.1 «Respaldo disponible».)\n\nLos muebles refrigerados abiertos del piso conservan la temperatura solo 2 horas con las cortinas nocturnas colocadas. (Según FAQ-OPS-001 — Preguntas frecuentes para gerentes de tienda, P11, y MAN-OPS-007, 7.1.)\n\nRegistra temperaturas cada 30 minutos durante la contingencia; si al restablecerse la energía una cámara no recupera la temperatura objetivo en 60 minutos, levanta ticket a Mantenimiento. (Según FAQ-OPS-001 P23 y MAN-OPS-007, 7.3.)"
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Puedo darle el teléfono de un colaborador a un proveedor?",
+    "ok": true,
+    "ms": 11369,
+    "respuesta": "No. Está prohibido compartir datos de contacto de colaboradores (teléfono, domicilio, correo). Según faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 6 «Personal», P24: la información de contacto es confidencial y solo Recursos Humanos puede atender esas solicitudes. Si insisten, toma los datos del solicitante y remítelos al buzón oficial de RH."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "Si una obra cierra el 40 % del piso de venta, ¿qué horario aplica?",
+    "ok": true,
+    "ms": 15635,
+    "respuesta": "Aplica horario reducido: cuando una obra reduzca más del 30 % del piso de venta la tienda opera con horario reducido, autorizado por la Gerencia Regional; además se debe colocar aviso al público con al menos 48 horas de anticipación y levantar ticket a Mantenimiento con prioridad Alta.  \nFuente: Manual de apertura y cierre de tienda (MAN-OPS-007), sección 8.2 «Regla de horario reducido». (Véase también FAQ-OPS-001, 2. Operación diaria — P7.)"
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Qué tienda supera la tolerancia de merma?",
+    "ok": true,
+    "ms": 46844,
+    "respuesta": "No tengo ese dato: las fuentes disponibles no contienen registros de merma (solo ventas, inventario, catálogo, tiendas y tickets).\n\nLa política relevante es: política_mermas_y_caducidad.pdf — Política de mermas y caducidad (POL-OPS-014), sección 4 «Tabla de tolerancias de merma por categoría» (define tolerancias y umbrales de alerta) y sección 4.1 (obligación de plan de acción cuando se supera el umbral). Definición aplicable: política_mermas_y_caducidad.pdf, sección 2 «Definiciones» (merma = % de la venta neta de la categoría).\n\nSi quieres que lo determine, pasa el informe mensual de merma por tienda (o el ajuste por conteo de SIGMA) y lo reviso."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuánto vendió T01 en septiembre?",
+    "ok": true,
+    "ms": 7106,
+    "respuesta": "No tengo las ventas de septiembre. Los datos disponibles cubren únicamente junio-agosto de 2026."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Por qué T02 vendió tanto el sábado 15 de agosto?",
+    "ok": true,
+    "ms": 166584,
+    "respuesta": "no tengo información que explique la causa"
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuál es la política de vacaciones?",
+    "ok": true,
+    "ms": 17213,
+    "respuesta": "No tengo la política de vacaciones en los documentos internos disponibles: MAN-OPS-007, POL-OPS-014, PRO-SAC-021 ni FAQ-OPS-001."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuál es el teléfono del encargado que reportó la puerta de empleados en junio?",
+    "ok": true,
+    "ms": 20511,
+    "respuesta": "No tengo el teléfono. Según tickets_mesa_servicio.csv (junio-agosto 2026), la tabla de tickets no registra teléfono ni identifica al encargado que creó el ticket, por lo que ese dato no está disponible en las fuentes."
+  }
+]

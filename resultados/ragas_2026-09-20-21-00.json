@@ -1,0 +1,194 @@
+[
+ {
+  "familia": "politicas",
+  "pregunta": "¿Cuántos días tiene un cliente para devolver una licuadora?",
+  "respuesta": "El cliente tiene 30 días naturales con ticket para devolver o cambiar una licuadora, según Procedimiento de devoluciones y cambios (procedimiento_devoluciones.pdf — PRO-SAC-021), sección 3 «Plazos de devolución por tipo de producto» (entrada “Electrodomésticos y electrónicos menores”). \n\nEl producto debe presentarse con empaque original, accesorios y manuales (PRO-SAC-021, sección 3.2) y el plazo se cuenta desde la fecha de compra en el ticket (PRO-SAC-021, sección 3). \n\nNota: la FAQ para gerentes (faq_gerentes_de_tienda.pdf — FAQ-OPS-001, sección 4 P15) indica 15 días; prevalece el procedimiento (PRO-SAC-021).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 12060,
+  "exec": "84841",
+  "reference": "30 días naturales con ticket y empaque original completo, según PRO-SAC-021 sección 3 (Plazos de devolución por tipo de producto). La FAQ-OPS-001 P15 menciona 15 días, pero prevalece el procedimiento.",
+  "cita_ok": true,
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.904,
+  "ragas_llm_context_precision_with_reference": 0.0,
+  "ragas_context_recall": 0.0
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Cuál es la tolerancia mensual de merma en panadería y su umbral de alerta?",
+  "respuesta": "Tolerancia mensual (Panadería): 3.5% de la venta neta. Umbral de alerta: 4.5% de la venta neta.\n\nFuente: política_mermas_y_caducidad.pdf — Política de mermas y caducidad (POL-OPS-014), sección 4 «Tabla de tolerancias de merma por categoría». Frecuencia de conteo: diaria; si se supera el umbral, el Gerente de Tienda tiene cinco días hábiles para enviar un plan de acción (sección 4.1 «Interpretación de la tabla»).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 12476,
+  "exec": "84841",
+  "reference": "Tolerancia 3.5 % de la venta y umbral de alerta 4.5 %, con conteo diario, según la tabla de la sección 4 de POL-OPS-014.",
+  "cita_ok": true,
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.755,
+  "ragas_llm_context_precision_with_reference": 0.0,
+  "ragas_context_recall": 0.0
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Quién autoriza una devolución de 12,000 pesos?",
+  "respuesta": "El Gerente de Tienda. Una devolución de $12,000.00 corresponde al rango $10,000.01-$30,000.00 y debe autorizarla el Gerente de Tienda; requiere firma electrónica, captura de motivo y copia de identificación del cliente — según Procedimiento de devoluciones y cambios (procedimiento_devoluciones.pdf), sección 9 «Flujo de autorización por monto». La FAQ lo corrobora (Preguntas frecuentes para gerentes de tienda, FAQ-OPS-001, sección 4 P17).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 9594,
+  "exec": "84841",
+  "reference": "El Gerente de Tienda, con firma electrónica, captura de motivo y copia de identificación del cliente (rango de 10,000.01 a 30,000 pesos), según PRO-SAC-021 sección 9.",
+  "cita_ok": true,
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.837,
+  "ragas_llm_context_precision_with_reference": 0.0,
+  "ragas_context_recall": 0.0
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Cuánto tiempo conservan la temperatura las cámaras de refrigeración si se va la luz?",
+  "respuesta": "Las cámaras de refrigeración conservan la temperatura segura durante cuatro horas con las puertas cerradas. (manual_apertura_y_cierre_tienda.pdf — Manual de apertura y cierre de tienda (MAN-OPS-007), sección 7.1 «Respaldo disponible»; faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 3 P11).\n\nLos muebles refrigerados abiertos, con las cortinas nocturnas colocadas, conservan la temperatura durante dos horas. (MAN-OPS-007, sección 7.1; FAQ-OPS-001, sección 3 P11).\n\nAcciones clave: registrar temperaturas cada 30 minutos durante la contingencia; si la falla dura entre 2 y 4 horas trasladar producto de muebles abiertos a cámaras; si supera 4 horas —o el producto refrigerado estuvo >7 °C por más de 2 horas— retirar de venta y registrar en SIGMA. Si una cámara no recupera la temperatura objetivo en 60 minutos tras restablecer la energía, levantar ticket a Mantenimiento. (manual_apertura_y_cierre_tienda.pdf — MAN-OPS-007, secciones 7.2 y 7.3; faq_gerentes_de_tienda.pdf — FAQ-OPS-001, P11 y P23).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 12495,
+  "exec": "84841",
+  "reference": "Cuatro horas con las puertas cerradas; los muebles refrigerados abiertos solo dos horas con cortinas nocturnas, según MAN-OPS-007 sección 7.1.",
+  "cita_ok": true,
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.867,
+  "ragas_llm_context_precision_with_reference": 0.0,
+  "ragas_context_recall": 0.0
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Puedo darle el teléfono de un colaborador a un proveedor?",
+  "respuesta": "No. Está prohibido compartir el teléfono o domicilio de un colaborador.  \nSegún Preguntas frecuentes para gerentes de tienda (faq_gerentes_de_tienda.pdf), sección 6 «Personal», P24: la información de contacto y los datos personales son confidenciales y sólo Recursos Humanos puede atender y verificar esas solicitudes; si alguien insiste, toma sus datos y remítelo al buzón oficial de RH.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 9395,
+  "exec": "84841",
+  "reference": "No. Los datos personales de los empleados son confidenciales; cualquier solicitud se canaliza a Recursos Humanos, según FAQ-OPS-001 P24.",
+  "cita_ok": true,
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null,
+  "ragas_llm_context_precision_with_reference": null,
+  "ragas_context_recall": null
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "Si una obra cierra el 40 % del piso de venta, ¿qué horario aplica?",
+  "respuesta": "Se aplica horario reducido, autorizado por la Gerencia Regional. (Manual de apertura y cierre de tienda — manual_apertura_y_cierre_tienda.pdf — MAN-OPS-007 — sección 8.2 «Regla de horario reducido»).\n\nAdemás, debe colocarse aviso al público con al menos 48 horas de anticipación y el Gerente de Tienda debe levantar un ticket a Mantenimiento con prioridad Alta indicando fecha de inicio, duración estimada y áreas afectadas. (FAQ para gerentes — faq_gerentes_de_tienda.pdf — FAQ-OPS-001 — sección 2 «Operación diaria», P7; Manual MAN-OPS-007 — sección 8.2).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 18009,
+  "exec": "84841",
+  "reference": "Horario reducido autorizado por la Gerencia Regional, con aviso al público 48 horas antes y ticket a Mantenimiento con prioridad Alta, porque supera el 30 % del área de venta (MAN-OPS-007 sección 8.2).",
+  "cita_ok": true,
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null,
+  "ragas_llm_context_precision_with_reference": null,
+  "ragas_context_recall": null
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Con cuántos días de anticipación se retiran los lácteos del anaquel?",
+  "respuesta": "Se retiran del anaquel dos días antes de la fecha de caducidad.\n\nSegún Política de mermas y caducidad (politica_mermas_y_caducidad.pdf), sección 5.2 «Regla específica para lácteos»; confirmado en Preguntas frecuentes para gerentes de tienda (faq_gerentes_de_tienda.pdf), sección 3 P10.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 10911,
+  "exec": "84841",
+  "reference": "Dos días antes de la fecha de caducidad (el resto de perecederos, un día antes), según POL-OPS-014 sección 5.2.",
+  "cita_ok": true,
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null,
+  "ragas_llm_context_precision_with_reference": null,
+  "ragas_context_recall": null
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Cuál es el descuento para un producto al que le quedan 3 días de caducidad?",
+  "respuesta": "35% de descuento.\n\nSegún politica_mermas_y_caducidad.pdf — Política de mermas y caducidad (POL-OPS-014), sección 6 «Rebajas escalonadas para producto próximo a vencer», la escala indica que con 3 días antes de caducar corresponde 35%.  \nNo aplica a fórmulas infantiles, suplementos alimenticios ni medicamentos de venta libre (sección 6.2). Además, los lácteos salen del módulo de rebaja al llegar a 2 días antes de la caducidad (sección 6.1), por lo que no recibirían la rebaja de 3 días.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 11275,
+  "exec": "84841",
+  "reference": "35 % sobre el precio regular, según la escala de rebajas de POL-OPS-014 sección 6.",
+  "cita_ok": true,
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null,
+  "ragas_llm_context_precision_with_reference": null,
+  "ragas_context_recall": null
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Cuánto tarda la Mesa de Servicio en dar primera respuesta a un ticket de prioridad Alta?",
+  "respuesta": "1 hora. Según Preguntas frecuentes para gerentes de tienda (faq_gerentes_de_tienda.pdf — FAQ-OPS-001), sección 5 «Tecnología y mantenimiento», P20.  \n(El tiempo objetivo de solución para prioridad Alta es 8 horas, según la misma sección.)",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 8919,
+  "exec": "84841",
+  "reference": "1 hora de primera respuesta y 8 horas objetivo de solución, según la tabla de prioridades de FAQ-OPS-001 P20.",
+  "cita_ok": true,
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null,
+  "ragas_llm_context_precision_with_reference": null,
+  "ragas_context_recall": null
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Cuántas devoluciones sin ticket puede hacer un cliente al año?",
+  "respuesta": "Máximo 3 devoluciones sin ticket en un periodo de 12 meses, con un acumulado máximo de $3,000.00 (Procedimiento de devoluciones y cambios, procedimiento_devoluciones.pdf, sección 5.3 «Límites»; ver también Preguntas frecuentes para gerentes de tienda, faq_gerentes_de_tienda.pdf, sección 4 P16). \n\nEl sistema bloquea la operación al exceder cualquiera de esos límites y solo el Gerente de Tienda puede liberar el bloqueo con justificación (procedimiento_devoluciones.pdf, sección 5.3).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 13527,
+  "exec": "84841",
+  "reference": "Máximo tres en doce meses, con un acumulado de tres mil pesos; el sistema bloquea al exceder y solo el Gerente de Tienda libera, según PRO-SAC-021 sección 5.3.",
+  "cita_ok": true,
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null,
+  "ragas_llm_context_precision_with_reference": null,
+  "ragas_context_recall": null
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Qué diferencia de caja se considera crítica en el arqueo?",
+  "respuesta": "Crítica: cualquier diferencia mayor a $1,000.00.\n\nSegún Manual de apertura y cierre de tienda (manual_apertura_y_cierre_tienda.pdf), sección 6.2 «Conciliación»: las diferencias superiores a $1,000.00 se clasifican como críticas y deben reportarse de inmediato al Gerente de Tienda y a Prevención de Pérdidas; además se revisa la videograbación de la caja. La FAQ de gerentes (faq_gerentes_de_tienda.pdf, sección 2 P3) confirma el mismo umbral.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 11581,
+  "exec": "84841",
+  "reference": "Más de 1,000 pesos: se reporta de inmediato al Gerente de Tienda y a Prevención de Pérdidas y se revisa la videograbación, según MAN-OPS-007 sección 6.2.",
+  "cita_ok": true,
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null,
+  "ragas_llm_context_precision_with_reference": null,
+  "ragas_context_recall": null
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Se puede reembolsar en efectivo una compra pagada con tarjeta si el cliente no trae la tarjeta?",
+  "respuesta": "No. Si el cliente pagó con tarjeta y no presenta la tarjeta, el reembolso se entrega en vale de tienda; no se realizan reembolsos en efectivo ni a una tarjeta distinta.  \n\nProcedimiento de devoluciones y cambios (procedimiento_devoluciones.pdf), sección 6 «Reembolsos por forma de pago», subsección 6.1 «Cliente sin la tarjeta original».  \nVer también: procedimiento_devoluciones.pdf, sección 5 «Devoluciones sin ticket», subsección 5.2 «Forma de reembolso».",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_resueltos_no_cerrados FROM tickets_mesa_servicio WHERE estado = 'Resuelto'\\\",\\\"filas\\\":[{\\\"tickets_resueltos_no_cerrados\\\":\\\"72\\\"}],\\\"total\\\":72}\"}"
+  ],
+  "ms": 11900,
+  "exec": "84841",
+  "reference": "No: se reembolsa en vale de tienda; nunca en efectivo ni a una tarjeta distinta, según PRO-SAC-021 sección 6.1.",
+  "cita_ok": true,
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": null,
+  "ragas_llm_context_precision_with_reference": null,
+  "ragas_context_recall": null
+ }
+]

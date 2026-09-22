@@ -1,0 +1,68 @@
+[
+ {
+  "caso": "correferencia: turno 1 T02 julio",
+  "ok": true,
+  "detalle": "Venta neta de T02 en julio: $1,810,013.00.  \nFuente: ventas de julio de 2026 (consulta a consultar_datos)."
+ },
+ {
+  "caso": "correferencia: '¿y en agosto?' -> T02 agosto",
+  "ok": true,
+  "detalle": "Venta neta de T02 en agosto: $1,973,086.37.  \nFuente: ventas de agosto de 2026 (consulta a consultar_datos)."
+ },
+ {
+  "caso": "correferencia: 'T03 ese mismo mes' -> T03 agosto",
+  "ok": true,
+  "detalle": "Venta neta de T03 en agosto: $949,469.00.  \nFuente: ventas de agosto de 2026 (consulta a consultar_datos)."
+ },
+ {
+  "caso": "correferencia: comparacion sin repetir datos",
+  "ok": true,
+  "detalle": "T02 vendió más en agosto: total $1,973,086.37 vs T03 $949,469.00.  \nFuente: ventas de agosto de 2026 por tienda (consulta a consultar_datos)."
+ },
+ {
+  "caso": "aislamiento: A T01 junio",
+  "ok": true,
+  "detalle": "$2,085,066.63.\n\nSegún ventas de junio de 2026 para T01 (dato obtenido vía consultar_datos)."
+ },
+ {
+  "caso": "aislamiento: B T04 junio",
+  "ok": true,
+  "detalle": "$786,418.46. Según ventas de junio de 2026 para la tienda T04."
+ },
+ {
+  "caso": "aislamiento: A recuerda T01 y no T04",
+  "ok": true,
+  "detalle": "T01 — Tienda Valle Norte."
+ },
+ {
+  "caso": "aislamiento: B recuerda T04 y no T01",
+  "ok": true,
+  "detalle": "T04 — formato Mi Tienda (solo piso). La cifra que te di corresponde a las ventas de junio de 2026 de la tienda T04."
+ },
+ {
+  "caso": "premisa falsa: responde desde SQL, no desde lo 'recordado'",
+  "ok": true,
+  "detalle": "Venta neta: $1,810,013.00, según ventas de julio de 2026 (T02)."
+ },
+ {
+  "caso": "ventana 10 turnos: recuerda T03 tras 12 turnos (informativo: la ventana es 10)",
+  "ok": false,
+  "detalle": "T01.\n\nFue la primera tienda que consultaste en la conversación — preguntaste por su formato.",
+  "informativo": true
+ },
+ {
+  "caso": "cadena invalida -> 400 previous_response_not_found",
+  "ok": true,
+  "detalle": "400 El `previous_response_id` no existe o ya caduco. Las conversaciones se conservan 30 dias."
+ },
+ {
+  "caso": "rafaga: aparece 429 rate_limited dentro del minuto (0 de 7)",
+  "ok": true,
+  "detalle": "no se alcanzaron 20 turnos en 60 s (latencia); limite no ejercitado"
+ },
+ {
+  "caso": "concurrencia: 5 en paralelo, todas 200 y correctas",
+  "ok": true,
+  "detalle": "200:T01 vendió $2,085,066.63, según ventas d | 200:Venta neta: $786,418.46.  \nSegún ventas  | 200:$1,810,013.00.  \nSegún ventas de julio 2 | 200:$1,973,086.37, según ventas de agosto de | 200:$949,469.00, según ventas de agosto de 2"
+ }
+]

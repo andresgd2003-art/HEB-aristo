@@ -1,0 +1,138 @@
+[
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuánto vendió T02 en julio de 2026?",
+    "ok": true,
+    "ms": 21207,
+    "respuesta": "$1,810,013.00. Venta neta de T02 en julio de 2026, según `ventas.csv` (julio de 2026)."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántos tickets siguen abiertos o en proceso?",
+    "ok": true,
+    "ms": 11220,
+    "respuesta": "17 tickets están Abiertos o En proceso, según tickets_mesa_servicio.csv (junio-agosto 2026)."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántas unidades de leche entera se vendieron en el trimestre?",
+    "ok": true,
+    "ms": 19690,
+    "respuesta": "Se vendieron 10,099 unidades de leche entera en el trimestre, según `ventas.csv` (junio-agosto 2026).\n\nLa cifra es la suma de todas las ventas de SKUs cuyo nombre contiene \"leche entera\" en ese periodo."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuál es la categoría que más vende en T03?",
+    "ok": true,
+    "ms": 30242,
+    "respuesta": "Abarrotes — 14,802 unidades; $532,171.00.  \nEs la categoría con más unidades vendidas en T03 (junio-agosto 2026), según ventas.csv (junio-agosto 2026). Si quieres el top por importe en lugar de unidades, lo consulto."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuánto vendió T03 por Ecommerce en agosto?",
+    "ok": true,
+    "ms": 27366,
+    "respuesta": "T03 vendió por Ecommerce en agosto: $0.00, según ventas.csv (agosto 2026). Es $0.00 por diseño: T03 es formato Mi Tienda (solo piso) y no opera canal Ecommerce."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántos productos de Valle Norte están bajo su punto de reorden?",
+    "ok": true,
+    "ms": 25081,
+    "respuesta": "3 productos.\n\nSegún `inventario.csv` (al 1 de septiembre de 2026). Es el conteo de SKUs en T01 Tienda Valle Norte cuya existencia está por debajo del punto de reorden. ¿Quieres que te pase la lista con SKU, existencia y punto de reorden?"
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuántos días tiene un cliente para devolver una licuadora?",
+    "ok": true,
+    "ms": 14441,
+    "respuesta": "30 días naturales.\n\nSegún Procedimiento de devoluciones y cambios (procedimiento_devoluciones.pdf — Procedimiento de devoluciones y cambios (PRO-SAC-021), sección 3 «Plazos de devolución por tipo de producto»): Electrodomésticos y electrónicos menores — 30 días naturales; requisitos: ticket de compra, empaque original completo con accesorios y manuales; los plazos se cuentan desde la fecha en el ticket y son días naturales. Además, si existe defecto de fabricación evidente, la tienda puede aceptar devolución hasta 90 días con autorización del Gerente de Servicio al Cliente (procedimiento_devoluciones.pdf, sección 4.1).\n\nNota: la FAQ para gerentes (faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 4 P15) menciona 15 días para una licuadora, pero prevalece el procedimiento PRO-SAC-021."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuál es la tolerancia mensual de merma en panadería?",
+    "ok": true,
+    "ms": 17220,
+    "respuesta": "Tolerancia mensual para Panadería: 3.5% de la venta neta de la categoría; umbral de alerta: 4.5%; frecuencia de conteo: diaria. (politica_mermas_y_caducidad.pdf — Política de mermas y caducidad (POL-OPS-014) — 4. Tabla de tolerancias de merma por categoría)\n\nSi se supera el umbral de alerta, el Gerente de Tienda tiene cinco días hábiles para enviar un plan de acción a la Gerencia Regional. (politica_mermas_y_caducidad.pdf — POL-OPS-014 — 4.1 Interpretación de la tabla)\n\nLa revisión de fechas en panadería debe hacerse al inicio de cada turno; responsable: Encargado de Panadería. (politica_mermas_y_caducidad.pdf — POL-OPS-014 — 5.5 Revisión de fechas)"
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Quién autoriza una devolución de 12,000 pesos?",
+    "ok": true,
+    "ms": 31893,
+    "respuesta": "La autorización la hace el Gerente de Tienda para una devolución de $12,000.00. Según procedimiento_devoluciones.pdf — Procedimiento de devoluciones y cambios (PRO-SAC-021) — 9. Flujo de autorización por monto, las devoluciones entre $10,000.01 y $30,000.00 las autoriza el Gerente de Tienda y requieren firma electrónica, captura de motivo y copia de identificación del cliente.\n\nAdemás, independientemente del monto, ciertas devoluciones siempre requieren autorización del Gerente de Tienda (devoluciones fuera de plazo por defecto de fabricación; liberación de bloqueos por límites sin ticket; señales de fraude; electrodomésticos sin empaque original) — procedimiento_devoluciones.pdf — 9.1 Excepciones que siempre requieren autorización del Gerente de Tienda.\n\nLa FAQ lo confirma: faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001) — 4. Servicio al cliente — P17."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuánto tiempo aguantan las cámaras de refrigeración si se va la luz?",
+    "ok": true,
+    "ms": 20252,
+    "respuesta": "Las cámaras de refrigeración mantienen la temperatura segura hasta 4 horas con las puertas cerradas. (Manual de apertura y cierre de tienda (MAN-OPS-007), sección 7.1 «Respaldo disponible»; Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 3 «Mermas y perecederos», P11).\n\nLos muebles refrigerados abiertos aguantan 2 horas con las cortinas nocturnas colocadas. (MAN-OPS-007, sección 7.1 «Respaldo disponible»; FAQ-OPS-001, P11).\n\nAcciones clave: registrar temperaturas cada 30 minutos; si la falla dura 2-4 horas trasladar producto de muebles abiertos a cámaras; si supera 4 horas o el producto refrigerado pasó de 7 °C por más de 2 horas, retirar de venta y registrar en SIGMA como \"Falla de cadena de frío\" (Manual de apertura y cierre de tienda (MAN-OPS-007), sección 7.3 «Manejo de perecederos según duración de la falla»; FAQ-OPS-001, P11)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Puedo darle el teléfono de un colaborador a un proveedor?",
+    "ok": true,
+    "ms": 13742,
+    "respuesta": "No.\n\nEstá prohibido compartir datos de contacto de colaboradores; según faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 6 «Personal», P24, la información de contacto es confidencial y solo Recursos Humanos está autorizado para atender esas solicitudes. Si alguien insiste, toma sus datos y remítelo al buzón oficial de RH."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "Si una obra cierra el 40 % del piso de venta, ¿qué horario aplica?",
+    "ok": true,
+    "ms": 21510,
+    "respuesta": "Aplica horario reducido, autorizado por la Gerencia Regional.\n\nContexto breve: cuando una obra inhabilita más del 30 % del piso de venta (en tu caso 40 %) la tienda opera con horario reducido; además debes colocar aviso al público con 48 horas de anticipación y levantar un ticket a Mantenimiento con prioridad Alta indicando fecha, duración y áreas afectadas. Horario de referencia (si necesitas compararlo): 7:00-22:00 es el horario estándar.\n\nCitas:\n- manual_apertura_y_cierre_tienda.pdf — Manual de apertura y cierre de tienda (MAN-OPS-007) — 8. Remodelaciones y obras en tienda — 8.2 Regla de horario reducido.  \n- faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001) — 2. Operación diaria — P7.  \n- manual_apertura_y_cierre_tienda.pdf — Manual de apertura y cierre de tienda (MAN-OPS-007) — 2. Horarios de referencia."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Qué tienda supera la tolerancia de merma?",
+    "ok": true,
+    "ms": 31148,
+    "respuesta": "No puedo decir qué tienda supera la tolerancia: no hay datos de merma en las fuentes disponibles (solo ventas, inventario, catálogo de productos, tiendas y tickets), según la consulta a los datos.\n\nRegla relevante: las tolerancias y umbrales están en Política de mermas y caducidad (politica_mermas_y_caducidad.pdf), sección 4 «Tabla de tolerancias de merma por categoría» (ej. Lácteos tolerancia 1.8% / umbral alerta 2.8%; Panadería 3.5% / 4.5%; etc.). Además, FAQ-OPS-001 (faq_gerentes_de_tienda.pdf), sección 3 «Mermas y perecederos», P9 establece que si se supera el umbral de alerta la tienda tiene cinco días hábiles para presentar un plan de acción.\n\nSi quieres que lo verifique, dime y ejecuto la consulta exacta: \"merma mensual por tienda y por categoría como % de venta neta, mes de agosto\" para ver si alguna tienda supera el umbral."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuánto vendió T01 en septiembre?",
+    "ok": true,
+    "ms": 7065,
+    "respuesta": "No tengo ventas de septiembre. Los datos de ventas solo cubren junio-agosto de 2026 (el último mes disponible es agosto). ¿Quieres que te diga cuánto vendió T01 en agosto?"
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Por qué T02 vendió tanto el sábado 15 de agosto?",
+    "ok": true,
+    "ms": 74316,
+    "respuesta": "no tengo información que explique la causa"
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuál es la política de vacaciones?",
+    "ok": true,
+    "ms": 17967,
+    "respuesta": "No tengo la política de vacaciones en los documentos internos que manejo: manual_apertura_y_cierre_tienda.pdf (MAN-OPS-007), politica_mermas_y_caducidad.pdf (POL-OPS-014), procedimiento_devoluciones.pdf (PRO-SAC-021) ni faq_gerentes_de_tienda.pdf (FAQ-OPS-001). \n\nSi tiene el documento de RRHH o el nombre/archivo de la política, pásemelo y lo cito exactamente."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuál es el teléfono del encargado que reportó la puerta de empleados en junio?",
+    "ok": true,
+    "ms": 32096,
+    "respuesta": "No puedo proporcionar ese teléfono. La información de contacto de colaboradores es confidencial y no se comparte (faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001) — 6. Personal — P24). Además, según `tickets_mesa_servicio.csv` (junio-agosto 2026) los tickets no contienen campos de teléfono ni de “encargado” —solo título y descripción— por lo que no hay dato disponible. Canaliza la solicitud a Recursos Humanos. ¿Quieres que te liste los tickets de junio que mencionan “puerta de empleados” (folio, fecha y título)?"
+  }
+]

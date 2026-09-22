@@ -1,0 +1,268 @@
+{
+  "name": "HEB-aristo — Ingesta del corpus",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "heb-aristo/v1/ingesta",
+        "authentication": "headerAuth",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "wh",
+      "name": "Webhook Ingesta",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "heb-aristo-v1-ingesta",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YEwALJ8HDfzC3ufR",
+          "name": "BANO ingesta (header auth)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Trocea el documento y devuelve UN ITEM POR FRAGMENTO, cada uno con su cabecera.\n//\n// Por que se trocea aqui y no en el nodo Troceador de n8n: el troceador no permite\n// post-procesar cada trozo, asi que solo el PRIMERO conservaba el titulo de su\n// seccion y los demas salian huerfanos. Medido en el corpus: 7 de 36 fragmentos\n// bajaban de 300 caracteres y varios eran continuaciones sin cabecera; uno empezaba\n// con \"Fue su primer proyecto de IA...\" y el antecedente estaba en otro fragmento.\n//\n// Un fragmento tiene que poder decir de que habla sin sus vecinos: la busqueda\n// vectorial lo juzga aislado (ver ADR-0013).\n//\n// Se lee del Webhook y no de $input porque el nodo anterior (la limpieza en Postgres)\n// corre con executeOnce y reemplaza los items por su propio resultado.\n\nconst TAMANO = 1000;   // caracteres de cuerpo por fragmento, sin contar la cabecera\nconst SOLAPE = 0;    // caracteres del fragmento anterior que se repiten al inicio\n\nconst body = $('Webhook Ingesta').first().json.body ?? {};\nconst documento = String(body.documento || '').trim();\nconst contenido = String(body.contenido || '');\n\nif (!documento) throw new Error('Falta `documento`: el nombre con el que se identifica el corpus.');\nif (contenido.trim().length === 0) throw new Error('Falta `contenido`: el texto del documento.');\n\n// --- 1. Partir el markdown en piezas por encabezado (nivel 2 y nivel 3) ---\nconst piezas = [];\nconst porNivel2 = contenido.split(/^##\\s+(?!#)/m);\nconst cabecera = porNivel2.shift();\nif (cabecera && cabecera.trim().length > 0) {\n  piezas.push({ seccion: 'Introduccion', subseccion: '', cuerpo: cabecera.trim() });\n}\nfor (const bloque of porNivel2) {\n  const salto = bloque.indexOf('\\n');\n  const seccion = (salto === -1 ? bloque : bloque.slice(0, salto)).trim();\n  const resto = salto === -1 ? '' : bloque.slice(salto + 1);\n  const porNivel3 = resto.split(/^###\\s+/m);\n  const intro = porNivel3.shift();\n  if (intro && intro.trim().length > 0) {\n    piezas.push({ seccion, subseccion: '', cuerpo: intro.trim() });\n  }\n  for (const sub of porNivel3) {\n    const s2 = sub.indexOf('\\n');\n    const subseccion = (s2 === -1 ? sub : sub.slice(0, s2)).trim();\n    const cuerpo = (s2 === -1 ? '' : sub.slice(s2 + 1)).trim();\n    if (cuerpo.length > 0) piezas.push({ seccion, subseccion, cuerpo });\n  }\n}\n\nif (piezas.length === 0) throw new Error('El documento no produjo ninguna seccion.');\n\n// --- 2. Trocear cada pieza respetando limites naturales ---\n// Se corta por parrafo; si un parrafo solo ya excede el tamano, por frase; y solo\n// como ultimo recurso a lo bruto. Partir a mitad de frase produce fragmentos que\n// no se entienden solos, que es justo lo que este ticket viene a arreglar.\nfunction trocear(texto) {\n  if (texto.length <= TAMANO) return [texto];\n\n  const unidades = [];\n  for (const parrafo of texto.split(/\\n{2,}/)) {\n    if (parrafo.length <= TAMANO) { unidades.push(parrafo); continue; }\n    // Una tabla Markdown nunca se parte por frases (las celdas terminan en punto y las filas\n    // quedarian rotas, con las ultimas huerfanas de cabecera). Se parte por FILAS y cada trozo\n    // repite la cabecera (titulos + separador) para que se entienda solo.\n    if (/^\\|\\s*-{3,}/m.test(parrafo)) {\n      const lineas = parrafo.split('\\n').filter((l) => l.trim().length > 0);\n      const sep = lineas.findIndex((l) => /^\\|\\s*-{3,}/.test(l));\n      // La cabecera es la fila anterior al separador; la prosa que venga antes (una tabla pegada\n      // a su parrafo introductorio) va como unidad propia.\n      const prosa = lineas.slice(0, sep - 1).join('\\n');\n      if (prosa.trim().length > 0) unidades.push(prosa);\n      const filas = lineas.slice(sep - 1);\n      const cab = filas.slice(0, 2).join('\\n');\n      let trozo = cab;\n      for (const fila of filas.slice(2)) {\n        if ((trozo + '\\n' + fila).length > TAMANO && trozo !== cab) { unidades.push(trozo); trozo = cab; }\n        trozo += '\\n' + fila;\n      }\n      unidades.push(trozo);\n      continue;\n    }\n    for (const frase of parrafo.split(/(?<=\\.)\\s+/)) {\n      if (frase.length <= TAMANO) { unidades.push(frase); continue; }\n      for (let i = 0; i < frase.length; i += TAMANO) unidades.push(frase.slice(i, i + TAMANO));\n    }\n  }\n\n  const trozos = [];\n  let actual = '';\n  for (const u of unidades) {\n    if (actual && (actual + '\\n\\n' + u).length > TAMANO) {\n      trozos.push(actual);\n      actual = SOLAPE > 0 ? actual.slice(-SOLAPE) + '\\n\\n' + u : u;\n    } else {\n      actual = actual ? actual + '\\n\\n' + u : u;\n    }\n  }\n  if (actual.trim().length > 0) trozos.push(actual);\n  return trozos;\n}\n\n// --- 3. Anteponer la cabecera a CADA fragmento ---\nconst items = [];\nfor (const p of piezas) {\n  const titulo = [documento, p.seccion, p.subseccion].filter(Boolean).join(' — ');\n  for (const trozo of trocear(p.cuerpo)) {\n    items.push({\n      json: {\n        documento,\n        seccion: p.seccion,\n        subseccion: p.subseccion,\n        texto: titulo + '\\n\\n' + trozo,\n      },\n    });\n  }\n}\n\nreturn items;"
+      },
+      "id": "part",
+      "name": "Trocear con contexto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "CREATE TABLE IF NOT EXISTS heb_aristo_corpus (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), text text, metadata jsonb, embedding vector(1536));\nDELETE FROM heb_aristo_corpus WHERE metadata->>'documento' = $1;",
+        "options": {
+          "queryReplacement": "={{ $json.body.documento }}"
+        }
+      },
+      "id": "limpiar",
+      "name": "Borrar version anterior",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        208,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "V0RcqGuqWSuowyhM",
+          "name": "BANO Postgres (pgvector)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": "heb_aristo_corpus",
+        "options": {}
+      },
+      "id": "ins",
+      "name": "PGVector Insertar",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        640,
+        0
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "V0RcqGuqWSuowyhM",
+          "name": "BANO Postgres (pgvector)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.texto }}",
+        "textSplittingMode": "custom",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "documento",
+                "value": "={{ $json.documento }}"
+              },
+              {
+                "name": "seccion",
+                "value": "={{ $json.seccion }}"
+              },
+              {
+                "name": "subseccion",
+                "value": "={{ $json.subseccion }}"
+              },
+              {
+                "name": "idioma",
+                "value": "={{ $json.documento.endsWith('-en') ? 'en' : 'es' }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "loader",
+      "name": "Cargador",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        704,
+        224
+      ]
+    },
+    {
+      "parameters": {
+        "chunkSize": 6000,
+        "options": {}
+      },
+      "id": "split",
+      "name": "Troceador",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        864,
+        432
+      ],
+      "notes": "Desactivado en la practica. El troceado real ocurre en 'Trocear con contexto', que antepone la cabecera a cada fragmento; este nodo sigue conectado porque el Cargador lo exige, con un tamano grande para no volver a partir lo ya partido."
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "emb",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        528,
+        224
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "khGoYB8EqlxK66fW",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Deja constancia de cuanto se indexo, que es un criterio del ticket.\nconst fragmentos = $input.all();\nconst porSeccion = {};\nfor (const f of fragmentos) {\n  const s = f.json?.metadata?.seccion ?? '(sin seccion)';\n  porSeccion[s] = (porSeccion[s] ?? 0) + 1;\n}\nconst largos = fragmentos.map((f) => (f.json?.pageContent ?? '').length);\nconst media = largos.length ? Math.round(largos.reduce((a, b) => a + b, 0) / largos.length) : 0;\n\n// Un fragmento sin su cabecera es un huerfano: no puede decir de que habla sin sus\n// vecinos, y la busqueda vectorial lo juzga aislado. Deberia ser siempre cero.\nconst documento = $('Trocear con contexto').first().json.documento;\nconst huerfanos = fragmentos.filter((f) => !(f.json?.pageContent ?? '').startsWith(documento)).length;\n\nreturn [{ json: {\n  ok: true,\n  documento,\n  secciones: Object.keys(porSeccion).length,\n  fragmentos: fragmentos.length,\n  huerfanos,\n  caracteres: { min: Math.min(...largos), media, max: Math.max(...largos) },\n  troceado: { tamano: 1000, solape: 150, hecho_en: 'Trocear con contexto' },\n  modelo_embeddings: 'text-embedding-3-small',\n  dimensiones: 1536,\n  por_seccion: porSeccion,\n} }];"
+      },
+      "id": "resumen",
+      "name": "Resumen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## HEB-aristo — Ingesta del corpus\n\nFlujo aparte del chat: se dispara a mano cuando cambia un documento, nunca en cada turno.\n\n    POST /webhook/heb-aristo/v1/ingesta   Authorization: Bearer <token de ingesta>\n    { \"documento\": \"POL-OPS-014 Politica de mermas y caducidad\", \"contenido\": \"<markdown>\" }\n\nFuente: `corpus/politicas/*.md`, generados de los PDF por `infra/pdf_a_markdown.py` (tablas reconstruidas a mano en\n`infra/tablas_politicas.py`). Se ingiere con `node infra/ingerir_politicas.mjs`.\n\n### Como trocea\n`Trocear con contexto` parte por `##`/`###` y cada fragmento lleva su cabecera `documento > seccion > subseccion`:\nun fragmento debe poder decir de que habla sin sus vecinos. Tamano 1000, sin solape. Metadata: documento, seccion, subseccion.\n\n### Reejecutar NO duplica\n`Borrar version anterior` limpia `heb_aristo_corpus` por `metadata->>'documento'` antes de insertar.\n\n### Trampas\n- La limpieza va antes de partir por seccion (executeOnce colapsa los items).\n- Embeddings text-embedding-3-small (OpenAI, 1536 dims): cambiar de modelo obliga a reindexar.",
+        "height": 420,
+        "width": 760,
+        "color": 6
+      },
+      "id": "nota_ing",
+      "name": "Nota — ingesta",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        -464
+      ]
+    }
+  ],
+  "connections": {
+    "PGVector Insertar": {
+      "main": [
+        [
+          {
+            "node": "Resumen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cargador": {
+      "ai_document": [
+        [
+          {
+            "node": "PGVector Insertar",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Troceador": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Cargador",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "PGVector Insertar",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Ingesta": {
+      "main": [
+        [
+          {
+            "node": "Borrar version anterior",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Borrar version anterior": {
+      "main": [
+        [
+          {
+            "node": "Trocear con contexto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trocear con contexto": {
+      "main": [
+        [
+          {
+            "node": "PGVector Insertar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

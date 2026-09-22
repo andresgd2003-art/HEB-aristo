@@ -1,0 +1,52 @@
+[
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cumplimos el tiempo objetivo de solución de los tickets críticos según la política?",
+  "respuesta": "Regla: tiempo objetivo para prioridad Crítica = 4 horas (faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 5 «Tecnología y mantenimiento», P20).\n\nDatos: según `tickets_mesa_servicio.csv` (junio-agosto 2026)\n- Total críticos: 8; resueltos en ≤4 horas: 2; resueltos en >4 horas: 6; abiertos (Abierto + En proceso): 0.\n- T01: total 1; ≤4 h: 0; >4 h: 1; abiertos: 0.\n- T02: total 2; ≤4 h: 0; >4 h: 2; abiertos: 0.\n- T03: total 4; ≤4 h: 2; >4 h: 2; abiertos: 0.\n- T04: total 1; ≤4 h: 0; >4 h: 1; abiertos: 0.\n\nVeredicto: no cumplimos el tiempo objetivo — sólo 2 de 8 tickets críticos se resolvieron en ≤4 horas según los registros.",
+  "contextos": [
+   "(sin contexto recuperado)"
+  ],
+  "ms": 74781,
+  "exec": "86698",
+  "trampa": "T14",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "FAQ-OPS-001 P20 (sección 5): Crítica = 4 horas de solución. De los 8 tickets críticos, solo 2 cerraron en 4 horas o menos (1158 en estado Resuelto, 1191 Cerrado); si se cuentan solo los Cerrado, 1 de 7. En cualquier lectura, no se cumple; el asistente debe decir cuál usó.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.726
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuántos tickets siguen sin cerrar y cuántos están resueltos pero no cerrados?",
+  "respuesta": "Tickets sin cerrar (Abierto + En proceso): 17.  \nTickets resueltos pero no cerrados (Resuelto): 72.  \n\nFuente: tickets_mesa_servicio.csv (periodo junio-agosto de 2026). Conté los estados Abierto y En proceso como \"sin cerrar\"; Resuelto es el conteo de tickets resueltos que no están en estado Cerrado.",
+  "contextos": [
+   "faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001) — 4. Servicio al cliente — P15. Un cliente quiere devolver una licuadora que compró hace dos semanas. ¿Procede?\n\nSí, siempre que presente el ticket de compra y el producto con su empaque original completo, accesorios y manuales. Para electrodomésticos y electrónicos menores como licuadoras, tostadores, planchas o cafeteras, el cliente tiene 15 días con ticket para solicitar la devolución o el cambio en tienda; después de ese plazo se le orienta para ejercer la garantía del fabricante en el centro de servicio autorizado. Si el aparato presenta falla de funcionamiento dentro del plazo, la tienda realiza el cambio directamente sin remitir al cliente al fabricante. Si el cliente no trae el empaque original, la devolución requiere autorización del Gerente de Tienda.",
+   "procedimiento_devoluciones.pdf — Procedimiento de devoluciones y cambios (PRO-SAC-021) — 3. Plazos de devolución por tipo de producto\n\n| Tipo de producto | Plazo para devolución o cambio | Requisitos |\r\n|---|---|---|\r\n| Abarrotes y no perecederos | 30 días | Ticket de compra; producto cerrado y en buen estado. |\r\n| Perecederos | 48 horas | Ticket de compra; el producto debe presentar defecto de calidad (descomposición, mal olor, cuerpo extraño, caducidad vencida al momento de la compra). |\r\n| Electrodomésticos y electrónicos menores | 30 días naturales | Ticket de compra, empaque original completo con accesorios y manuales. |\r\n| Ropa y textiles | 30 días | Ticket de compra; prenda sin uso, con etiquetas originales. |\r\n| Medicamentos | Sin devolución | No aplica, por disposición sanitaria. Únicamente procede cambio por defecto de fabricación visible o error de despacho documentado. |\r\n| Artículos de temporada (navideños, escolares, etc.) | 15 días | Ticket de compra; producto cerrado. No procede después de concluida la temporada. |",
+   "procedimiento_devoluciones.pdf — Procedimiento de devoluciones y cambios (PRO-SAC-021) — 3. Plazos de devolución por tipo de producto — 3.2 Notas sobre electrodomésticos y electrónicos menores\n\nEl producto debe presentarse con todos los accesorios, manuales y empaque original. Si el producto presenta falla de funcionamiento dentro del plazo, la tienda realiza el cambio o la devolución directamente sin remitir al cliente al centro de servicio del fabricante. Después del plazo de tienda, el cliente ejerce la garantía del fabricante conforme a la póliza incluida en el empaque; el módulo de Servicio al Cliente le proporciona los datos de contacto del centro de servicio autorizado.",
+   "procedimiento_devoluciones.pdf — Procedimiento de devoluciones y cambios (PRO-SAC-021) — 3. Plazos de devolución por tipo de producto\n\nLos plazos se cuentan a partir de la fecha de compra que aparece en el ticket. Cuando el plazo se expresa en días, se trata de días naturales. La siguiente tabla es la referencia oficial para todo el personal de tienda:",
+   "procedimiento_devoluciones.pdf — Procedimiento de devoluciones y cambios (PRO-SAC-021) — 4. Excepciones a los plazos — 4.1 Producto con defecto de fabricación\n\nCuando un producto no perecedero presente un defecto de fabricación evidente, la tienda acepta la devolución o el cambio aun cuando haya vencido el plazo de la tabla, siempre que el cliente presente el ticket y la compra no tenga más de noventa días. Estos casos requieren autorización del Gerente de Servicio al Cliente.",
+   "procedimiento_devoluciones.pdf — Procedimiento de devoluciones y cambios (PRO-SAC-021) — 4. Excepciones a los plazos — 4.2 Error de la tienda\n\nSi el error es atribuible a la tienda (precio cobrado distinto al exhibido, producto equivocado entregado en pedido en línea, doble cobro), la devolución procede en cualquier momento dentro de los noventa días siguientes a la compra y no requiere que el producto esté cerrado."
+  ],
+  "ms": 86429,
+  "exec": "86742",
+  "esperado": [
+   "17",
+   "72"
+  ],
+  "trampa": "T15",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "reference": "17 tickets en Abierto o En proceso; 72 en Resuelto con fecha de cierre. Ningún documento define la diferencia entre Resuelto y Cerrado: el asistente debe declarar qué contó y no inventar una definición.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.772
+ }
+]

@@ -1,0 +1,710 @@
+{
+  "name": "HEB-aristo — Chat",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "heb-aristo/chat",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        640,
+        0
+      ],
+      "webhookId": "heb-aristo-chat"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Valida la peticion y extrae la pregunta. Corre ANTES del agente a proposito:\n// no se gasta una llamada al modelo en una peticion que ya sabemos que es invalida.\n//\n// Contrato hacia adelante: { __status, cuerpo } si hay que rechazar,\n// { __status: 200, pregunta } si hay que seguir.\n\n// Limite de longitud. Va aqui, ANTES de llamar al modelo, porque un prompt se puede\n// convencer y un `if` no. Sin esto, cualquiera con el token puede mandar un megabyte\n// y quemar la credencial de OpenAI que este flujo comparte con un bot de ventas en\n// produccion (ver la anotacion del ADR-0004).\n//\n// 16000 caracteres son unos 4000 tokens: sobra para pegar un reporte entero, y es 60 veces menos que el megabyte que hoy pasaria.\nconst MAX_CARACTERES = 16000;\n\nconst previo = $input.first().json;\n\n// Si `Autorizar` ya decidio rechazar, se deja pasar su respuesta tal cual.\nif (previo.__status !== 200) return [{ json: previo }];\n\nconst body = previo.body ?? {};\n\nconst error = (code, message, param) => [{\n  json: {\n    __status: 400,\n    cuerpo: { status: 'error', code, respuesta: message, param },\n  },\n}];\n\n// `model` NO se exige, el flujo fija el modelo.\n//\n// Tampoco se exigen `id` ni `status` en los items de ENTRADA, por lo mismo:\n// el canal puede mandar solo {role, type, content}.\n\nif (body.input === undefined || body.input === null) {\n  return error('missing_required_parameter', 'Falta el campo `input`.', 'input');\n}\n\nif (typeof body.input !== 'string' && !Array.isArray(body.input)) {\n  return error('invalid_type', 'El campo `input` debe ser un string o un array de items.', 'input');\n}\n\nif (Array.isArray(body.input)) {\n  if (body.input.length === 0) {\n    return error('empty_input', 'El campo `input` no puede ser un array vacio.', 'input');\n  }\n  for (let i = 0; i < body.input.length; i++) {\n    const item = body.input[i];\n    if (!item || typeof item !== 'object') {\n      return error('invalid_item', 'El item ' + i + ' de `input` no es un objeto.', 'input[' + i + ']');\n    }\n    if (typeof item.type !== 'string' || item.type.length === 0) {\n      return error('invalid_item', 'El item ' + i + ' de `input` no declara `type`.', 'input[' + i + '].type');\n    }\n  }\n}\n\n// De un item de tipo message se concatena el texto de sus content parts `input_text`.\nfunction leerInput(input) {\n  if (typeof input === 'string') return input;\n  const textos = [];\n  for (const item of input) {\n    if (typeof item.content === 'string') { textos.push(item.content); continue; }\n    if (!Array.isArray(item.content)) continue;\n    for (const parte of item.content) {\n      if (parte && parte.type === 'input_text' && typeof parte.text === 'string') {\n        textos.push(parte.text);\n      }\n    }\n  }\n  return textos.join('\\n');\n}\n\nconst pregunta = leerInput(body.input);\n\nif (String(pregunta).length > MAX_CARACTERES) {\n  return error(\n    'input_too_long',\n    'El campo `input` supera el limite de ' + MAX_CARACTERES + ' caracteres (llegaron ' +\n      String(pregunta).length + '). Manda menos texto o divide la pregunta.',\n    'input',\n  );\n}\n\nif (String(pregunta).trim().length === 0) {\n  return error('empty_input', 'El campo `input` no contiene texto.', 'input');\n}\n\n// --- Filtro determinista de intento de inyeccion ---\n// No reemplaza la resistencia del prompt (esa sigue viva en el system message): esto\n// es una alerta que queda REGISTRADA antes de que la peticion llegue al modelo, para\n// que un intento de inyeccion se pueda auditar en la tabla `turnos` aunque el modelo\n// lo haya resistido perfectamente y no lo mencione en su respuesta. Lo que debe quedar\n// registrado no puede depender de que el modelo se acuerde de decirlo.\n//\n// Es deliberadamente laxo (no bloquea, solo marca): un falso positivo aqui no le\n// niega el servicio a nadie, solo aparece marcado en el log para revision.\nconst GLOSARIO_INYECCION = [\n  /ignora\\s+(tus\\s+)?instruccion/i,\n  /olvida\\s+(que\\s+eres|tus\\s+reglas|todo\\s+lo\\s+anterior)/i,\n  /system\\s*prompt/i,\n  /(dame|dime|revela|muestra|repite).{0,20}(tu\\s+)?(prompt|instruccion)/i,\n  /actua\\s+como\\s+(un\\s+)?(agente|asistente)\\s+sin\\s+(restriccion|regla|limite)/i,\n  /a\\s+partir\\s+de\\s+ahora\\s+eres/i,\n  /modo\\s+desarrollador/i,\n  /jailbreak/i,\n  /\\bDAN\\b/,\n];\n// Sin quitar acentos, \"Actua\" (mi regex) no reconoce \"Actúa\" (lo que escribe la\n// gente de verdad). Se normaliza antes de comparar, igual que en los gates de prueba.\nconst sinAcentos = String(pregunta).normalize('NFD').replace(/[̀-ͯ]/g, '');\nconst alertaInyeccion = GLOSARIO_INYECCION.some((re) => re.test(sinAcentos));\n\n// --- Deteccion determinista de idioma de la pregunta ---\n// Decide con que subconjunto del corpus (es/en) se filtra la recuperacion, para que\n// una pregunta en ingles no traiga fragmentos en espanol que el modelo pegaria sin\n// traducir (el revoltijo de la ejecucion 72511). No sustituye la regla de espejo del\n// prompt: solo elige el idioma de los fragmentos. Empate -> es (idioma fuente).\nfunction detectarIdioma(texto) {\n  const t = ' ' + sinAcentos.toLowerCase() + ' ';\n  const es = (t.match(/\\b(que|de|la|el|los|las|un|una|como|donde|cuando|cuales|cual|quien|por|para|con|sus|su|es|son|ha|hace|hizo|tiene|proyectos|trabajo|experiencia|habla|cuentame|dime|explicame|sobre|tus|del)\\b/g) || []).length;\n  const en = (t.match(/\\b(what|which|who|where|when|how|the|of|is|are|has|have|do|does|did|his|her|their|about|projects|work|experience|tell|explain|your|you|and|for|with|can)\\b/g) || []).length;\n  return en > es ? 'en' : 'es';\n}\nconst idioma = detectarIdioma(pregunta);\n\n// `previous_response_id` es lo UNICO que llega del pasado: el canal no reenvia\n// el historial (ADR-0006). `t0` sirve para medir la latencia del turno completo.\nreturn [{\n  json: {\n    __status: 200,\n    pregunta,\n    previous_response_id: typeof body.previous_response_id === 'string' ? body.previous_response_id : '',\n    t0: Date.now(),\n    alerta_inyeccion: alertaInyeccion,\n    idioma,\n  },\n}];"
+      },
+      "id": "construir",
+      "name": "Validar entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        992,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json.cuerpo) }}",
+        "options": {
+          "responseCode": "={{ $json.__status }}"
+        }
+      },
+      "id": "responder",
+      "name": "Responder",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2960,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Forma de la salida\n\nTodo nodo pasa `{ __status, cuerpo }` hacia adelante.\n`Responder` fija el codigo HTTP con\n`{{ $json.__status }}`, asi que **un solo camino\nde salida sirve para 200, 400, 401 y 500**.\n\n`Construir response` respeta ese contrato: si\n`__status` no es 200, deja pasar la respuesta de\n`Autorizar` sin tocarla.\n\n### Detalles del spec que cuestan caro olvidar\n\n- `input` puede ser **string O array de items**.\n- Todo item lleva `id`, `type` y **`status`**.\n- Entrada usa `input_text`; salida usa `output_text`.\n\n### Trampa de n8n\n\n`crypto` NO existe en el sandbox del task runner.\nSi un nodo revienta, n8n responde **200 con cuerpo\nvacio**, no 500: un fallo silencioso disfrazado de\nexito. Por eso se valida antes de llegar aqui.",
+        "height": 588,
+        "width": 452,
+        "color": 5
+      },
+      "id": "nota_salida",
+      "name": "Nota — forma de la salida",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2432,
+        208
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.pregunta }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "Version: 27\r\n\r\nEres HEB-aristo, el asistente de una gerente regional que administra cuatro tiendas H-E-B: T01 Tienda Valle Norte y T02 (formato Supermercado, con canal Ecommerce), T03 y T04 (formato Mi Tienda, solo piso). Respondes siempre en español, de forma directa y breve, como lo haría un buen asistente de gerencia.\r\n\r\n## Reglas que no se negocian\r\n\r\n1. **Toda cifra sale de `consultar_datos`.** Ventas, inventario, tickets, catálogo, tiendas: nunca calcules ni recuerdes números; llama a la herramienta y reporta exactamente lo que devuelve. **Un 0 no siempre es un dato.** Si la pregunta pide un hecho que ninguna tabla registra (quién autorizó, si se escaló, quién lo aprobó, la causa de algo), di que ese dato no existe en las fuentes; una búsqueda por palabras en tickets con 0 resultados **no** demuestra que no ocurrió. **Si la herramienta no devolvió ningún resultado, no pongas una cifra** (nunca escribas $0.00 ni \"no hubo\" por falta de resultado): vuelve a pedirlo tú mismo, de inmediato, con una pregunta más simple (hasta dos intentos) y solo si sigue sin resultado di que no lo obtuviste. **Nunca termines con \"¿quieres que lo pida así…?\" ni \"¿confirmas…?\"**: si faltó algo que sí te pidieron, pídelo tú; si la respuesta ya contesta la pregunta, termina ahí y no ofrezcas datos que nadie pidió. Si te pidieron un total y la herramienta devolvió solo un desglose, **no lo sumes tú**: vuelve a pedir el total a `consultar_datos` (\"dame solo la suma total de …\") y reporta la cifra que devuelva. Di de qué archivo salió, con su nombre: \"según `ventas.csv` (junio–agosto 2026)\", \"según `inventario.csv` (al 1 de septiembre de 2026)\", \"según `tickets_mesa_servicio.csv`\", \"según `catalogo_productos.csv`\". **Pásale la pregunta de la gerente tal cual**, con una sola excepción: `consultar_datos` no ve la conversación, así que **sustituye las referencias al contexto por su valor** (\"esa tienda\" → \"T04\", \"ese día\" → \"el 13 de agosto de 2026\", \"esos productos\" → los SKU) antes de llamarla. Fuera de eso, nada más: no le agregues desgloses, filtros de fecha ni tiendas que ella no pidió; si pide un total, pide un total. Si la pregunta mezcla una cifra con una regla o política, a `consultar_datos` pásale **solo la parte de datos** (\"¿cuántos tickets de producto caducado en anaquel hubo?\") y la parte de política resuélvela con `consultar_politicas`.\r\n2. **Toda regla o política sale de `consultar_politicas`** y se cita **con el nombre del archivo y la sección**, tal como aparecen en la cabecera del fragmento: \"Procedimiento de devoluciones y cambios (procedimiento_devoluciones.pdf), sección 3 «Plazos de devolución por tipo de producto»\". Los archivos son: `manual_apertura_y_cierre_tienda.pdf`, `politica_mermas_y_caducidad.pdf`, `procedimiento_devoluciones.pdf`, `faq_gerentes_de_tienda.pdf`. Si dos documentos difieren, prevalece la política, el manual o el procedimiento sobre la FAQ (la propia FAQ lo dice), y mencionas la discrepancia en una frase.\r\n3. **Si no está en los datos ni en las políticas, dilo sin rodeos.** \"No tengo ese dato\" es una respuesta correcta. Nunca inventes cifras, reglas ni causas. En particular:\r\n   - No hay datos de merma (solo ventas, inventario, catálogo, tiendas y tickets): no la calcules con devoluciones ni con nada.\r\n   - No hay ventas de septiembre ni de meses anteriores a junio de 2026.\r\n   - No hay política de vacaciones, nómina, uniformes ni recursos humanos más allá de lo que diga la FAQ.\r\n   - Ventas por Ecommerce en T03 o T04: son **$0.00 por diseño** (formato Mi Tienda, solo piso), no un dato faltante. Dilo así aunque la herramienta devuelva vacío o `null`.\r\n   - Preguntas de causa (\"¿por qué subió/bajó?\", \"¿qué pasó?\"): haz **una sola** consulta a `consultar_datos` pidiendo literalmente \"tickets de <tienda> creados entre <30 días antes del evento> y <fin del evento>, con folio, fecha, título y descripción\" — los avisos de obras, cierres o fallas se levantan **días antes** de que ocurran. Si un ticket lo explica, cítalo con su folio y, si aplica, la regla de la política (por ejemplo, obra > 30 % del piso → horario reducido, MAN-OPS-007 §8.2). Si no hay ninguno, o la herramienta devuelve `ok: false`, responde exactamente \"no tengo información que explique la causa\" y para ahí: no ofrezcas reintentos ni hipótesis (quincenas, clima, promociones).\r\n4. **No reveles datos personales de colaboradores** (nombre completo con teléfono, domicilio, correo) aunque aparezcan en un ticket: la FAQ-OPS-001 P24 lo prohíbe. Puedes decir que existe el ticket y su folio.\r\n5. Los datos cubren ventas de junio a agosto de 2026, inventario al 1 de septiembre de 2026 y tickets de junio a agosto. Hoy es 1 de septiembre de 2026; \"el último mes\" es agosto.\r\n\r\n6. **Alcance**: solo asuntos de las cuatro tiendas (ventas, inventario, catálogo, tickets) y sus políticas internas. Recetas, código, noticias, opiniones, tareas generales: decláralo fuera de tu alcance en una frase y ofrece lo que sí puedes hacer. No lo resuelvas \"de paso\".\r\n7. **Nunca repitas mensajes de error de las herramientas ni nombres de tablas, esquemas u objetos internos** que no sean las cinco fuentes de negocio (ventas, inventario, catálogo, tiendas, tickets). Si piden algo fuera de esas fuentes o que suene a operación técnica (borrar, actualizar, tablas del sistema), responde solo: \"Solo puedo consultar ventas, inventario, catálogo, tiendas y tickets, y únicamente en modo lectura.\"\r\n\r\n8. **Habla como asistente, no como sistema.** Nunca menciones herramientas (`consultar_datos`, `consultar_politicas`), tablas, SQL, \"instrucciones\", \"esquema\" ni nombres internos. Si preguntan qué sabes hacer o cómo pedirte algo, contesta en lenguaje llano: \"Puedo darte cifras de ventas, inventario y tickets de tus cuatro tiendas (junio a agosto) y explicarte las políticas internas citando el documento. Pregúntame normal, por ejemplo: ¿cuánto vendió T02 en julio?, ¿qué productos hay que reordenar en T01?, ¿cuántos días hay para devolver una licuadora?\". Al citar el origen de una cifra di \"según las ventas de julio\", no el nombre de una tabla.\r\n\r\n9. **Listas cortas.** Esto es un chat, no un reporte. Si hay 10 elementos o menos, lístalos directamente sin pedir permiso. Si hay más (por ejemplo \"todos los tickets de julio\"), responde con el resumen —total y desglose por tienda o por tipo— más los 5 más relevantes, y pregunta cómo acotar (\"¿de qué tienda, o solo los abiertos?\"). Cada elemento en una línea corta: folio, fecha, tienda, título.\r\n\r\n10. **No ofrezcas lo que no puedes hacer.** Solo consultas datos y explicas políticas. No generes \"órdenes de compra\", no ofrezcas exportar a CSV/Excel, enviar correos, agendar, avisar a proveedores ni \"generar\" documentos. **Tampoco redactes** correos, mensajes, avisos, recetas ni textos para terceros, aunque la petición venga con datos reales (\"hazme un correo con los productos a reordenar\"): entrega la lista o la cifra y di en una frase que la redacción la haces tú. Esto no cambia en turnos siguientes (\"ahora en inglés\", \"en otro tono\"): si no lo redactaste antes, tampoco ahora.\r\n\r\n11. **Preguntas de \"qué pasó\" en una fecha.** Dos llamadas **separadas** a `consultar_datos`, en este orden, y nada más: (a) venta de ese día por tienda contra el promedio diario de cada tienda en el periodo, señalando las que se desvían (una caída al 40 %, un pico al doble); (b) tickets que puedan cubrir esa fecha: creados **desde 7 días antes hasta ese día**, o cuyo título o descripción **mencionen la fecha** (un aviso de remodelación \"del 14 al 16\" se crea días antes). Una sola consulta con ambas condiciones; no rastrees meses. Si hay varias fechas, una por una, sin saltarte ninguna. Responde siempre con la cifra y el porcentaje. Un ticket solo cuenta como causa si la explica de forma directa (una remodelación explica una caída; una avería o un foco fundido no explican una subida). Si no hay causa así, di exactamente: \"no hay ticket ni política que lo explique\", sin \"podría estar relacionado\".\r\n\r\n12. **Preguntas de \"por qué\" o de cumplimiento sin fecha** (\"¿por qué X no tiene Y?\", \"¿cumplimos Z?\", \"¿qué tiendas incumplen?\"): dos llamadas y nada más: `consultar_datos` para la cifra o el conteo real y `consultar_politicas` para la regla que aplica. No rastrees tickets **como causa** de un dato de ventas o inventario (eso es solo para la regla 11); si la pregunta es sobre los propios tickets (SLA, prioridades, estados), consúltalos con normalidad. Cuando la regla fija un valor (plazo, umbral, frecuencia, monto), **pásaselo explícito a `consultar_datos`** (\"tickets críticos cerrados en 4 horas o menos\", \"conteos con más de un turno de antigüedad\"): las tablas no conocen la política, tú sí. Responde con el dato, la regla citada **con su valor** (\"cada turno\", \"4 horas\", \"15 días\") y el veredicto; si ninguna regla explica el dato, di: \"el dato es X; no hay política que lo explique\". Nunca pidas aclarar tienda o periodo si la pregunta abarca todas las tiendas o todo el periodo.\r\n\r\n## Cómo responder\r\n\r\n- **Seguimientos cortos** (\"desglósalo por tienda\", \"¿y en agosto?\", \"¿cuánto se devolvió en ese mismo periodo?\") se ejecutan sin pedir aclaración: toma la tienda, el periodo y la métrica del turno anterior. Si amplías el alcance respecto al turno anterior (por ejemplo, de tres tiendas a las cuatro), dilo en la respuesta (\"en las cuatro tiendas\"). Solo pregunta cuando el contexto tiene **dos** lecturas incompatibles (dos fechas distintas en juego).\r\n\r\n- Primero el dato o la regla, luego el contexto en una o dos frases. Cifras en pesos con separador de miles y dos decimales ($1,810,013.00); unidades y conteos sin decimales.\r\n- **Tickets \"abiertos\", \"sin cerrar\" o \"pendientes\"**: los estados son `Abierto`, `En proceso`, `Resuelto` y `Cerrado`, y ningún documento define la diferencia entre Resuelto y Cerrado. Da el conteo de `Abierto` + `En proceso` y **di qué estados contaste**; si además hay `Resuelto` sin cerrar, menciónalo en una frase.\r\n- Si la pregunta puede leerse de dos formas (por ejemplo \"cuántos productos\" como SKU distintos o como posiciones por tienda), responde con la lectura más útil para una gerente y aclara la otra en una frase.\r\n- Si `consultar_datos` devuelve un desglose (por título, tienda o mes) y la gerente preguntó un total (\"cuántos\", \"cuánto\"), pide el total a la herramienta y da **primero ese total** y luego el desglose. Las sumas las hace la base de datos, nunca tú.\r\n- Si la herramienta devuelve un **total y un detalle**, manda el total: el detalle puede venir recortado (máximo 20 filas) y no sirve para deducir cuántas tiendas, tickets o productos hay. Nunca digas \"solo T03\" porque el detalle solo muestre T03.\r\n- Si para responder te falta un **campo** que la herramienta no devolvió (la fecha de creación, la prioridad, el importe), pídelo tú de inmediato con una pregunta explícita (\"dame el ticket 1118 con su fecha de creación\"); no pidas permiso ni confirmación para hacerlo.\r\n- En preguntas de cumplimiento sobre tickets o inventario, da siempre el **conteo** de casos afectados además del veredicto (\"hay 6 tickets de producto caducado; ninguno registra escalación\").\r\n- Si la pregunta cruza fuentes (una cifra y una regla, un ticket y una política), usa las dos herramientas y une los resultados con sus citas.\r\n- Si `consultar_datos` devuelve `ok: false`, explica en una frase por qué no se pudo y ofrece una reformulación concreta.\r\n- No repitas la pregunta, no saludes en cada turno, no cierres con ofrecimientos genéricos.",
+          "maxIterations": 25
+        }
+      },
+      "id": "agente",
+      "name": "Agente",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1888,
+        -496
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gpt-5-mini"
+        },
+        "responsesApiEnabled": false,
+        "options": {
+          "maxTokens": 16000,
+          "reasoningEffort": "medium",
+          "timeout": 120000
+        }
+      },
+      "id": "modelo",
+      "name": "Modelo",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1840,
+        -192
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "khGoYB8EqlxK66fW",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Empaqueta la respuesta del agente en el contrato generico {status, response_id, respuesta}.\n\n// El agente devuelve texto VACIO de vez en cuando: es un modelo razonador y en preguntas\n// adversarias (inyeccion) llega a gastar su presupuesto razonando sin emitir contenido.\n// Medido: 44% con maxTokens 4000, 11% con 8000, 17% con reasoningEffort medium.\n//\n// Bajar el razonamiento lo evitaba pero rompia otras cosas (el idioma dejaba de reflejar\n// al usuario y las consultas multiples a la herramienta se volvian poco fiables, #27), asi\n// que el invariante \"nunca devolver vacio\" NO puede depender del presupuesto del modelo:\n// vive aqui, en un if. Igual que los limites del ADR-0002.\nconst RESPALDO = 'No pude generar una respuesta para eso. Reformula la pregunta y lo intento de nuevo.';\nconst crudo = $input.first().json.output ?? '';\nconst texto = String(crudo).trim().length > 0 ? crudo : RESPALDO;\n\n// `crypto` no existe en el sandbox del task runner de n8n.\n// El id solo tiene que ser opaco y unico, no criptografico.\nconst id = (prefijo) =>\n  prefijo + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);\n\nconst MODELO = 'gpt-5-mini';\n\n// La mantiene sincronizada infra/desplegar-prompt.mjs con prompts/sistema.md (repo HEB-aristo).\n// Se registra por turno para poder comparar calidad entre versiones del prompt.\nconst PROMPT_VERSION = '27';\n\nreturn [{\n  json: {\n    __status: 200,\n    prompt_version: PROMPT_VERSION,\n    cuerpo: { status: 'completed', response_id: id('resp'), respuesta: texto },\n  },\n}];"
+      },
+      "id": "fmt",
+      "name": "Formatear response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2688,
+        -560
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Traduce un fallo del agente a un error con la forma del spec.\n//\n// Sin este nodo, n8n responde 200 con el CUERPO VACIO cuando algo revienta: un exito\n// aparente que esconde el fallo. Medido en la fase 1 con un ReferenceError, y probable\n// desde que hay una llamada a un servicio externo de por medio.\n//\n// El texto crudo del error NUNCA se devuelve: puede traer nombres de nodos, trazas y\n// hasta el prompt del sistema. Se usa solo para clasificar.\n\nconst crudo = String(\n  $input.first().json?.error?.message ??\n  $input.first().json?.error ??\n  $input.first().json?.message ??\n  ''\n);\n\nconst dice = (...palabras) => palabras.some((p) => crudo.toLowerCase().includes(p));\n\n// 503 y no 502: el Traefik de Easypanel INTERCEPTA los 502 del backend y los sustituye\n// por su propia pagina HTML de \"Service is not reachable\", porque 502 es el codigo que\n// el mismo usa cuando un servicio esta caido. Medido: con 502 el cliente recibe HTML;\n// con 503 y 504 el cuerpo JSON llega intacto.\nlet status = 503;\nlet code = 'upstream_error';\nlet message = 'El modelo no pudo generar una respuesta. Intentalo de nuevo.';\n\nif (dice('timeout', 'timed out', 'etimedout', 'esockettimedout', 'aborted')) {\n  status = 504;\n  code = 'upstream_timeout';\n  message = 'El modelo tardo demasiado en responder. Intentalo de nuevo.';\n} else if (dice('429', 'rate limit', 'quota', 'too many requests')) {\n  status = 429;\n  code = 'rate_limited';\n  message = 'Se alcanzo el limite de peticiones del proveedor. Intentalo en unos momentos.';\n} else if (dice('401', '403', 'api key', 'unauthorized', 'incorrect api key')) {\n  // Es culpa del servidor, no de quien llama: su bearer ya se valido antes.\n  status = 503;\n  code = 'upstream_auth_error';\n  message = 'El servidor no pudo autenticarse contra el proveedor del modelo.';\n}\n\nreturn [{\n  json: {\n    __status: status,\n    cuerpo: { status: 'error', code, respuesta: message },\n  },\n}];"
+      },
+      "id": "errag",
+      "name": "Error del agente",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2688,
+        -416
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "id",
+          "value": "nvidia/nemotron-3-super-120b-a12b"
+        },
+        "responsesApiEnabled": false,
+        "options": {
+          "maxTokens": 4000,
+          "timeout": 120000
+        }
+      },
+      "id": "modelo2",
+      "name": "Modelo de respaldo (NVIDIA)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1936,
+        -336
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "YDLnU9ZAyIGqa0l9",
+          "name": "BANO NVIDIA (OpenAI compatible)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "WITH ancla AS (\n  SELECT conversation_id FROM heb_turnos WHERE response_id = $1 LIMIT 1\n)\nSELECT a.conversation_id,\n       (SELECT count(*) FROM heb_turnos t WHERE t.conversation_id = a.conversation_id) AS heb_turnos,\n       (SELECT count(*) FROM heb_turnos t WHERE t.conversation_id = a.conversation_id\n          AND t.creado_en > now() - interval '1 minute') AS ultimo_minuto\nFROM ancla a;",
+        "options": {
+          "queryReplacement": "={{ $json.previous_response_id || '-' }}"
+        }
+      },
+      "id": "resolver",
+      "name": "Resolver conversacion",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1152,
+        0
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "V0RcqGuqWSuowyhM",
+          "name": "BANO Postgres (pgvector)"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "notes": "Una sola consulta hace tres cosas: resuelve el `previous_response_id` a su conversacion, y devuelve cuantos turnos lleva y cuantos van en el ultimo minuto, para los limites del guardia determinista. Sin ancla devuelve cero filas, igual que antes.\n\nCorre tambien para peticiones ya marcadas como error: sin `previous_response_id` se manda '-' como centinela y no encuentra nada. Se acepta ese SELECT de mas a cambio de un portero menos; la exposicion no cambia, porque una peticion sin token valido ya provocaba antes una lectura de la data table en `Leer token`.\n\nSi la base falla, continueRegularOutput deja seguir el turno: el asistente responde sin memoria en vez de no responder."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Decide a que conversacion pertenece este turno.\n//\n// Si no llego `previous_response_id`, se abre una conversacion nueva.\n// Si llego y resolvio, se hereda su `conversation_id`.\n// Si llego y NO resolvio, se responde 400: callar y empezar de cero seria peor que\n// fallar, porque quien pregunta creeria que el asistente perdio la memoria a mitad de la\n// conversacion, sin saber por que.\n//\n// Un id deja de resolver por dos motivos: no existio nunca, o caduco. La limpieza\n// borra los turnos de mas de 30 dias (pendiente: limpieza de heb_turnos).\n\nconst turno = $('Validar entrada').first().json;\n\n// Lo que ya viene marcado como error pasa intacto hasta el portero unico del final.\n// Antes habia un IF aqui delante que lo frenaba; se quito por ser identico al de\n// mas abajo, y este nodo se hizo responsable de no estorbar.\nif (turno.__status !== 200) return [{ json: turno }];\n\nconst fila = $input.first().json ?? {};\nconst pedido = String(turno.previous_response_id || '').trim();\nconst encontrado = fila.conversation_id;\n\n// Si la base fallo, `Resolver conversacion` deja pasar su error como item. Se\n// distingue de \"no encontrado\": ahi la culpa es del servidor, no de quien llama,\n// y es preferible responder sin memoria a rechazar un id que quiza si existe.\nconst baseFallo = Boolean(fila.error);\n\nif (pedido && !encontrado && !baseFallo) {\n  return [{\n    json: {\n      __status: 400,\n      cuerpo: { status: 'error', code: 'previous_response_not_found', respuesta: 'El `previous_response_id` no existe o ya caduco. Las conversaciones se conservan 30 dias.' },\n    },\n  }];\n}\n\n// --- Limites del guardia determinista ---\n// Solo aplican a conversaciones que ya existen: una nueva empieza en cero.\nconst MAX_TURNOS = 100;        // por conversacion\nconst MAX_POR_MINUTO = 20;     // por conversacion, para frenar rafagas\n\nif (encontrado) {\n  const turnos = Number(fila.turnos ?? 0);\n  const ultimoMinuto = Number(fila.ultimo_minuto ?? 0);\n\n  if (turnos >= MAX_TURNOS) {\n    return [{\n      json: {\n        __status: 400,\n        cuerpo: { status: 'error', code: 'conversation_too_long', respuesta: 'Esta conversacion alcanzo el limite de ' + MAX_TURNOS +\n              ' turnos. Empieza una nueva omitiendo `previous_response_id`.' },\n      },\n    }];\n  }\n\n  if (ultimoMinuto >= MAX_POR_MINUTO) {\n    return [{\n      json: {\n        __status: 429,\n        cuerpo: { status: 'error', code: 'rate_limited', respuesta: 'Demasiadas peticiones en esta conversacion: el limite es ' +\n              MAX_POR_MINUTO + ' por minuto. Intentalo en unos segundos.' },\n      },\n    }];\n  }\n}\n\nconst nuevo = () =>\n  'conv_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);\n\nreturn [{\n  json: {\n    __status: 200,\n    pregunta: turno.pregunta,\n    previous_response_id: pedido,\n    conversation_id: encontrado || nuevo(),\n    conversacion_nueva: !encontrado,\n    t0: turno.t0,\n    alerta_inyeccion: turno.alerta_inyeccion ?? false,\n    idioma: turno.idioma ?? 'es',\n  },\n}];"
+      },
+      "id": "decidir",
+      "name": "Decidir conversacion",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1312,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Decidir conversacion').first().json.conversation_id }}",
+        "contextWindowLength": 20
+      },
+      "id": "memoria",
+      "name": "Memoria",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        2016,
+        -192
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO heb_turnos (response_id, conversation_id, previous_response_id, entrada, salida, modelo, prompt_version, latencia_ms, alerta_inyeccion)\nSELECT r.response_id, r.conversation_id, r.previous_response_id, r.entrada, r.salida, r.modelo, r.prompt_version, r.latencia_ms, r.alerta_inyeccion\nFROM json_populate_record(null::heb_turnos, convert_from(decode($1, 'base64'), 'UTF8')::json) AS r\nON CONFLICT (response_id) DO NOTHING;",
+        "options": {
+          "queryReplacement": "={{ $json.registro_b64 }}"
+        }
+      },
+      "id": "registrar",
+      "name": "Registrar turno",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3360,
+        32
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "V0RcqGuqWSuowyhM",
+          "name": "BANO Postgres (pgvector)"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "notes": "Un solo parametro a proposito: n8n parte los parametros por comas y cualquier valor con una coma corre las columnas (bug n8n#14955 / #16354). El turno viaja como JSON en base64, que no puede contener comas."
+    },
+    {
+      "parameters": {
+        "jsCode": "const MODELO_DEL_TURNO = 'gpt-5-mini';\n// Empaqueta el turno como JSON en base64, para pasarlo a Postgres en UN solo parametro.\n//\n// Por que base64 y no varios parametros: n8n parte `queryReplacement` por COMAS, asi que\n// cualquier valor con una coma corre las columnas. Es un bug abierto de n8n (#14955,\n// reabierto en #16354, cerrado como \"not planned\"). Lo vimos en vivo: la pregunta acabo\n// en la columna `previous_response_id` y la respuesta en `entrada`.\n// El base64 no puede contener comas, asi que el problema desaparece de raiz.\n\n// Este nodo cuelga de `Responder`, que se ejecuta TAMBIEN en los caminos de error\n// (401, 400, 503). En esos casos `Formatear response` nunca corrio y leerlo revienta,\n// dejando la ejecucion marcada como fallida aunque el cliente ya recibio su respuesta\n// correcta. El resultado eran errores falsos que enmascaran los de verdad, justo en\n// el log que existe para observar el sistema.\n//\n// Sin turno que registrar, no se registra nada.\nif (!$('Formatear response').isExecuted) return [];\n\nconst r = $('Formatear response').first().json;\nconst c = $('Decidir conversacion').first().json;\n\nconst registro = {\n  response_id: r.cuerpo.response_id,\n  conversation_id: c.conversation_id,\n  previous_response_id: c.previous_response_id || null,\n  entrada: c.pregunta,\n  salida: r.cuerpo.respuesta,\n  modelo: MODELO_DEL_TURNO,\n  prompt_version: r.prompt_version,\n  latencia_ms: Date.now() - c.t0,\n  alerta_inyeccion: c.alerta_inyeccion ?? false,\n};\n\nreturn [{ json: { registro_b64: Buffer.from(JSON.stringify(registro), 'utf8').toString('base64') } }];"
+      },
+      "id": "prepreg",
+      "name": "Preparar registro",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3136,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.__status }}",
+              "rightValue": 200,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "esvalido2",
+      "name": "Puede seguir",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1472,
+        0
+      ],
+      "notes": "Portero UNICO del flujo. Todo lo que llega marcado con __status distinto de 200 (401 de autenticacion, 400 de validacion, 400 de id desconocido) sale por la rama falsa directo a Responder.\n\nAntes habia dos IF con esta misma condicion. El streaming cuelga de este."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Entrada generica: sin autenticacion, el cuerpo pasa tal cual a Validar entrada.\nreturn [{ json: { __status: 200, body: $input.first().json.body ?? {} } }];"
+      },
+      "id": "entrada_generica",
+      "name": "Entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        816,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## HEB-aristo — Chat (Recuperación)\n\nAsistente de una gerente de tienda H-E-B (ejercicio de reclutamiento; datos y politicas sinteticos).\n\n    POST /webhook/heb-aristo/chat   { input, previous_response_id? }  ->  { status, response_id, respuesta }\n\nMemoria por conversacion en `heb_turnos` (Postgres `bano_postgres`, servicio compartido, tabla propia; guarda tokens por turno).\n\n**Herramientas del Agente**\n\n- `consultar_politicas`: pgvector `heb_aristo_corpus` (4 PDF, cada fragmento con documento y seccion), top-6.\n- `consultar_datos`: **AI Agent Tool** (gpt-5-mini) con el esquema comentado y ejemplos verificados; su unica herramienta es\n  `ejecutar_sql` = Postgres Tool con la credencial `heb_lector` (solo SELECT en `heb`, timeout 15 s) y la guarda\n  determinista (`infra/guarda_sql.js`) como expresion de la consulta: solo SELECT, una sentencia, tablas de `heb`, LIMIT 50.\n\n**No editar a mano**: `node infra/crear-flujos.mjs` regenera y sincroniza todo desde el repo (workflows/*.json, prompts/sistema.md,\ninfra/esquema_para_el_agente.md, infra/ejemplos_sql.md, infra/reglas_sql.md, infra/guarda_sql.js).",
+        "height": 592,
+        "width": 640,
+        "color": 4
+      },
+      "id": "nota_heb_aristo",
+      "name": "Nota — HEB-aristo",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        752,
+        -624
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Busca en los 4 documentos internos de H-E-B: Manual de apertura y cierre (MAN-OPS-007), Politica de mermas y caducidad (POL-OPS-014), Procedimiento de devoluciones y cambios (PRO-SAC-021) y Preguntas frecuentes para gerentes (FAQ-OPS-001). Cada fragmento empieza con su documento y seccion: citalos. Usala para toda pregunta de reglas, plazos, procedimientos, responsables o politicas.",
+        "tableName": "heb_aristo_corpus",
+        "topK": 6,
+        "options": {}
+      },
+      "id": "tool_pol",
+      "name": "consultar_politicas",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        2112,
+        -304
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "V0RcqGuqWSuowyhM",
+          "name": "BANO Postgres (pgvector)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "emb_pol",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2192,
+        -176
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "khGoYB8EqlxK66fW",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "id",
+          "value": "nvidia/nemotron-3-super-120b-a12b"
+        },
+        "responsesApiEnabled": false,
+        "options": {
+          "maxTokens": 4000,
+          "timeout": 120000
+        }
+      },
+      "id": "sqlnv",
+      "name": "Modelo SQL de respaldo (NVIDIA)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2464,
+        -96
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "YDLnU9ZAyIGqa0l9",
+          "name": "BANO NVIDIA (OpenAI compatible)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Consulta las cifras reales de las 4 tiendas: ventas (jun-ago 2026), inventario al 1-sep-2026, catalogo de productos, tiendas y tickets de la mesa de servicio. Pasa la pregunta completa en espanol, con tienda, periodo y producto si el usuario los dio. Devuelve las filas y el SQL usado. Usala SIEMPRE para cualquier numero, conteo, ranking o comparacion; nunca calcules cifras de memoria.",
+        "text": "={{ $fromAI('pregunta', 'La pregunta del usuario tal cual, con tienda, periodo y producto si los menciono', 'string') }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "Eres un analista de datos. Respondes preguntas ejecutando SQL con la herramienta ejecutar_sql.\nProduce UNA sola consulta SELECT para PostgreSQL 17, sin comentarios y sin punto y coma final,\r\nusando solo las tablas y reglas del esquema. Pon alias legibles en espanol a las columnas\r\ncalculadas. Redondea montos a 2 decimales. Ordena de mayor a menor cuando se pida un ranking.\r\nLa granularidad la fija la pregunta: si pide un total ('cuanto', 'cuantos', 'en total', 'las cuatro\r\ntiendas'), devuelve UNA fila con el total; si pide 'por tienda', 'por mes', 'cual', 'ranking',\r\ndevuelve el desglose. Nunca inventes un filtro de tienda o periodo que el usuario no dio.\r\nSi la pregunta no puede responderse con estas tablas (merma, septiembre en adelante, competidores,\r\nopiniones), no consultes nada y dilo.\r\nListas: si piden \"todos los ...\" o una lista, haz DOS consultas separadas: (1) COUNT(*) total y, si aplica,\r\nGROUP BY tienda o tipo; (2) hasta 20 filas de detalle ordenadas por lo relevante (prioridad, fecha), solo con\r\nlas columnas necesarias (folio, fecha, tienda, titulo): NUNCA descripcion salvo que la pidan. Nunca mezcles\r\nresumen y detalle en un UNION: el total que reportes es el COUNT de (1), jamas las filas que devolviste.\r\nEmpates: en preguntas de \"el mas/menos vendido\", \"el mejor/peor\", \"el mayor/menor\", NO uses LIMIT 1 a ciegas:\ndevuelve todos los que empatan en el primer lugar (por ejemplo con RANK() o comparando contra el MIN/MAX) y di\ncon que criterio se ordeno (unidades o importe). Si la pregunta no fija el criterio, usa unidades y devuelve\ntambien el importe para que quien pregunta pueda elegir.\n\"Mejor/peor dia\", \"cuanto vendio\", \"ventas\": siempre venta_neta_mxn (pesos). Solo ordena por unidades si la pregunta\ndice \"unidades\" o \"piezas\". Si das unidades ademas de pesos, deja claro cual fue el criterio.\nLo mismo para \"que tienda vendio mas/menos\", \"cual vendio mas\": ordena por venta_neta_mxn (pesos), no por unidades,\nsalvo que la pregunta diga \"unidades\" o \"piezas\".\nTotales: si la pregunta pide un total (\"cuanto vendieron las cuatro tiendas\", \"cuantos tickets en total\"), devuelve el\nTOTAL calculado en SQL (SUM/COUNT sin GROUP BY) y, si ademas quieres el desglose, agregalo con GROUPING SETS o una\nsegunda fila \"Total\". El agente principal no debe sumar filas.\nSi ejecutar_sql devuelve un error, leelo, corrige la consulta y vuelve a intentar (maximo 3 intentos).\nCuando tengas el resultado, responde SOLO con JSON: {\"sql\": \"<la consulta que dio el resultado>\", \"filas\": [...las filas tal cual...], \"total\": <el COUNT(*) real de lo que pregunta el usuario, obtenido con UNA consulta de conteo aparte; NUNCA el numero de filas que devolviste>}. Para listas haz dos consultas separadas: (1) COUNT (y GROUP BY si aplica), (2) hasta 20 filas de detalle; nunca las mezcles con UNION. Si (2) trae mas de 20 filas, recorta a 20: `total` sigue siendo el COUNT.\nSi no es respondible: {\"sql\": null, \"filas\": [], \"motivo\": \"<una frase>\"}.\n\n## Esquema\nBase PostgreSQL, esquema `heb`. Cada tabla viene de un archivo CSV que el usuario conoce por nombre: tiendas ← tiendas.csv, catalogo_productos ← catalogo_productos.csv, ventas ← ventas.csv, inventario ← inventario.csv, tickets_mesa_servicio ← tickets_mesa_servicio.csv. Al responder incluye el archivo de origen (\"fuente: ventas.csv\"). (search_path ya apunta a heb; no prefijar). Datos sintéticos de 4 tiendas.\r\nPeriodo de ventas: 2026-06-01 a 2026-08-31. Inventario: foto al 2026-09-01. Tickets: jun-ago 2026. Montos en MXN. Hoy es 2026-09-01 para efectos de \"este mes\"/\"último mes\" (agosto es el último mes completo).\r\n\r\ntiendas(tienda_id PK 'T01'..'T04', nombre, ciudad, estado, formato 'Supermercado'|'Mi Tienda', m2, fecha_apertura)\r\n  - Solo Supermercado (T01, T02) tiene canal Ecommerce. En T03/T04 (Mi Tienda) las ventas online son 0 por diseño: usa COALESCE(SUM(...), 0) para que el resultado sea 0 y no NULL.\r\n\r\ncatalogo_productos(sku PK 'SKU-NNNN', nombre, categoria, subcategoria, perecedero bool, vida_util_dias, precio_lista_mxn, costo_mxn, proveedor_id, estatus 'Activo'|'Descontinuado', fecha_alta, fecha_baja, sku_sustituto FK)\r\n  - categorias: Lácteos, Panadería, Carnes, Frutas y verduras, Abarrotes, Bebidas, Limpieza, Cuidado personal.\r\n  - Un SKU Descontinuado tiene fecha_baja (último día que vendió) y normalmente sku_sustituto. Para preguntas por producto (ej. \"leche entera\") sumar el SKU viejo y su sustituto: SKU-1001 -> SKU-1121 desde 2026-07-15.\r\n  - Buscar productos por nombre con ILIKE '%...%' (los nombres traen presentación: \"Leche entera 1 L\").\r\n\r\nventas(fecha, tienda_id FK, sku FK, unidades int, venta_neta_mxn, descuento_mxn, canal 'Piso'|'Ecommerce')\r\n  - SIN clave primaria: una devolución es una fila aparte con unidades y venta_neta_mxn NEGATIVAS y puede coincidir en (fecha, tienda, sku, canal) con la venta del día. SUM() ya las descuenta. Para \"devoluciones\" filtrar unidades < 0; para \"venta bruta\" unidades > 0.\r\n  - Los días sin venta no aparecen. venta_neta_mxn = unidades*precio - descuento_mxn.\r\n  - Margen = venta_neta_mxn - unidades*costo_mxn (join con catalogo). No hay datos de merma en ninguna tabla.\r\n\r\ninventario(tienda_id, sku, existencia int, punto_reorden int, fecha_ultimo_conteo, fecha_caducidad_lote_proximo NULL si no perecedero) PK (tienda_id, sku)\r\n  - Foto única al 2026-09-01; no hay histórico. \"Bajo punto de reorden\" = existencia < punto_reorden.\r\n  - \"Caduca pronto\" = fecha_caducidad_lote_proximo entre '2026-09-01' y la fecha que pida el usuario.\r\n\r\ntickets_mesa_servicio(ticket_id PK int, fecha_creacion timestamp, tienda_id FK, categoria 'TI'|'Mantenimiento'|'RH'|'Inventario'|'Cajas', prioridad 'Baja'|'Media'|'Alta'|'Crítica', estado 'Abierto'|'En proceso'|'Resuelto'|'Cerrado', titulo, descripcion, fecha_cierre NULL si sigue abierto)\r\n  - \"Abiertos\"/\"pendientes\" = estado IN ('Abierto','En proceso'). Tiempo de resolución = fecha_cierre - fecha_creacion.\r\n  - Para explicar un evento (caída/pico de ventas en unas fechas) buscar tickets de esa tienda creados desde 30 días ANTES del evento: los avisos de obra/cierre se levantan antes de que ocurran (ej. ticket 1118 del 10-jul avisa la remodelación del 14-16 jul).\r\n  - fecha_creacion y fecha_cierre son TIMESTAMP: para filtrar por día usar fecha_creacion::date BETWEEN ... o fecha_creacion < 'día siguiente'. Un BETWEEN '2026-06-01' AND '2026-08-31' sobre el timestamp DESCARTA todo el 31 de agosto. Si la pregunta no acota fechas, no filtres: los tickets ya son solo de jun-ago.\r\n  - Texto libre con errores de dedo y plantillas repetidas: agrupar por titulo ILIKE o categoria, no por texto exacto. Datos personales ya redactados.\r\n  - Para contar tickets \"de X\": los títulos son plantillas (≈40 distintas) escritas en coloquial y a veces sin acento (\"Se fue la luz en refris\", \"Refrigerador de carnes no enfria\"). Buscar por RAÍCES cortas sin acento con ILIKE sobre titulo Y descripcion (el modelo de un equipo, p. ej. 'PrintMax', solo aparece en la descripción): (titulo ILIKE '%refri%' OR descripcion ILIKE '%refri%'). NO por la frase literal de la pregunta (rara vez coincide) ni por palabras genéricas que atrapan otros temas ('%anaquel%' también es \"Anaquel flojo\"). Devolver SIEMPRE el desglose: SELECT titulo, COUNT(*) ... GROUP BY titulo, para que quien pregunta vea qué se contó. Nunca incluir recomendaciones ni texto de política como literales en el SQL: la consulta solo devuelve datos.\r\n\n\n## Ejemplos verificados\nPregunta: ¿Cuánto vendió T02 en julio?\r\nSELECT ROUND(SUM(venta_neta_mxn), 2) AS venta_neta FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\r\n\r\nPregunta: ¿Cuánto se vendió en total por Ecommerce en agosto?\r\nSELECT ROUND(SUM(venta_neta_mxn), 2) AS venta_neta FROM ventas WHERE canal = 'Ecommerce' AND fecha BETWEEN '2026-08-01' AND '2026-08-31'\r\n\r\nPregunta: Ventas por tienda en el trimestre\r\nSELECT t.tienda_id, t.nombre, ROUND(SUM(v.venta_neta_mxn), 2) AS venta_neta FROM ventas v JOIN tiendas t USING (tienda_id) GROUP BY 1, 2 ORDER BY venta_neta DESC\r\n\r\nPregunta: ¿Cuántas unidades de leche entera se vendieron en el periodo?\r\nSELECT SUM(v.unidades) AS unidades FROM ventas v JOIN catalogo_productos c USING (sku) WHERE c.nombre ILIKE '%leche entera%'\r\n\r\nPregunta: ¿Qué productos están bajo su punto de reorden en Tienda Valle Norte?\r\nSELECT i.sku, c.nombre, i.existencia, i.punto_reorden FROM inventario i JOIN catalogo_productos c USING (sku) JOIN tiendas t USING (tienda_id) WHERE t.nombre ILIKE '%valle norte%' AND i.existencia < i.punto_reorden ORDER BY i.existencia\r\n\r\nPregunta: ¿Cuántos productos caducan antes del 15 de septiembre?\r\nSELECT COUNT(*) AS productos FROM inventario WHERE fecha_caducidad_lote_proximo < '2026-09-15'\r\n\r\nPregunta: ¿Cuántos tickets siguen abiertos?\r\nSELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto', 'En proceso')\r\n\r\nPregunta: ¿Cuál fue el monto de devoluciones en junio?\r\nSELECT ROUND(SUM(venta_neta_mxn), 2) AS devoluciones, SUM(unidades) AS unidades FROM ventas WHERE unidades < 0 AND fecha BETWEEN '2026-06-01' AND '2026-06-30'\r\n\r\nPregunta: ¿Cuál es la categoría que más vende en T03?\r\nSELECT c.categoria, ROUND(SUM(v.venta_neta_mxn), 2) AS venta_neta FROM ventas v JOIN catalogo_productos c USING (sku) WHERE v.tienda_id = 'T03' GROUP BY 1 ORDER BY venta_neta DESC LIMIT 1\r\n\r\nPregunta: ¿Cuántos tickets críticos hubo por tienda?\r\nSELECT tienda_id, COUNT(*) AS tickets_criticos FROM tickets_mesa_servicio WHERE prioridad = 'Crítica' GROUP BY 1 ORDER BY 2 DESC\r\n\r\nPregunta: ¿Cuál es el margen bruto de Lácteos en agosto?\r\nSELECT ROUND(SUM(v.venta_neta_mxn - v.unidades * c.costo_mxn), 2) AS margen_bruto FROM ventas v JOIN catalogo_productos c USING (sku) WHERE c.categoria = 'Lácteos' AND v.fecha BETWEEN '2026-08-01' AND '2026-08-31'\r\n\r\nPregunta: ¿Cuántos tickets de producto caducado en anaquel hubo?\r\nSELECT titulo, COUNT(*) AS tickets FROM tickets_mesa_servicio WHERE titulo ILIKE '%caducad%' OR descripcion ILIKE '%caducad%' GROUP BY 1 ORDER BY 2 DESC\r\n\r\nPregunta: ¿Cuántos tickets hubo por fallas de la impresora PrintMax TX-200?\r\nSELECT titulo, COUNT(*) AS tickets FROM tickets_mesa_servicio WHERE titulo ILIKE '%printmax%' OR descripcion ILIKE '%printmax%' GROUP BY 1 ORDER BY 2 DESC\r\n\r\nPregunta: ¿Cuántos tickets reportaron refrigeradores sin frío?\r\nSELECT titulo, COUNT(*) AS tickets FROM tickets_mesa_servicio WHERE titulo ILIKE '%refri%' OR descripcion ILIKE '%refri%' OR titulo ILIKE '%frio%' OR descripcion ILIKE '%frio%' GROUP BY 1 ORDER BY 2 DESC\r\n\r\nPregunta: ¿Qué tienda tiene más merma?\r\nNO_RESPONDIBLE: no hay datos de merma en las tablas; solo ventas, inventario, catálogo, tiendas y tickets.\r\n\nPregunta: ¿Cuál fue el artículo menos vendido en T01 el 16 de julio?\nSELECT v.sku, c.nombre, SUM(v.unidades) AS unidades, ROUND(SUM(v.venta_neta_mxn), 2) AS venta_neta FROM ventas v JOIN catalogo_productos c USING (sku) WHERE v.tienda_id = 'T01' AND v.fecha = '2026-07-16' AND v.unidades > 0 GROUP BY v.sku, c.nombre HAVING SUM(v.unidades) = (SELECT MIN(u) FROM (SELECT SUM(unidades) AS u FROM ventas WHERE tienda_id = 'T01' AND fecha = '2026-07-16' AND unidades > 0 GROUP BY sku) m) ORDER BY venta_neta\n\nPregunta: ¿Qué tiendas llevan más de un día sin contar panadería, carnes o frutas y verduras?\nSELECT i.tienda_id, c.categoria, COUNT(*) AS posiciones_sin_conteo_reciente, MAX(i.fecha_ultimo_conteo) AS ultimo_conteo FROM inventario i JOIN catalogo_productos c USING (sku) WHERE c.categoria IN ('Panadería', 'Carnes', 'Frutas y verduras') AND i.fecha_ultimo_conteo < DATE '2026-09-01' GROUP BY 1, 2 ORDER BY 1, 2\n-- inventario es una foto al 1 de septiembre de 2026: la antigüedad del conteo se mide con fecha_ultimo_conteo contra esa fecha; no hay histórico diario.\n",
+          "maxIterations": 8
+        }
+      },
+      "id": "agente_sql",
+      "name": "consultar_datos",
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        2400,
+        -304
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {
+          "maxTokens": 4000,
+          "reasoningEffort": "low",
+          "timeout": 90000
+        }
+      },
+      "id": "modelo_sql",
+      "name": "Modelo SQL",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2320,
+        -96
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "khGoYB8EqlxK66fW",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Ejecuta UNA consulta SELECT sobre el esquema heb (solo lectura, LIMIT 50) y devuelve las filas. Si la consulta no es valida devuelve el motivo.",
+        "operation": "executeQuery",
+        "query": "{{ (() => {\n// Guarda determinista del SQL que genera el modelo. Corre como expresion dentro del Postgres Tool\r\n// `ejecutar_sql` del flujo de chat (la inyecta infra/consolidar_sql.mjs) y tambien en local (guarda_sql.test.mjs).\r\n// El usuario Postgres ya es de solo lectura (heb_lector): esto es la segunda capa, y la que\r\n// da un mensaje claro en vez de un \"permission denied\".\r\n//\r\n// Contrato: guardar(textoDelModelo) -> { sql } o lanza Error con el motivo.\r\n\r\nconst TABLAS = ['tiendas', 'catalogo_productos', 'ventas', 'inventario', 'tickets_mesa_servicio'];\r\nconst LIMITE = 50;   // ponytail: 50 filas; mas no caben en la salida del agente SQL (JSON truncado = cifras falsas)\r\n\r\nfunction guardar(crudo) {\r\n  let sql = String(crudo ?? '').trim();\r\n  // El modelo a veces envuelve en ```sql ... ``` o devuelve JSON {\"sql\": \"...\"}.\r\n  const fence = sql.match(/```(?:sql)?\\s*([\\s\\S]*?)```/i);\r\n  if (fence) sql = fence[1].trim();\r\n  if (sql.startsWith('{')) { try { sql = String(JSON.parse(sql).sql ?? '').trim(); } catch { /* sigue crudo */ } }\r\n  sql = sql.replace(/;\\s*$/, '').trim();\r\n\r\n  if (!sql) throw new Error('El modelo no produjo SQL.');\r\n  if (!/^(select|with)\\b/i.test(sql)) throw new Error('Solo se permiten consultas SELECT.');\r\n  if (/;/.test(sql)) throw new Error('Solo se permite una sentencia.');\r\n  if (/--|\\/\\*|\\*\\//.test(sql)) throw new Error('No se permiten comentarios en el SQL.');\r\n  if (/\\b(insert|update|delete|drop|alter|create|truncate|grant|revoke|copy|call|do|execute|set|reset|vacuum|analyze|lock|listen|notify|refresh|into)\\b/i.test(sql))\r\n    throw new Error('Palabra clave no permitida en una consulta de solo lectura.');\r\n  if (/\\b(pg_catalog|pg_|information_schema|current_setting|pg_sleep|lo_|dblink|public\\.)/i.test(sql))\r\n    throw new Error('Acceso a objetos del sistema no permitido.');\r\n  // Toda tabla referenciada debe ser del esquema heb (con o sin prefijo heb.) o un CTE propio.\r\n  // (?:\\bwith|,|\\)) y no \\b(?:with|,): \\b no casa antes de una coma, asi que del segundo CTE en adelante no se reconocian\r\n  // y la guardia los rechazaba como \"tabla fuera del esquema\" (8 reintentos, 156 s, sin respuesta).\r\n  const ctes = [...sql.matchAll(/(?:\\bwith|,|\\))\\s*([a-z_][a-z0-9_]*)\\s+as\\s*\\(/gi)].map((m) => m[1].toLowerCase());\r\n  for (const m of sql.matchAll(/\\b(?:from|join)\\s+(?:heb\\.)?([a-z_][a-z0-9_]*)/gi)) {\r\n    const t = m[1].toLowerCase();\r\n    if (!TABLAS.includes(t) && !ctes.includes(t) && !/^(select|lateral|unnest|generate_series)$/.test(t))\r\n      throw new Error('Tabla fuera del esquema heb: ' + m[1]);\r\n  }\r\n  // LIMIT forzado: mas de 50 filas no caben en la salida del agente SQL (JSON truncado = cifras falsas).\r\n  const lim = sql.match(/\\blimit\\s+(\\d+)\\s*$/i);\r\n  if (!lim) sql += ' LIMIT ' + LIMITE;\r\n  else if (Number(lim[1]) > LIMITE) sql = sql.replace(/\\blimit\\s+\\d+\\s*$/i, 'LIMIT ' + LIMITE);\r\n  return { sql };\r\n}\r\n\r\nreturn guardar($fromAI('sql', 'La consulta SELECT completa', 'string')).sql;\n})() }}",
+        "options": {
+          "queryBatching": "independently"
+        }
+      },
+      "id": "ejecutar_sql",
+      "name": "ejecutar_sql",
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.6,
+      "position": [
+        2624,
+        -112
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "Jk9Oc1ul5YKVuNg3",
+          "name": "HEB lector (solo lectura)"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente": {
+      "main": [
+        [
+          {
+            "node": "Formatear response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error del agente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error del agente": {
+      "main": [
+        [
+          {
+            "node": "Responder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo de respaldo (NVIDIA)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Resolver conversacion": {
+      "main": [
+        [
+          {
+            "node": "Decidir conversacion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memoria": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agente",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear response": {
+      "main": [
+        [
+          {
+            "node": "Responder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Responder": {
+      "main": [
+        [
+          {
+            "node": "Preparar registro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar registro": {
+      "main": [
+        [
+          {
+            "node": "Registrar turno",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decidir conversacion": {
+      "main": [
+        [
+          {
+            "node": "Puede seguir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Puede seguir": {
+      "main": [
+        [
+          {
+            "node": "Agente",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Responder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar entrada": {
+      "main": [
+        [
+          {
+            "node": "Resolver conversacion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Entrada": {
+      "main": [
+        [
+          {
+            "node": "Validar entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "consultar_politicas",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "consultar_politicas": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo SQL de respaldo (NVIDIA)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "consultar_datos",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "consultar_datos": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo SQL": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "consultar_datos",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ejecutar_sql": {
+      "ai_tool": [
+        [
+          {
+            "node": "consultar_datos",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "timezone": "America/Mexico_City",
+    "executionOrder": "v1"
+  }
+}

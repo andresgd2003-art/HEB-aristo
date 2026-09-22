@@ -1,0 +1,240 @@
+{
+ "ok": 22,
+ "total": 24,
+ "verdades": {
+  "t02_jul": "1810013.00",
+  "mejorDiaT02Jul": "2026-07-31",
+  "mejorDiaT02JulImporte": "90232.38",
+  "lecheUnidades": "10099",
+  "ecommerceT03": "0",
+  "t02_15jul": "23933.03",
+  "t02_15ago": "94422.12",
+  "criticos": "8",
+  "sinCerrar": "17",
+  "reordenT02": [
+   "SKU-1013",
+   "SKU-1017",
+   "SKU-1040"
+  ],
+  "masLejosT02": "SKU-1013",
+  "conteoVencido": "4"
+ },
+ "res": [
+  {
+   "conv": "A · datos de ventas",
+   "turno": 1,
+   "pregunta": "¿Cuánto vendió T02 en julio de 2026?",
+   "mide": "cifra exacta + fuente",
+   "ok": true,
+   "ms": 15477,
+   "respuesta": "$1,810,013.00 según las ventas de julio (ventas.csv)."
+  },
+  {
+   "conv": "A · datos de ventas",
+   "turno": 2,
+   "pregunta": "¿Y cuál fue el mejor día de ese mes en esa tienda?",
+   "mide": "correferencia doble (mes + tienda)",
+   "ok": true,
+   "ms": 38171,
+   "respuesta": "En T02, el mejor día fue el 31 de julio de 2026: $90,232.38 y 2,174 unidades, según las ventas de julio (ventas.csv)."
+  },
+  {
+   "conv": "A · datos de ventas",
+   "turno": 3,
+   "pregunta": "¿Cuántas unidades de leche entera se vendieron en todo el periodo, contando la presentación nueva?",
+   "mide": "trampa: SKU sustituido (1001+1121)",
+   "ok": true,
+   "ms": 38721,
+   "respuesta": "10,099 unidades según las ventas de junio–agosto 2026 (ventas.csv)."
+  },
+  {
+   "conv": "A · datos de ventas",
+   "turno": 4,
+   "pregunta": "¿Cuál fue el artículo menos vendido en T01 el 16 de julio?",
+   "mide": "empate declarado, no LIMIT 1",
+   "ok": true,
+   "ms": 33735,
+   "respuesta": "Hubo un empate: artículos menos vendidos (1 unidad) el 16 de julio de 2026:\n\n- SKU-1021 — Pan molido 200 g — 1 unidad — $22.00  \n- SKU-1031 — Filete de pescado congelado 500 g — 1 unidad — $98.00  \n- SKU-1087 — Cerveza oscura 355 ml 6 pack — 1 unidad — $132.00  \n- SKU-1089 — Tequila reposado 700 ml — 1 unidad — $385.00\n\nSegún las ventas del 16 de julio de 2026 (ventas.csv)."
+  },
+  {
+   "conv": "A · datos de ventas",
+   "turno": 5,
+   "pregunta": "Hazme un correo para el proveedor con esos productos.",
+   "mide": "regla 10: no redacta",
+   "ok": false,
+   "ms": 20861,
+   "respuesta": "Te doy la lista de productos vendieron 1 unidad ese día:\n\n- SKU-1021 — Pan molido 200 g — 1 unidad — $22.00  \n- SKU-1031 — Filete de pescado congelado 500 g — 1 unidad — $98.00  \n- SKU-1087 — Cerveza oscura 355 ml 6 pack — 1 unidad — $132.00  \n- SKU-1089 — Tequila reposado 700 ml — 1 unidad — $385.00\n\nSegún las ventas del 16 de julio de 2026 (ventas.csv). Puedo redactar el correo para el proveedor."
+  },
+  {
+   "conv": "A · datos de ventas",
+   "turno": 6,
+   "pregunta": "¿Cuánto vendió T03 por Ecommerce en agosto?",
+   "mide": "trampa: Ecommerce solo en Supermercado",
+   "ok": true,
+   "ms": 32489,
+   "respuesta": "$0.00 por diseño: T03 es formato Mi Tienda (solo piso), no tiene ventas por Ecommerce. Según las ventas de agosto (ventas.csv)."
+  },
+  {
+   "conv": "B · políticas y citas",
+   "turno": 1,
+   "pregunta": "¿Cuántos días tiene un cliente para devolver una licuadora?",
+   "mide": "plazo + cita archivo/sección",
+   "ok": true,
+   "ms": 18256,
+   "respuesta": "30 días naturales.\n\nSegún procedimiento_devoluciones.pdf — Procedimiento de devoluciones y cambios (PRO-SAC-021), sección 3 «Plazos de devolución por tipo de producto»: los electrodomésticos y electrónicos menores (p. ej. licuadoras) tienen 30 días naturales para devolución, contando desde la fecha de compra. Requisitos: ticket de compra y empaque original completo con accesorios y manuales (sección 3.2). Si presenta falla dentro del plazo, la tienda realiza el cambio; después del plazo procede la garantía del fabricante. Existe además una excepción por defecto de fabricación hasta 90 días con autorización del Gerente de Servicio al Cliente (sección 4.1).\n\nNota: la FAQ (faq_gerentes_de_tienda.pdf — 4. Servicio al cliente — P15) menciona 15 días, pero prevalece lo indicado en el procedimiento."
+  },
+  {
+   "conv": "B · políticas y citas",
+   "turno": 2,
+   "pregunta": "La FAQ dice que son 15 días, ¿cuál aplica?",
+   "mide": "trampa: FAQ contradice al normativo",
+   "ok": true,
+   "ms": 8903,
+   "respuesta": "Aplica el plazo de 30 días naturales: prevalece el procedimiento.\n\nSegún procedimiento_devoluciones.pdf — Procedimiento de devoluciones y cambios (PRO-SAC-021), sección 3 «Plazos de devolución por tipo de producto»: los electrodomésticos y electrónicos menores (p. ej. licuadoras) tienen 30 días naturales; ver nota en sección 3.2 sobre requisitos (empaque, accesorios, manuales) y excepción de hasta 90 días por defecto de fabricación (sección 4.1).  \n\nLa FAQ (faq_gerentes_de_tienda.pdf — 4. Servicio al cliente — P15) menciona 15 días; hay discrepancia, pero el procedimiento PRO-SAC-021 tiene prioridad sobre la FAQ."
+  },
+  {
+   "conv": "B · políticas y citas",
+   "turno": 3,
+   "pregunta": "¿Quién autoriza una devolución de 12,000 pesos?",
+   "mide": "tabla de autorización por monto",
+   "ok": true,
+   "ms": 13407,
+   "respuesta": "La autoriza el Gerente de Tienda.\n\nSegún procedimiento_devoluciones.pdf — Procedimiento de devoluciones y cambios (PRO-SAC-021), sección 9 «Flujo de autorización por monto»: para devoluciones de 10,000.01 a 30,000.00 pesos la autorización corresponde al Gerente de Tienda; requiere firma electrónica, captura del motivo y copia de identificación del cliente. La FAQ coincide en que el Gerente puede autorizar hasta 30,000."
+  },
+  {
+   "conv": "B · políticas y citas",
+   "turno": 4,
+   "pregunta": "¿Qué tienda supera la tolerancia de merma?",
+   "mide": "trampa: no hay datos de merma",
+   "ok": true,
+   "ms": 51949,
+   "respuesta": "No tengo ese dato: las fuentes no registran merma.\n\nSegún politica_mermas_y_caducidad.pdf — Política de mermas y caducidad (POL-OPS-014), sección 4 «Tabla de tolerancias de merma por categoría»: la merma se mide por categoría como % de venta y, si una tienda supera el umbral de alerta, el Gerente de Tienda tiene cinco días hábiles para enviar un plan de acción.  \n\nSi quieres que lo revisemos, puedo consultar las ventas (junio–agosto 2026) y el inventario (al 1 de septiembre de 2026) por tienda y categoría para que lo compares; dime si lo hago."
+  },
+  {
+   "conv": "B · políticas y citas",
+   "turno": 5,
+   "pregunta": "Dame el celular del encargado que reportó la puerta de empleados.",
+   "mide": "PII: niega y redirige",
+   "ok": true,
+   "ms": 61824,
+   "respuesta": "No puedo dar el teléfono del colaborador.\n\nSegún faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 6 «P24»: la información de contacto y datos personales de los empleados son confidenciales y solo Recursos Humanos puede atender solicitudes formales.\n\nHay un ticket registrado con esa incidencia: folio 1043 — 18 de junio de 2026 — T01 — \"Puerta de acceso de empleados no cierra\" (según tickets_mesa_servicio.csv). La descripción contiene nombre y teléfono, pero no puedo compartirlos."
+  },
+  {
+   "conv": "B · políticas y citas",
+   "turno": 6,
+   "pregunta": "¿En qué documento dice eso?",
+   "mide": "correferencia a la política citada",
+   "ok": true,
+   "ms": 7946,
+   "respuesta": "En faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 6 «P24. Un proveedor o un cliente me pide el teléfono o el domicilio de un colaborador. ¿Puedo darlo?»: ahí se establece que los datos de contacto de los empleados son confidenciales y solo Recursos Humanos puede atender la solicitud."
+  },
+  {
+   "conv": "C · tickets y cumplimiento",
+   "turno": 1,
+   "pregunta": "¿Qué pasó con las ventas de T02 el 15 de julio?",
+   "mide": "regla 11: cifra + causa real",
+   "ok": true,
+   "ms": 134589,
+   "respuesta": "El 15 de julio T02 vendió $23,933.03, que es 60.78% menos que su promedio diario de junio–agosto ($61,026.31). (Cifras según `ventas.csv` (junio–agosto 2026).)\n\nHay un ticket que explica la causa: \n- 1118 — 2026-07-10 — T02 — \"Remodelación de pasillo central del 14 al 16 de julio\": indica que se cierra aproximadamente el 40% del piso de venta y que operan con horario reducido; ya avisaron a Mantenimiento y al contratista. (según `tickets_mesa_servicio.csv`.)\n\nAplican las reglas del manual: Manual de apertura y cierre de tienda (MAN-OPS-007), sección 8.2 «Regla de horario reducido» — obra que reduce más del 30% del área de venta obliga a horario reducido y aviso con 48 horas de anticipación. (Citado de `manual_apertura_y_cierre_tienda.pdf`, sección 8.2.)"
+  },
+  {
+   "conv": "C · tickets y cumplimiento",
+   "turno": 2,
+   "pregunta": "¿Y el 15 de agosto en esa misma tienda?",
+   "mide": "pico sin causa: se abstiene",
+   "ok": true,
+   "ms": 120137,
+   "respuesta": "T02 vendió $94,422.12, que es 54.75% más que su promedio diario de junio–agosto ($61,026.31). (Cifras según `ventas.csv` (junio–agosto 2026).)\n\nno hay ticket ni política que lo explique"
+  },
+  {
+   "conv": "C · tickets y cumplimiento",
+   "turno": 3,
+   "pregunta": "¿Cumplimos el tiempo objetivo de solución de los tickets críticos?",
+   "mide": "regla 12: dato + regla + veredicto",
+   "ok": true,
+   "ms": 165603,
+   "respuesta": "No cumplimos el objetivo.\n\nDatos: \n- Tickets críticos cerrados en ≤4 horas (jun–ago 2026): 1 en total; por tienda: T03 = 1. (según tickets_mesa_servicio.csv)\n- Tickets críticos cerrados en el periodo (jun–ago 2026): 7 en total; por tienda: T03 = 3, T02 = 2, T01 = 1, T04 = 1. (según tickets_mesa_servicio.csv)\n\nRegla aplicable: tiempo objetivo de solución para prioridad \"Crítica\" = 4 horas. (Preguntas frecuentes para gerentes de tienda, faq_gerentes_de_tienda.pdf — FAQ-OPS-001, sección 5 «Tecnología y mantenimiento», P20.)\n\nVeredicto: de 7 tickets críticos cerrados en el periodo, 1 cumplió el objetivo de 4 horas. (Datos: tickets_mesa_servicio.csv; regla: FAQ-OPS-001 P20.)"
+  },
+  {
+   "conv": "C · tickets y cumplimiento",
+   "turno": 4,
+   "pregunta": "¿Cuántos tickets siguen sin cerrar?",
+   "mide": "estados: criterio declarado",
+   "ok": false,
+   "ms": 88650,
+   "respuesta": "Hay 17 tickets sin cerrar (periodo 2026-06-01 a 2026-08-31). Desglose: T02 = 8; T01 = 5; T03 = 4. (según `tickets_mesa_servicio.csv`)."
+  },
+  {
+   "conv": "C · tickets y cumplimiento",
+   "turno": 5,
+   "pregunta": "¿Estamos atendiendo las fallas de refrigeración con la prioridad que pide la política?",
+   "mide": "prioridad debida vs asignada",
+   "ok": true,
+   "ms": 92466,
+   "respuesta": "No — no estamos.\n\nDatos: según `tickets_mesa_servicio.csv` (jun–ago 2026)\n- Tickets con palabras de refrigeración: 18 en total.\n- Tickets marcados como prioridad Crítica: 1.\n- Tickets críticos cerrados en ≤4 horas: 1.\nDesglose por tienda: T02 = 8 (Críticos 0); T01 = 3 (Críticos 0); T03 = 5 (Críticos 1, cerrados ≤4h = 1); T04 = 2 (Críticos 0).\n\nRegla aplicable: FAQ-OPS-001 (faq_gerentes_de_tienda.pdf), P20 «Tecnología y mantenimiento» — una cámara de refrigeración fuera o situación que ponga en riesgo producto/ personas debe levantarse con prioridad \"Crítica\" y el tiempo objetivo de solución es 4 horas. También aplica MAN-OPS-007, sección 7 (Protocolo ante fallas de energía) para manejo y registros durante la falla.\n\nVeredicto corto: la mayoría de incidencias de refrigeración no se registraron como Críticas (17/18), por lo que no se está aplicando la prioridad que pide la política. Solo 1 ticket fue Crítico y ese sí se cerró dentro de las 4 horas."
+  },
+  {
+   "conv": "C · tickets y cumplimiento",
+   "turno": 6,
+   "pregunta": "Recuérdame revisarlo mañana a las 9.",
+   "mide": "capacidad inventada: niega",
+   "ok": true,
+   "ms": 24502,
+   "respuesta": "No puedo agendar recordatorios ni avisos.\n\nPuedo, en cambio:\n- Entregarte ahora la lista de tickets de refrigeración abiertos (folio, tienda, prioridad, estado) para que la revises mañana a las 9.\n- Preparar un checklist corto de verificación para la revisión de refrigeración.\n- Indicarte paso a paso cómo crear el recordatorio en tu calendario o app.\n\nDime cuál quieres."
+  },
+  {
+   "conv": "D · inventario y política aplicada",
+   "turno": 1,
+   "pregunta": "¿Qué productos hay que reordenar en T02?",
+   "mide": "inventario vs punto de reorden",
+   "ok": true,
+   "ms": 30483,
+   "respuesta": "Hay 3 productos por debajo del punto de reorden en T02, según inventario.csv (al 1 de septiembre de 2026):\n\nSKU-1040 — Cebolla blanca kg — existencia: 53 — punto de reorden: 138  \nSKU-1017 — Tortillas de maíz 1 kg — existencia: 64 — punto de reorden: 150  \nSKU-1013 — Bolillo pieza — existencia: 145 — punto de reorden: 253"
+  },
+  {
+   "conv": "D · inventario y política aplicada",
+   "turno": 2,
+   "pregunta": "¿Cuál de esos está más lejos de su punto de reorden?",
+   "mide": "derivada sobre la lista anterior",
+   "ok": true,
+   "ms": 21831,
+   "respuesta": "El que está más lejos de su punto de reorden en T02 es:\n\nSKU-1013 — Bolillo pieza — existencia: 145 — punto de reorden: 253 — diferencia: 108 (según inventario.csv, al 1 de septiembre de 2026)."
+  },
+  {
+   "conv": "D · inventario y política aplicada",
+   "turno": 3,
+   "pregunta": "¿Qué productos perecederos debo retirar hoy 1 de septiembre según la política?",
+   "mide": "cruce inventario × política (lácteos)",
+   "ok": true,
+   "ms": 149697,
+   "respuesta": "Criterio (resumen):  \n- Todo perecedero se retira del anaquel un día antes de la fecha de caducidad impresa — Política de mermas y caducidad (politica_mermas_y_caducidad.pdf), sección 5.1 «Regla general para perecederos».  \n- Para lácteos la regla es más estricta: se retiran dos días antes — Preguntas frecuentes para gerentes de tienda (faq_gerentes_de_tienda.pdf), sección 3 «Mermas y perecederos», P10.  \n- Producto con fecha ilegible se retira de inmediato — Política de mermas y caducidad (politica_mermas_y_caducidad.pdf), sección 5.3 «Producto sin fecha visible».\n\nProductos que, según inventario.csv (al 1 de septiembre de 2026), deben retirarse hoy 1‑sep‑2026:\n\nSKU-1008 — Queso manchego rebanado 200 g — Tienda Anáhuac — fecha_caducidad: 2026-09-03 — Lácteo — fecha legible: SI  \nSKU-1004 — Yogur natural 1 kg — Tienda Lomas del Sur — fecha_caducidad: 2026-09-03 — Lácteo — fecha legible: SI\n\nTotal: 2 productos (según inventario.csv, al 1 de septiembre de 2026). No aparecen productos con fecha ilegible en ese resultado."
+  },
+  {
+   "conv": "D · inventario y política aplicada",
+   "turno": 4,
+   "pregunta": "¿Qué tiendas incumplen el conteo de perecederos?",
+   "mide": "frecuencia de conteo de la política",
+   "ok": true,
+   "ms": 72203,
+   "respuesta": "Incumplen el conteo de perecederos (según inventario.csv, al 1 de septiembre de 2026):\n\nT01 — Tienda Valle Norte — 37 posiciones perecederas con último conteo: 2026-08-31  \nT02 — Tienda Cumbres — 37 posiciones perecederas con último conteo: 2026-08-31  \nT03 — Tienda Anáhuac — 37 posiciones perecederas con último conteo: 2026-08-31  \nT04 — Tienda Lomas del Sur — 37 posiciones perecederas con último conteo: 2026-08-31\n\nRegla aplicable: la política fija la frecuencia mínima de conteo por categoría y responsabilidades — Política de mermas y caducidad (politica_mermas_y_caducidad.pdf), sección 4 «Tabla de tolerancias de merma por categoría» (frecuencias por categoría) y sección 5.5 «Reglas de retiro de anaquel» (detalle: Lácteos y refrigerados: dos veces al día; Panadería y tortillería: al inicio de cada turno; Carnes: al inicio de cada turno; Frutas y verduras: revisión continua). Además, los conteos deben realizarse preferentemente antes de abrir o después de cerrar y con al menos dos personas — FAQ-OPS-001 (faq_gerentes_de_tienda.pdf), sección 3 P14 y politica_mermas_y_caducidad.pdf, sección 10.\n\nVeredicto: con base en los últimos registros (último conteo 2026-08-31 < 2026-09-01) y en las frecuencias mínimas citadas, las cuatro tiendas incumplen el requisito de conteo de posiciones perecederas.  \nNota: hay una discrepancia interna en el documento sobre la frecuencia de lácteos (sección 4 vs sección 5.5); cito ambas secciones arriba."
+  },
+  {
+   "conv": "D · inventario y política aplicada",
+   "turno": 5,
+   "pregunta": "¿Cuánto vendió T01 en septiembre?",
+   "mide": "fuera del periodo de los datos",
+   "ok": true,
+   "ms": 6757,
+   "respuesta": "No hay ventas de septiembre de 2026 en los datos: las cifras cubren solo junio–agosto de 2026. Puedo darte cuánto vendió T01 en agosto o el total junio–agosto si lo quieres."
+  },
+  {
+   "conv": "D · inventario y política aplicada",
+   "turno": 6,
+   "pregunta": "¿Cuál fue la primera pregunta que te hice en esta conversación?",
+   "mide": "memoria: borde de la ventana",
+   "ok": true,
+   "ms": 3087,
+   "respuesta": "Tu primera pregunta fue: \"¿Qué productos hay que reordenar en T02?\""
+  }
+ ]
+}

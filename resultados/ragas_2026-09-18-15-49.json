@@ -1,0 +1,784 @@
+[
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuánto vendió T02 en julio de 2026?",
+  "respuesta": "$1,810,013.00.\n\nSegún ventas de julio de 2026 (consulta a ventas de T02 entre 2026-07-01 y 2026-07-31).",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT ROUND(SUM(venta_neta_mxn), 2) AS venta_neta FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\", \"n\": 1, \"filas\": [{\"venta_neta\": \"1810013.00\"}]}"
+  ],
+  "ms": 9450,
+  "exec": "81955",
+  "esperado": "1810013.00",
+  "exacto": true,
+  "reference": "La respuesta correcta es 1810013.00.",
+  "ragas_faithfulness": 1.0
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuál fue la venta neta total de las cuatro tiendas entre junio y agosto?",
+  "respuesta": "$17,228,300.26.\n\nSegún consultar_datos: venta neta total de las cuatro tiendas entre el 1 de junio y el 31 de agosto de 2026.",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT ROUND(SUM(venta_neta_mxn), 2) AS venta_neta_total FROM ventas WHERE fecha BETWEEN '2026-06-01' AND '2026-08-31'\", \"n\": 1, \"filas\": [{\"venta_neta_total\": \"17228300.26\"}]}"
+  ],
+  "ms": 14379,
+  "exec": "81958",
+  "esperado": "17228300.26",
+  "exacto": true,
+  "reference": "La respuesta correcta es 17228300.26.",
+  "ragas_faithfulness": null
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuántos tickets siguen abiertos o en proceso?",
+  "respuesta": "17 tickets están abiertos o en proceso, según tickets de la mesa de servicio (junio-agosto de 2026).",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT COUNT(*) AS tickets_pendientes FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\", \"n\": 1, \"filas\": [{\"tickets_pendientes\": \"17\"}]}"
+  ],
+  "ms": 10933,
+  "exec": "81961",
+  "esperado": "17",
+  "exacto": true,
+  "reference": "La respuesta correcta es 17.",
+  "ragas_faithfulness": 0.667
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuántas unidades de leche entera se vendieron en el trimestre?",
+  "respuesta": "10,099 unidades, según ventas de junio a agosto de 2026.",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT SUM(v.unidades) AS unidades FROM ventas v JOIN catalogo_productos c USING (sku) WHERE c.nombre ILIKE '%leche entera%' AND v.fecha BETWEEN '2026-06-01' AND '2026-08-31'\", \"n\": 1, \"filas\": [{\"unidades\": \"10099\"}]}"
+  ],
+  "ms": 16477,
+  "exec": "81964",
+  "esperado": "10099",
+  "exacto": true,
+  "reference": "La respuesta correcta es 10099.",
+  "ragas_faithfulness": 1.0
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuánto se vendió por Ecommerce en agosto?",
+  "respuesta": "Se vendió $128,038.00 por Ecommerce en agosto de 2026, según ventas de agosto de 2026 (consulta a la base de datos de ventas).",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT ROUND(COALESCE(SUM(venta_neta_mxn),0), 2) AS venta_neta FROM ventas WHERE canal = 'Ecommerce' AND fecha BETWEEN '2026-08-01' AND '2026-08-31'\", \"n\": 1, \"filas\": [{\"venta_neta\": \"128038.00\"}]}"
+  ],
+  "ms": 16334,
+  "exec": "81967",
+  "esperado": "128038.00",
+  "exacto": true,
+  "reference": "La respuesta correcta es 128038.00.",
+  "ragas_faithfulness": 1.0
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuántos productos de Tienda Valle Norte están bajo su punto de reorden?",
+  "respuesta": "3 productos.\n\nDato según inventario al 1 de septiembre de 2026 (consulta realizada: \"¿Cuántos productos de Tienda Valle Norte están bajo su punto de reorden?\"). Cuenta SKUs (líneas de producto en la tienda), no unidades.",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT COUNT(*) AS productos_bajo_punto_reorden FROM inventario i JOIN tiendas t USING (tienda_id) WHERE t.nombre ILIKE '%valle norte%' AND i.existencia < i.punto_reorden\", \"n\": 1, \"filas\": [{\"productos_bajo_punto_reorden\": \"3\"}]}"
+  ],
+  "ms": 13327,
+  "exec": "81970",
+  "esperado": "3",
+  "exacto": true,
+  "reference": "La respuesta correcta es 3.",
+  "ragas_faithfulness": 0.5
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuál es la categoría que más vende en T03?",
+  "respuesta": "Abarrotes — $532,171.00 de venta neta, según ventas junio-agosto de 2026 en T03.",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT c.categoria, ROUND(SUM(v.venta_neta_mxn), 2) AS venta_neta FROM ventas v JOIN catalogo_productos c USING (sku) WHERE v.tienda_id = 'T03' GROUP BY 1 ORDER BY venta_neta DESC LIMIT 1\", \"n\": 1, \"filas\": [{\"categoria\": \"Abarrotes\", \"venta_neta\": \"532171.00\"}]}"
+  ],
+  "ms": 13169,
+  "exec": "81973",
+  "esperado": "Abarrotes",
+  "exacto": true,
+  "reference": "La respuesta correcta es Abarrotes.",
+  "ragas_faithfulness": 0.667
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuántos tickets críticos hubo en el periodo?",
+  "respuesta": "Hubo 8 tickets críticos, según los tickets de junio a agosto de 2026 (consulta a consultar_datos).",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT COUNT(*) AS tickets_criticos FROM tickets_mesa_servicio WHERE prioridad = 'Crítica'\", \"n\": 1, \"filas\": [{\"tickets_criticos\": 8}]}"
+  ],
+  "ms": 15827,
+  "exec": "81976",
+  "esperado": "8",
+  "exacto": true,
+  "reference": "La respuesta correcta es 8.",
+  "ragas_faithfulness": null
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuánto sumaron las devoluciones en junio?",
+  "respuesta": "Las devoluciones sumaron $-13,305.00, según ventas de junio de 2026.",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT ROUND(SUM(venta_neta_mxn), 2) AS devoluciones FROM ventas WHERE unidades < 0 AND fecha BETWEEN '2026-06-01' AND '2026-06-30'\", \"n\": 1, \"filas\": [{\"devoluciones\": \"-13305.00\"}]}"
+  ],
+  "ms": 16639,
+  "exec": "81979",
+  "esperado": "-13305.00",
+  "exacto": true,
+  "reference": "La respuesta correcta es -13305.00.",
+  "ragas_faithfulness": 1.0
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuántos tickets abiertos o en proceso tiene T02?",
+  "respuesta": "T02 tiene 8 tickets abiertos o en proceso, según los registros de la mesa de servicio (tickets, jun-ago 2026).",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT COUNT(*) AS tickets_pendientes FROM tickets_mesa_servicio WHERE tienda_id = 'T02' AND estado IN ('Abierto','En proceso')\", \"n\": 1, \"filas\": [{\"tickets_pendientes\": \"8\"}]}"
+  ],
+  "ms": 12914,
+  "exec": "81982",
+  "esperado": "8",
+  "exacto": true,
+  "reference": "La respuesta correcta es 8.",
+  "ragas_faithfulness": null
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuánto cayó la venta de T02 el 14 de julio respecto al 13?",
+  "respuesta": "Cayó $29,197.29 (55.36%). Venta 13/07: $52,745.18; 14/07: $23,547.89 — según ventas de julio de T02.",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT ROUND(COALESCE(SUM(v.venta_neta_mxn) FILTER (WHERE v.fecha = '2026-07-13'), 0), 2) AS \\\"venta_13_jul\\\", ROUND(COALESCE(SUM(v.venta_neta_mxn) FILTER (WHERE v.fecha = '2026-07-14'), 0), 2) AS \\\"venta_14_jul\\\", ROUND(ROUND(COALESCE(SUM(v.venta_neta_mxn) FILTER (WHERE v.fecha = '2026-07-13'), 0), 2) - ROUND(COALESCE(SUM(v.venta_neta_mxn) FILTER (WHERE v.fecha = '2026-07-14'), 0), 2), 2) AS \\\"caida_mxn\\\", ROUND(CASE WHEN COALESCE(SUM(v.venta_neta_mxn) FILTER (WHERE v.fecha = '2026-07-13'), 0) = 0 THEN NULL ELSE ( (COALESCE(SUM(v.venta_neta_mxn) FILTER (WHERE v.fecha = '2026-07-13'), 0) - COALESCE(SUM(v.venta_neta_mxn) FILTER (WHERE v.fecha = '2026-07-14'), 0)) / COALESCE(SUM(v.venta_neta_mxn) FILTER (WHERE v.fecha = '2026-07-13'), 0) * 100 ) END, 2) AS \\\"caida_pct\\\" FROM ventas v WHERE v.tienda_id = 'T02'\", \"n\": 1, \"filas\": [{\"venta_13_jul\": \"52745.18\", \"venta_14_jul\": \"23547.89\", \"caida_mxn\": \"29197.29\", \"caida_pct\": \"55.36\"}]}"
+  ],
+  "ms": 38084,
+  "exec": "81985",
+  "esperado": "23547.89",
+  "exacto": true,
+  "reference": "La respuesta correcta es 23547.89.",
+  "ragas_faithfulness": 1.0
+ },
+ {
+  "familia": "cifras",
+  "pregunta": "¿Cuántos productos perecederos caducan antes del 15 de septiembre en T04?",
+  "respuesta": "28 posiciones de inventario (lotes) de productos perecederos caducan antes del 15 de septiembre en T04, según inventario al 1 de septiembre de 2026 (dato obtenido con consultar_datos).  \nSi prefiere el conteo como SKUs distintos en lugar de posiciones, lo consulto.",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT COUNT(*) AS productos_caducan FROM inventario i JOIN catalogo_productos c USING (sku) WHERE i.tienda_id = 'T04' AND c.perecedero = TRUE AND i.fecha_caducidad_lote_proximo < '2026-09-15'\", \"n\": 1, \"filas\": [{\"productos_caducan\": \"28\"}]}"
+  ],
+  "ms": 18867,
+  "exec": "81988",
+  "esperado": "28",
+  "exacto": true,
+  "reference": "La respuesta correcta es 28.",
+  "ragas_faithfulness": 0.2
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Cuántos días tiene un cliente para devolver una licuadora?",
+  "respuesta": "30 días naturales.\n\nSegún PRO-SAC-021 §3 Plazos de devolución por tipo de producto (contados desde la fecha en el ticket): los electrodomésticos y electrónicos menores tienen 30 días naturales y requieren ticket, empaque original completo, accesorios y manuales (ver PRO-SAC-021 §3.2). Nota: la FAQ-OPS-001 P15 indica 15 días para licuadoras; prevalece el procedimiento PRO-SAC-021.",
+  "contextos": [
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 4. Servicio al cliente — P15. Un cliente quiere devolver una licuadora que compró hace dos semanas. ¿Procede?\n\nSí, siempre que presente el ticket de compra y el producto con su empaque original completo, accesorios y manuales. Para electrodomésticos y electrónicos menores como licuadoras, tostadores, planchas o cafeteras, el cliente tiene 15 días con ticket para solicitar la devolución o el cambio en tienda; después de ese plazo se le orienta para ejercer la garantía del fabricante en el centro de servicio autorizado. Si el aparato presenta falla de funcionamiento dentro del plazo, la tienda realiza el cambio directamente sin remitir al cliente al fabricante. Si el cliente no trae el empaque original, la devolución requiere autorización del Gerente de Tienda.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 3. Plazos de devolución por tipo de producto\n\nLos plazos se cuentan a partir de la fecha de compra que aparece en el ticket.\n\nCuando el plazo se expresa en días, se trata de días naturales.\n\nLa siguiente tabla es la referencia oficial para todo el personal de tienda:\r\n\r\n| Tipo de producto | Plazo para devolución o cambio | Requisitos |\r\n|---|---|---|\r\n| Abarrotes y no perecederos | 30 días | Ticket de compra; producto cerrado y en buen estado.\n\n|\r\n| Perecederos | 48 horas | Ticket de compra; el producto debe presentar defecto de calidad (descomposición, mal olor, cuerpo extraño, caducidad vencida al momento de la compra).\n\n|\r\n| Electrodomésticos y electrónicos menores | 30 días naturales | Ticket de compra, empaque original completo con accesorios y manuales.\n\n|\r\n| Ropa y textiles | 30 días | Ticket de compra; prenda sin uso, con etiquetas originales.\n\n|\r\n| Medicamentos | Sin devolución | No aplica, por disposición sanitaria.\n\nÚnicamente procede cambio por defecto de fabricación visible o error de despacho documentado.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 3. Plazos de devolución por tipo de producto — 3.2 Notas sobre electrodomésticos y electrónicos menores\n\nEl producto debe presentarse con todos los accesorios, manuales y empaque original. Si el producto presenta falla de funcionamiento dentro del plazo, la tienda realiza el cambio o la devolución directamente sin remitir al cliente al centro de servicio del fabricante. Después del plazo de tienda, el cliente ejerce la garantía del fabricante conforme a la póliza incluida en el empaque; el módulo de Servicio al Cliente le proporciona los datos de contacto del centro de servicio autorizado.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 4. Excepciones a los plazos — 4.1 Producto con defecto de fabricación\n\nCuando un producto no perecedero presente un defecto de fabricación evidente, la tienda acepta la devolución o el cambio aun cuando haya vencido el plazo de la tabla, siempre que el cliente presente el ticket y la compra no tenga más de noventa días. Estos casos requieren autorización del Gerente de Servicio al Cliente.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 3. Plazos de devolución por tipo de producto\n\n|\r\n| Artículos de temporada (navideños, escolares, etc.) | 15 días | Ticket de compra; producto cerrado.\n\nNo procede después de concluida la temporada.\n\n|\r\n| Vales, tarjetas de regalo y recargas | Sin devolución | No aplica una vez activados.\n\n|",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 4. Servicio al cliente — P16. ¿Puedo aceptar una devolución sin ticket?\n\nSí, con restricciones. Solo procede para producto no perecedero y que no sea medicamento, cerrado, sin uso y del surtido activo de la tienda. El cliente presenta identificación oficial y el reembolso se hace exclusivamente en vale de tienda por el precio más bajo de los últimos treinta días. Un mismo cliente puede hacer como máximo tres devoluciones sin ticket en doce meses por un acumulado de tres mil pesos; el sistema bloquea la operación al exceder los límites y solo tú puedes liberar el bloqueo con justificación. Consulta el Procedimiento de devoluciones y cambios (PRO-SAC-021)."
+  ],
+  "ms": 16450,
+  "exec": "81992",
+  "reference": "30 días naturales con ticket y empaque original completo, según PRO-SAC-021 sección 3 (Plazos de devolución por tipo de producto). La FAQ-OPS-001 P15 menciona 15 días, pero prevalece el procedimiento.",
+  "cita_ok": true,
+  "ragas_faithfulness": 0.833,
+  "ragas_answer_relevancy": 0.692,
+  "ragas_llm_context_precision_with_reference": 0.583,
+  "ragas_context_recall": 1.0
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Cuál es la tolerancia mensual de merma en panadería y su umbral de alerta?",
+  "respuesta": "Tolerancia mensual: 3.5%. Umbral de alerta: 4.5% (frecuencia de conteo: diaria).\n\nFuente: POL-OPS-014 §4 Tabla de tolerancias de merma por categoría. Si se supera el umbral, POL-OPS-014 §4.1 indica que el Gerente de Tienda tiene cinco días hábiles para enviar un plan de acción a la Gerencia Regional.",
+  "contextos": [
+   "POL-OPS-014 Política de mermas y caducidad — 4. Tabla de tolerancias de merma por categoría\n\nLa siguiente tabla establece el nivel de merma total (conocida más desconocida) considerado aceptable para cada categoría, medido mensualmente como porcentaje de la venta neta de la categoría. El umbral de alerta indica el nivel a partir del cual la tienda debe presentar un plan de acción documentado ante la Gerencia Regional de Operaciones.\r\n\r\n| Categoría | Tolerancia mensual (% de venta) | Umbral de alerta (%) | Frecuencia de conteo |\r\n|---|---|---|---|\r\n| Lácteos | 1.8 | 2.8 | Semanal |\r\n| Panadería | 3.5 | 4.5 | Diaria |\r\n| Carnes | 2.5 | 3.5 | Diaria |\r\n| Frutas y verduras | 4.5 | 5.5 | Diaria |\r\n| Abarrotes | 0.6 | 1.6 | Mensual |\r\n| Bebidas | 0.8 | 1.8 | Mensual |\r\n| Limpieza | 0.4 | 1.4 | Trimestral |\r\n| Cuidado personal | 0.5 | 1.5 | Trimestral |",
+   "POL-OPS-014 Política de mermas y caducidad — 4. Tabla de tolerancias de merma por categoría — 4.1 Interpretación de la tabla\n\nLas tolerancias son metas operativas, no autorizaciones para desechar producto. Una tienda que se mantenga por debajo de la tolerancia en una categoría no queda exenta de registrar cada merma individual. Cuando la merma acumulada del mes supera el umbral de alerta, el Gerente de Tienda tiene cinco días hábiles para enviar a la Gerencia Regional un plan de acción con causas raíz identificadas, acciones correctivas y fecha compromiso.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 3. Mermas y perecederos — P9. ¿Cuánta merma es aceptable en mi tienda?\n\nNo existe una cifra única para toda la tienda: la merma aceptable depende de la categoría de producto y se mide cada mes como porcentaje de la venta neta de esa categoría. Los valores oficiales, junto con los umbrales de alerta y la frecuencia mínima de conteo, se encuentran en la tabla de tolerancias de merma por categoría de la Política de mermas y caducidad (POL-OPS-014). Consulta siempre esa tabla en la versión vigente del documento y no cifras de memoria ni de versiones anteriores; si tu tienda supera el umbral de alerta en alguna categoría, tienes cinco días hábiles para presentar un plan de acción a la Gerencia Regional.",
+   "POL-OPS-014 Política de mermas y caducidad — 4. Tabla de tolerancias de merma por categoría — 4.2 Revisión de las tolerancias\n\nLas tolerancias se revisan una vez al año por la Dirección de Operaciones de Tienda en conjunto con la Dirección de Finanzas, considerando el comportamiento histórico de la cadena, los cambios en el surtido y las condiciones del mercado. Cualquier modificación se publica mediante una nueva versión de esta política; las tiendas no pueden aplicar tolerancias distintas a las aquí publicadas.",
+   "POL-OPS-014 Política de mermas y caducidad — 3. Principios generales — 3.1 Prevención antes que registro\n\nLa primera línea de control de merma es el pedido correcto. Los gerentes de departamento deben apoyarse en las sugerencias de reabasto del sistema y ajustar las cantidades considerando la rotación real de la tienda, la estacionalidad y los eventos promocionales. Un sobreinventario en perecederos es la principal causa de merma conocida en la cadena.",
+   "POL-OPS-014 Política de mermas y caducidad — 12. Indicadores de seguimiento\n\nLa Dirección de Operaciones de Tienda publica mensualmente en el tablero corporativo los siguientes indicadores por tienda y por categoría:\r\n\r\n- Merma total como porcentaje de la venta neta.\r\n- Proporción de merma conocida sobre merma total (meta: al menos 70 %).\r\n- Porcentaje de folios de merma autorizados dentro del mismo día (meta: 100 %).\r\n- Recuperación por rebaja escalonada como porcentaje del valor de producto PVC identificado.\r\n- Cumplimiento del calendario de conteos."
+  ],
+  "ms": 10633,
+  "exec": "81993",
+  "reference": "Tolerancia 3.5 % de la venta y umbral de alerta 4.5 %, con conteo diario, según la tabla de la sección 4 de POL-OPS-014.",
+  "cita_ok": true,
+  "ragas_faithfulness": 0.6,
+  "ragas_answer_relevancy": 0.576,
+  "ragas_llm_context_precision_with_reference": 1.0,
+  "ragas_context_recall": 1.0
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Quién autoriza una devolución de 12,000 pesos?",
+  "respuesta": "Gerente de Tienda. Para una devolución de $12,000.00 el PRO-SAC-021 §9 (Flujo de autorización por monto) indica: “De 10,000.01 a 30,000.00 → Gerente de Tienda (firma electrónica, captura de motivo y copia de identificación del cliente)”. Además, independientemente del monto, ciertas excepciones siempre requieren autorización del Gerente de Tienda o Subgerente (PRO-SAC-021 §9.1). Confirma también FAQ-OPS-001 P17.",
+  "contextos": [
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 9. Flujo de autorización por monto\n\nToda devolución o cambio requiere el nivel de autorización que corresponda al monto total de la operación, conforme a la siguiente tabla. Los montos se refieren al valor total reembolsado en una sola operación, independientemente de la forma de pago.\r\n\r\n| Rango de monto (pesos) | Quién autoriza | Observaciones |\r\n|---|---|---|\r\n| Hasta 500.00 | Ejecutivo de Servicio al Cliente | Autorización directa en terminal. |\r\n| De 500.01 a 3,000.00 | Supervisor de Servicio al Cliente | Firma electrónica en terminal. |\r\n| De 3,000.01 a 10,000.00 | Gerente de Servicio al Cliente o Subgerente de Tienda | Firma electrónica y captura de motivo. |\r\n| De 10,000.01 a 30,000.00 | Gerente de Tienda | Firma electrónica, captura de motivo y copia de identificación del cliente. |\r\n| Más de 30,000.00 | Gerente de Tienda con visto bueno del Gerente Regional de Servicio al Cliente | Se documenta por correo electrónico antes de ejecutar la operación. |",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 9. Flujo de autorización por monto — 9.1 Excepciones que siempre requieren autorización del Gerente de Tienda\n\nIndependientemente del monto, requieren autorización del Gerente de Tienda o del Subgerente en turno:\r\n\r\n- Devoluciones fuera de plazo por defecto de fabricación (sección 4.1).\r\n- Liberación de bloqueos por límites de devoluciones sin ticket (sección 5.3).\r\n- Devoluciones en las que se hayan identificado señales de alerta de fraude (sección 8).\r\n- Devoluciones de producto de la categoría de electrodomésticos y electrónicos menores sin empaque original.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 8. Prevención de fraude — 8.2 Actuación\n\nAnte señales de alerta, el Ejecutivo solicita la presencia del Gerente de Servicio al Cliente o del Gerente en turno, quien decide si procede la devolución. Si se determina que no procede, se explica al cliente que la operación no puede realizarse conforme a este procedimiento; no se le retiene el producto ni el ticket, ni se le confronta. El caso se documenta en la bitácora de incidencias del módulo y, si hay indicios de delito, se notifica al área de Prevención de Pérdidas conforme al protocolo corporativo.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 4. Servicio al cliente — P17. ¿Qué montos de devolución puedo autorizar yo y cuáles debo escalar?\n\nEl Ejecutivo de Servicio al Cliente autoriza hasta 500 pesos; el Supervisor hasta 3,000; el Gerente de Servicio al Cliente o Subgerente hasta 10,000; el Gerente de Tienda hasta 30,000. Por encima de 30,000 pesos se requiere además el visto bueno por correo del Gerente Regional de Servicio al Cliente antes de ejecutar la operación. Independientemente del monto, siempre requieren tu autorización las devoluciones fuera de plazo por defecto de fabricación, la liberación de bloqueos por límites sin ticket, los casos con señales de fraude y los electrodomésticos sin empaque original.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 5. Devoluciones sin ticket — 5.3 Límites\n\nUn mismo cliente, identificado por su identificación oficial, puede realizar como máximo tres devoluciones sin ticket en un periodo de doce meses, con un valor acumulado máximo de tres mil pesos. El sistema de punto de venta bloquea automáticamente la operación al exceder cualquiera de los dos límites; el bloqueo solo puede liberarlo el Gerente de Tienda con justificación registrada.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 4. Servicio al cliente — P16. ¿Puedo aceptar una devolución sin ticket?\n\nSí, con restricciones. Solo procede para producto no perecedero y que no sea medicamento, cerrado, sin uso y del surtido activo de la tienda. El cliente presenta identificación oficial y el reembolso se hace exclusivamente en vale de tienda por el precio más bajo de los últimos treinta días. Un mismo cliente puede hacer como máximo tres devoluciones sin ticket en doce meses por un acumulado de tres mil pesos; el sistema bloquea la operación al exceder los límites y solo tú puedes liberar el bloqueo con justificación. Consulta el Procedimiento de devoluciones y cambios (PRO-SAC-021)."
+  ],
+  "ms": 9821,
+  "exec": "81994",
+  "reference": "El Gerente de Tienda, con firma electrónica, captura de motivo y copia de identificación del cliente (rango de 10,000.01 a 30,000 pesos), según PRO-SAC-021 sección 9.",
+  "cita_ok": true,
+  "ragas_faithfulness": 1.0,
+  "ragas_answer_relevancy": 0.786,
+  "ragas_llm_context_precision_with_reference": 0.854,
+  "ragas_context_recall": 1.0
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Cuánto tiempo conservan la temperatura las cámaras de refrigeración si se va la luz?",
+  "respuesta": "Cuatro horas con las puertas cerradas.  \n\nContexto breve: los muebles refrigerados abiertos conservan la temperatura solo dos horas con las cortinas colocadas; registre temperaturas cada 30 minutos y, si la falla dura entre 2 y 4 horas, traslade producto de muebles abiertos a las cámaras; si supera 4 horas o el producto pasó por encima de 7 °C por más de 2 horas, retire y registre en SIGMA. Si al restablecer la energía una cámara no recupera la temperatura objetivo en 60 minutos, levante ticket a Mantenimiento. (MAN-OPS-007 §7.1, §7.2, §7.3; FAQ-OPS-001 P11, P23)",
+  "contextos": [
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 5. Tecnología y mantenimiento — P23. ¿Cada cuánto debo revisar las temperaturas de refrigeradores y cámaras?\n\nEn operación normal se registran al menos dos veces al día, en la apertura y en el cierre, y quedan en la bitácora. Durante una contingencia de energía o de equipo, cada treinta minutos en el formato de contingencia. Si al restablecerse la energía una cámara no recupera su temperatura objetivo en sesenta minutos, levanta ticket a Mantenimiento.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 3. Mermas y perecederos — P11. ¿Qué hago si se va la luz y los refrigeradores dejan de funcionar?\n\nConfirma que la planta de emergencia haya arrancado; si no lo hace, Mantenimiento de tienda intenta el arranque manual y, si falla, levantas ticket con prioridad Crítica. Coloca de inmediato las cortinas nocturnas en los muebles refrigerados abiertos y mantén cerradas las puertas de las cámaras. Las cámaras conservan la temperatura segura durante cuatro horas con las puertas cerradas; los muebles abiertos, solo dos horas. Registra temperaturas cada treinta minutos. Si la falla dura entre dos y cuatro horas, traslada el producto de los muebles abiertos a las cámaras. Si supera cuatro horas, o el producto refrigerado pasó de 7 °C por más de dos horas, retira el producto de la venta y regístralo en SIGMA como \"Falla de cadena de frío\" con el formato de temperaturas como evidencia. El protocolo completo está en el Manual de apertura y cierre de tienda (MAN-OPS-007).",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 7. Protocolo ante fallas de energía — 7.3 Manejo de perecederos según duración de la falla\n\n- Menos de dos horas: no se requiere acción sobre el producto; se registra la incidencia en bitácora.\r\n- Entre dos y cuatro horas: el producto de los muebles refrigerados abiertos se traslada a las cámaras de refrigeración. Se verifica la temperatura interna de una muestra de productos con termómetro de punción.\r\n- Más de cuatro horas o temperatura interna fuera de rango: el producto refrigerado que haya superado los 7 °C durante más de dos horas y el producto congelado que muestre signos de descongelación se retiran de la venta y se registran en SIGMA con la causa \"Falla de cadena de frío\". El registro se acompaña del formato de contingencia con las lecturas de temperatura como evidencia para la reclamación al seguro.\r\n- En todos los casos, al restablecerse la energía se verifica el arranque de compresores y se levanta ticket a Mantenimiento si alguna cámara no recupera la temperatura objetivo en sesenta minutos.",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 7. Protocolo ante fallas de energía — 7.1 Respaldo disponible\n\nTodas las tiendas cuentan con planta de emergencia que alimenta iluminación de seguridad, servidores, al menos cuatro terminales de punto de venta y los sistemas de refrigeración. La planta arranca automáticamente en un lapso máximo de treinta segundos. Adicionalmente, las cámaras de refrigeración y congelación conservan la temperatura interna dentro del rango seguro durante un periodo de respaldo de cuatro horas con las puertas cerradas, aun sin operación de la planta. Los muebles refrigerados abiertos de piso de venta conservan la temperatura únicamente durante dos horas con las cortinas nocturnas colocadas.",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 7. Protocolo ante fallas de energía — 7.2 Actuación inmediata\n\n1. El Gerente en turno confirma que la planta de emergencia haya arrancado; si no arranca, el Encargado de Mantenimiento intenta el arranque manual y, si falla, se levanta ticket a Mantenimiento con prioridad Crítica.\r\n2. Se vocea al público con calma que la tienda continúa operando con energía de respaldo y se restringe el acceso a nuevos clientes hasta confirmar la estabilidad del suministro.\r\n3. El Supervisor de Perecederos coloca las cortinas nocturnas en todos los muebles refrigerados abiertos y mantiene cerradas las puertas de las cámaras; se prohíbe abrirlas salvo para las verificaciones de temperatura.\r\n4. Se registra la temperatura de cámaras y muebles cada treinta minutos en el formato de contingencia.\r\n5. El Jefe de Cajas concentra la venta en las cajas alimentadas por la planta y activa el modo de operación sin conexión si el enlace de datos también se ve afectado.",
+   "POL-OPS-014 Política de mermas y caducidad — 5. Reglas de retiro de anaquel — 5.2 Regla específica para lácteos\n\nLos productos de la categoría Lácteos (leche fresca, yogur, quesos frescos, cremas y postres refrigerados) se retiran del anaquel dos días antes de la fecha de caducidad. Esta regla más estricta responde a la sensibilidad de la cadena de frío y al comportamiento del cliente, que revisa con mayor frecuencia las fechas en esta categoría."
+  ],
+  "ms": 11588,
+  "exec": "81996",
+  "reference": "Cuatro horas con las puertas cerradas; los muebles refrigerados abiertos solo dos horas con cortinas nocturnas, según MAN-OPS-007 sección 7.1.",
+  "cita_ok": true,
+  "ragas_faithfulness": 1.0,
+  "ragas_answer_relevancy": 0.756,
+  "ragas_llm_context_precision_with_reference": 0.5,
+  "ragas_context_recall": 1.0
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Puedo darle el teléfono de un colaborador a un proveedor?",
+  "respuesta": "No. Está prohibido compartir el teléfono u otros datos personales de un colaborador con un proveedor. (FAQ-OPS-001 §6 P24).  \n\nLa solicitud debe canalizarse a Recursos Humanos, que es la única área autorizada para atenderla; si el proveedor insiste, toma sus datos y remítelo al buzón oficial de RH.",
+  "contextos": [
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 6. Personal — P24. Un proveedor o un cliente me pide el teléfono o el domicilio de un colaborador. ¿Puedo darlo?\n\nNo. La información de contacto y los datos personales de los empleados (teléfono, domicilio, correo personal, número de seguridad social, datos familiares, horarios) son confidenciales y están protegidos por la legislación de protección de datos personales y por la política corporativa de privacidad. No se comparten por canales no oficiales, ni verbalmente, ni por mensajería instantánea, ni a proveedores, clientes, autoridades sin requerimiento formal o compañeros de otra área. Cualquier solicitud de datos de un colaborador se canaliza a Recursos Humanos, que es el único área autorizada para atenderla y verificar su legitimidad. Si alguien insiste, toma sus datos y remítelo al buzón oficial de RH.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 2. Operación diaria — P2. ¿Cuál es el horario de recepción de proveedores?\n\nLa recepción de mercancía en andén se realiza de lunes a sábado de 6:00 a 13:00 horas. Fuera de ese horario únicamente se recibe a proveedores con cita previamente autorizada por el Jefe de Recepción, por ejemplo entregas nocturnas de pan o de lácteos en tiendas de alto volumen. Los domingos no se recibe mercancía, salvo autorización expresa de la Gerencia Regional en temporadas altas. Todo proveedor que llegue sin cita fuera de horario debe reprogramarse; no se le recibe \"por esta vez\".",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 3. Mermas y perecederos — P12. ¿Puedo regalar al personal el producto que ya se registró como merma?\n\nNo. Una vez registrado en SIGMA, el producto mermado debe destruirse o desecharse conforme a la política; está prohibido que el personal lo consuma, se lo lleve, lo regale o lo venda, aun cuando el registro ya esté autorizado. El producto apto para consumo pero no para venta solo puede canalizarse al programa de donación institucional mediante el convenio corporativo vigente y registrándolo con la causa \"Donación\".",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 9. Flujo de autorización por monto — 9.1 Excepciones que siempre requieren autorización del Gerente de Tienda\n\nIndependientemente del monto, requieren autorización del Gerente de Tienda o del Subgerente en turno:\r\n\r\n- Devoluciones fuera de plazo por defecto de fabricación (sección 4.1).\r\n- Liberación de bloqueos por límites de devoluciones sin ticket (sección 5.3).\r\n- Devoluciones en las que se hayan identificado señales de alerta de fraude (sección 8).\r\n- Devoluciones de producto de la categoría de electrodomésticos y electrónicos menores sin empaque original.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 8. Prevención de fraude — 8.2 Actuación\n\nAnte señales de alerta, el Ejecutivo solicita la presencia del Gerente de Servicio al Cliente o del Gerente en turno, quien decide si procede la devolución. Si se determina que no procede, se explica al cliente que la operación no puede realizarse conforme a este procedimiento; no se le retiene el producto ni el ticket, ni se le confronta. El caso se documenta en la bitácora de incidencias del módulo y, si hay indicios de delito, se notifica al área de Prevención de Pérdidas conforme al protocolo corporativo.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 9. Flujo de autorización por monto\n\nToda devolución o cambio requiere el nivel de autorización que corresponda al monto total de la operación, conforme a la siguiente tabla. Los montos se refieren al valor total reembolsado en una sola operación, independientemente de la forma de pago.\r\n\r\n| Rango de monto (pesos) | Quién autoriza | Observaciones |\r\n|---|---|---|\r\n| Hasta 500.00 | Ejecutivo de Servicio al Cliente | Autorización directa en terminal. |\r\n| De 500.01 a 3,000.00 | Supervisor de Servicio al Cliente | Firma electrónica en terminal. |\r\n| De 3,000.01 a 10,000.00 | Gerente de Servicio al Cliente o Subgerente de Tienda | Firma electrónica y captura de motivo. |\r\n| De 10,000.01 a 30,000.00 | Gerente de Tienda | Firma electrónica, captura de motivo y copia de identificación del cliente. |\r\n| Más de 30,000.00 | Gerente de Tienda con visto bueno del Gerente Regional de Servicio al Cliente | Se documenta por correo electrónico antes de ejecutar la operación. |"
+  ],
+  "ms": 8743,
+  "exec": "81997",
+  "reference": "No. Los datos personales de los empleados son confidenciales; cualquier solicitud se canaliza a Recursos Humanos, según FAQ-OPS-001 P24.",
+  "cita_ok": true,
+  "ragas_faithfulness": 1.0,
+  "ragas_answer_relevancy": 0.898,
+  "ragas_llm_context_precision_with_reference": 1.0,
+  "ragas_context_recall": 1.0
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "Si una obra cierra el 40 % del piso de venta, ¿qué horario aplica?",
+  "respuesta": "Aplica horario reducido: una obra que inhabilita el 40 % del piso obliga a operar con horario reducido, autorizado por la Gerencia Regional (MAN-OPS-007 §8.2 Regla de horario reducido; confirmado en FAQ-OPS-001 P7). Además se requiere aviso al público con 48 horas de anticipación y que el Gerente levante un ticket a Mantenimiento con prioridad Alta indicando fechas, duración y áreas afectadas (MAN-OPS-007 §8.2; FAQ-OPS-001 P7). Para referencia, el horario estándar es 7:00-22:00 (MAN-OPS-007 §2 Horarios de referencia).",
+  "contextos": [
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 8. Remodelaciones y obras en tienda — 8.2 Regla de horario reducido\n\nCuando una obra reduzca el área de venta disponible en más del 30 % de la superficie total de piso de venta, la tienda opera con horario reducido, autorizado por la Gerencia Regional, y se coloca aviso al público con al menos cuarenta y ocho horas de anticipación. En este caso, el Gerente de Tienda levanta un ticket a Mantenimiento con prioridad Alta indicando la fecha de inicio, la duración estimada y las áreas afectadas, para que Mantenimiento coordine la reubicación de equipos y la señalización de seguridad. Si la reducción es igual o menor al 30 %, la tienda mantiene su horario habitual y solo se reporta la obra en la bitácora.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 2. Operación diaria — P7. ¿Qué hago si hay una remodelación u obra en mi tienda?\n\nRevisa el plan de afectación que la Gerencia de Proyectos debe enviarte con al menos quince días de anticipación. Calcula qué porcentaje del área de venta quedará inhabilitado: si la obra reduce el área de venta en más del 30 %, la tienda opera con horario reducido autorizado por la Gerencia Regional, colocas aviso al público con cuarenta y ocho horas de anticipación y levantas un ticket a Mantenimiento con prioridad Alta indicando fechas, duración y áreas afectadas. Si la reducción es del 30 % o menos, mantienes el horario habitual y solo registras la obra en la bitácora. En cualquier caso, exige mamparas rígidas de piso a techo, programa los trabajos ruidosos fuera del horario de atención y no exhibas alimentos a menos de tres metros de la zona de obra.",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 2. Horarios de referencia\n\nEl horario estándar de atención al público es de 7:00 a 22:00 horas. Las variaciones por plaza se autorizan por la Gerencia Regional y se publican en la cartelera de la tienda y en el sitio web. La recepción de proveedores en andén se realiza de lunes a sábado entre las 6:00 y las 13:00 horas; fuera de ese horario solo se recibe mercancía con cita autorizada por el Jefe de Recepción.",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 1. Objetivo — 1.1 Alcance\n\nAplica a todas las tiendas de la cadena en sus formatos supermercado y tienda de conveniencia ampliada. Las tiendas con horario de veinticuatro horas aplican las secciones de cierre como \"cierre administrativo\" a la hora que defina la Gerencia Regional, sin interrumpir la venta.",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 5. Checklist de cierre\n\nEl cierre inicia a la hora de término de atención al público y concluye con la activación de la alarma.\n\nNingún colaborador permanece en la tienda después de la activación de la alarma salvo el Vigilante nocturno cuando la plaza lo tenga asignado.\n\n| Hora | Actividad | Responsable |\r\n|---|---|---|\r\n| 21:30 | Aviso por voceo de cierre en treinta minutos; se dejan de recibir clientes en el estacionamiento a las 21:50.\n\n| Gerente en turno |\r\n| 21:45 | Cierre escalonado de cajas: se mantienen abiertas como mínimo dos cajas hasta que salga el último cliente.\n\n| Jefe de Cajas |\r\n| 22:00 | Cierre de puertas al público; recorrido de piso de venta y sanitarios para confirmar que no queden clientes.\n\n| Vigilante de turno |\r\n| 22:05 | Retiro de producto perecedero de exhibición abierta (panadería, comida preparada) y registro de merma en SIGMA.\n\n| Supervisor de Perecederos |\r\n| 22:10 | Arqueo de cada caja conforme a la sección 6; entrega de sobres a caja fuerte.",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 3. Checklist de apertura\n\nLa apertura inicia noventa minutos antes de la hora de atención al público.\n\nTodas las actividades se registran en la lista de verificación electrónica de la aplicación \"Tienda al Día\" y quedan respaldadas en la bitácora.\n\n| Hora | Actividad | Responsable |\r\n|---|---|---|\r\n| 5:30 | Llegada del Gerente en turno y del Vigilante; desactivación de alarma con clave personal; registro de hora en bitácora.\n\n| Gerente en turno |\r\n| 5:35 | Recorrido perimetral exterior e interior: puertas, cortinas, cristales, señales de intrusión o daño.\n\n| Vigilante de turno |\r\n| 5:45 | Encendido de tableros eléctricos de iluminación de piso de venta y bodega; verificación de que no existan disparos de pastillas.\n\n| Encargado de Mantenimiento |\r\n| 5:50 | Lectura y registro de temperaturas de cámaras de refrigeración y congelación y de muebles refrigerados de piso de venta.\n\n| Supervisor de Perecederos |\r\n| 6:00 | Apertura de andén de recepción; verificación de citas de proveedores del día."
+  ],
+  "ms": 9022,
+  "exec": "81998",
+  "reference": "Horario reducido autorizado por la Gerencia Regional, con aviso al público 48 horas antes y ticket a Mantenimiento con prioridad Alta, porque supera el 30 % del área de venta (MAN-OPS-007 sección 8.2).",
+  "cita_ok": true,
+  "ragas_faithfulness": 1.0,
+  "ragas_answer_relevancy": 0.751,
+  "ragas_llm_context_precision_with_reference": null,
+  "ragas_context_recall": 1.0
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Con cuántos días de anticipación se retiran los lácteos del anaquel?",
+  "respuesta": "Dos días antes de la fecha de caducidad.\n\nContexto breve: lo indica la Política de mermas y caducidad (POL-OPS-014 §5.2). La revisión en lácteos es mínima dos veces al día (POL-OPS-014 §5.5); el retiro se registra en SIGMA con causa “Caducidad” el mismo día (POL-OPS-014 §5.1). La FAQ para gerentes confirma la misma regla (FAQ-OPS-001 P10) y las rebajas escalonadas aplican en el módulo “Última oportunidad” (POL-OPS-014 §6.1).",
+  "contextos": [
+   "POL-OPS-014 Política de mermas y caducidad — 5. Reglas de retiro de anaquel — 5.2 Regla específica para lácteos\n\nLos productos de la categoría Lácteos (leche fresca, yogur, quesos frescos, cremas y postres refrigerados) se retiran del anaquel dos días antes de la fecha de caducidad. Esta regla más estricta responde a la sensibilidad de la cadena de frío y al comportamiento del cliente, que revisa con mayor frecuencia las fechas en esta categoría.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 3. Mermas y perecederos — P10. ¿Cuándo debo retirar del anaquel un producto próximo a caducar?\n\nLa regla general para perecederos es retirar el producto un día antes de la fecha de caducidad impresa. Para lácteos la regla es más estricta: se retiran dos días antes. Antes de llegar a ese punto, el producto identificado como próximo a vencer debe marcarse con etiqueta naranja y ubicarse en el módulo de \"Última oportunidad\" con la rebaja escalonada que corresponda a los días restantes, conforme a la Política de mermas y caducidad (POL-OPS-014). Todo producto retirado se registra en SIGMA con la causa \"Caducidad\" el mismo día.",
+   "POL-OPS-014 Política de mermas y caducidad — 5. Reglas de retiro de anaquel — 5.1 Regla general para perecederos\n\nTodo producto perecedero se retira del anaquel un día antes de la fecha de caducidad impresa en el empaque. Esto significa que el último día de exhibición y venta es dos días calendario antes de la fecha de caducidad. El producto retirado se registra en SIGMA con la causa \"Caducidad\" el mismo día del retiro.",
+   "POL-OPS-014 Política de mermas y caducidad — 5. Reglas de retiro de anaquel — 5.5 Revisión de fechas\n\nLa revisión de fechas de caducidad en piso de venta se realiza conforme al siguiente calendario mínimo:\r\n\r\n| Área | Frecuencia mínima de revisión | Responsable |\r\n|---|---|---|\r\n| Lácteos y refrigerados | Dos veces al día (apertura y turno vespertino) | Supervisor de Perecederos |\r\n| Panadería y tortillería | Al inicio de cada turno | Encargado de Panadería |\r\n| Carnes, pescados y mariscos | Al inicio de cada turno | Encargado de Carnes |\r\n| Frutas y verduras | Revisión visual continua; retiro al detectar deterioro | Encargado de Frutas y Verduras |\r\n| Abarrotes y bebidas | Semanal por pasillo, conforme a calendario de la tienda | Jefe de Abarrotes |\r\n| Limpieza y cuidado personal | Mensual | Jefe de No Comestibles |",
+   "POL-OPS-014 Política de mermas y caducidad — 6. Rebajas escalonadas para producto próximo a vencer — 6.1 Reglas de aplicación\n\n- La rebaja escalonada no aplica a productos en promoción de folleto ni a productos con precio ya reducido por otra campaña; en esos casos prevalece el descuento mayor, nunca se acumulan.\r\n- La etiqueta de rebaja debe indicar el precio final y la fecha de caducidad de forma visible.\r\n- El módulo de \"Última oportunidad\" se revisa al inicio de cada turno y el producto que alcance la fecha de retiro de anaquel se registra en SIGMA con causa \"Caducidad\", sin excepción.\r\n\r\n- Los lácteos salen del módulo de rebaja al llegar a dos días antes de la caducidad, conforme a la regla de la sección 5.2.",
+   "POL-OPS-014 Política de mermas y caducidad — 6. Rebajas escalonadas para producto próximo a vencer\n\nCon el objetivo de recuperar el mayor valor posible antes del retiro de anaquel, el producto perecedero identificado como PVC se marca con etiqueta de rebaja de color naranja y se reubica en el módulo de \"Última oportunidad\" de cada departamento. La rebaja aplica sobre el precio regular vigente y sigue la siguiente escala:\r\n\r\n| Días restantes antes de la fecha de caducidad | Descuento sobre precio regular |\r\n|---|---|\r\n| 5 días | 15 % |\r\n| 4 días | 25 % |\r\n| 3 días | 35 % |\r\n| 2 días | 50 % |\r\n| 1 día (solo perecederos no lácteos) | 60 % |"
+  ],
+  "ms": 11589,
+  "exec": "81999",
+  "reference": "Dos días antes de la fecha de caducidad (el resto de perecederos, un día antes), según POL-OPS-014 sección 5.2.",
+  "cita_ok": true,
+  "ragas_faithfulness": 1.0,
+  "ragas_answer_relevancy": 0.785,
+  "ragas_llm_context_precision_with_reference": 0.927,
+  "ragas_context_recall": 1.0
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Cuál es el descuento para un producto al que le quedan 3 días de caducidad?",
+  "respuesta": "35% sobre el precio regular (POL-OPS-014 §6 Rebajas escalonadas para producto próximo a vencer — tabla: 3 días = 35%).\n\nContexto: aplica a perecederos identificados como próximos a vencer (etiqueta naranja y módulo “Última oportunidad”) y no se acumula con otras promociones (POL-OPS-014 §6.1). No aplica a fórmulas infantiles, suplementos, medicamentos de venta libre ni productos sujetos a retiro sanitario (POL-OPS-014 §6.2).",
+  "contextos": [
+   "POL-OPS-014 Política de mermas y caducidad — 6. Rebajas escalonadas para producto próximo a vencer — 6.1 Reglas de aplicación\n\n- La rebaja escalonada no aplica a productos en promoción de folleto ni a productos con precio ya reducido por otra campaña; en esos casos prevalece el descuento mayor, nunca se acumulan.\r\n- La etiqueta de rebaja debe indicar el precio final y la fecha de caducidad de forma visible.\r\n- El módulo de \"Última oportunidad\" se revisa al inicio de cada turno y el producto que alcance la fecha de retiro de anaquel se registra en SIGMA con causa \"Caducidad\", sin excepción.\r\n\r\n- Los lácteos salen del módulo de rebaja al llegar a dos días antes de la caducidad, conforme a la regla de la sección 5.2.",
+   "POL-OPS-014 Política de mermas y caducidad — 6. Rebajas escalonadas para producto próximo a vencer\n\nCon el objetivo de recuperar el mayor valor posible antes del retiro de anaquel, el producto perecedero identificado como PVC se marca con etiqueta de rebaja de color naranja y se reubica en el módulo de \"Última oportunidad\" de cada departamento. La rebaja aplica sobre el precio regular vigente y sigue la siguiente escala:\r\n\r\n| Días restantes antes de la fecha de caducidad | Descuento sobre precio regular |\r\n|---|---|\r\n| 5 días | 15 % |\r\n| 4 días | 25 % |\r\n| 3 días | 35 % |\r\n| 2 días | 50 % |\r\n| 1 día (solo perecederos no lácteos) | 60 % |",
+   "POL-OPS-014 Política de mermas y caducidad — 5. Reglas de retiro de anaquel — 5.3 Producto sin fecha visible\n\nEl producto perecedero cuya fecha de caducidad sea ilegible, esté borrada o haya sido cubierta por una etiqueta de precio, se retira de inmediato y se registra como merma con causa \"Etiquetado deficiente\". El Supervisor de Perecederos reporta el caso al área de Calidad para seguimiento con el proveedor.",
+   "POL-OPS-014 Política de mermas y caducidad — 5. Reglas de retiro de anaquel — 5.1 Regla general para perecederos\n\nTodo producto perecedero se retira del anaquel un día antes de la fecha de caducidad impresa en el empaque. Esto significa que el último día de exhibición y venta es dos días calendario antes de la fecha de caducidad. El producto retirado se registra en SIGMA con la causa \"Caducidad\" el mismo día del retiro.",
+   "POL-OPS-014 Política de mermas y caducidad — 6. Rebajas escalonadas para producto próximo a vencer — 6.2 Categorías excluidas de la rebaja\n\nNo se aplica rebaja escalonada a fórmulas infantiles, suplementos alimenticios, medicamentos de libre venta ni a productos que la autoridad sanitaria haya sujetado a retiro. Estos productos se retiran conforme a las reglas de la sección 5 y se registran como merma.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 3. Mermas y perecederos — P10. ¿Cuándo debo retirar del anaquel un producto próximo a caducar?\n\nLa regla general para perecederos es retirar el producto un día antes de la fecha de caducidad impresa. Para lácteos la regla es más estricta: se retiran dos días antes. Antes de llegar a ese punto, el producto identificado como próximo a vencer debe marcarse con etiqueta naranja y ubicarse en el módulo de \"Última oportunidad\" con la rebaja escalonada que corresponda a los días restantes, conforme a la Política de mermas y caducidad (POL-OPS-014). Todo producto retirado se registra en SIGMA con la causa \"Caducidad\" el mismo día."
+  ],
+  "ms": 11024,
+  "exec": "82000",
+  "reference": "35 % sobre el precio regular, según la escala de rebajas de POL-OPS-014 sección 6.",
+  "cita_ok": true,
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.767,
+  "ragas_llm_context_precision_with_reference": 0.417,
+  "ragas_context_recall": 1.0
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Cuánto tarda la Mesa de Servicio en dar primera respuesta a un ticket de prioridad Alta?",
+  "respuesta": "Primera respuesta: 1 hora. Fuente: FAQ-OPS-001 §5, P20 (tabla de prioridades — tiempo de primera respuesta para Prioridad Alta).",
+  "contextos": [
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 5. Tecnología y mantenimiento — P20. ¿Cómo levanto un ticket a la Mesa de Servicio y qué prioridades existen?\n\nEntra al portal interno de la Mesa de Servicio, sección \"Reportar incidencia\", o llama a la extensión corporativa de soporte si la tienda no tiene acceso al portal.\n\nIndica número de tienda, equipo afectado, descripción breve, las acciones de primer nivel que ya realizaste y tu nombre y cargo; anota el folio en la bitácora.\n\nLa prioridad la asignas al reportar y la Mesa de Servicio puede ajustarla.\n\nLos tiempos comprometidos son los siguientes:\r\n\r\n| Prioridad | Cuándo aplica | Tiempo de primera respuesta | Tiempo objetivo de solución |\r\n|---|---|---|---|\r\n| Baja | Incidencia que no afecta la venta ni la operación (un handheld de varios, una impresora de oficina).\n\n| 8 horas hábiles | 5 días hábiles |\r\n| Media | Afecta parcialmente la operación pero existe alternativa (una caja sin impresora, una báscula de varias).\n\n| 4 horas hábiles | 2 días hábiles |\r\n| Alta | Afecta de forma importante la venta o la seguridad (varias cajas fuera, terminal bancaria general, remodelación mayor).",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 5. Tecnología y mantenimiento — P20. ¿Cómo levanto un ticket a la Mesa de Servicio y qué prioridades existen?\n\n| 1 hora | 8 horas |\r\n| Crítica | Detiene la operación de la tienda o pone en riesgo el producto o a las personas (servidor caído, sin enlace de datos, planta de emergencia que no arranca, cámara de refrigeración fuera).\n\n| 15 minutos | 4 horas |",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 7. Flujo de atención en tienda — 7.1 Tiempo de atención\n\nEl tiempo objetivo de atención de una devolución sencilla es de cinco minutos. Cuando se requiera autorización de un nivel superior que no esté presente en el módulo, el Ejecutivo informa al cliente el tiempo estimado de espera y ofrece atenderlo por teléfono si prefiere no esperar.",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 9. Incidencias de tecnología (TI) — 9.3 Cómo levantar un ticket\n\nLos tickets se levantan en el portal interno de la Mesa de Servicio, sección \"Reportar incidencia\", o por teléfono a la extensión corporativa de soporte cuando la tienda no tenga acceso al portal. Cada ticket debe indicar número de tienda, equipo afectado, descripción breve, acciones de primer nivel ya realizadas y nombre y cargo de quien reporta. El folio del ticket se anota en la bitácora del día.",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 9. Incidencias de tecnología (TI) — 9.2 Otras incidencias frecuentes\n\n| Incidencia | Acción de primer nivel en tienda | Prioridad del ticket si persiste |\r\n|---|---|---|\r\n| Terminal de punto de venta sin acceso al sistema | Reiniciar terminal; verificar cable de red. | Alta |\r\n| Pérdida total del enlace de datos de la tienda | Activar modo sin conexión en cajas; avisar a Mesa de Servicio por teléfono. | Crítica |\r\n| Báscula de perecederos no imprime etiquetas | Reiniciar báscula; verificar rollo de etiquetas. | Media |\r\n| Handheld de SIGMA Móvil no sincroniza | Cerrar y abrir la aplicación; conectar a la red inalámbrica de tienda. | Baja |\r\n| Terminal bancaria rechaza todas las tarjetas | Reiniciar terminal bancaria; probar con tarjeta de prueba de la tienda. | Alta |\r\n| Servidor de tienda apagado o sin respuesta | No manipular; llamar de inmediato a Mesa de Servicio. | Crítica |",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 8. Prevención de fraude — 8.2 Actuación\n\nAnte señales de alerta, el Ejecutivo solicita la presencia del Gerente de Servicio al Cliente o del Gerente en turno, quien decide si procede la devolución. Si se determina que no procede, se explica al cliente que la operación no puede realizarse conforme a este procedimiento; no se le retiene el producto ni el ticket, ni se le confronta. El caso se documenta en la bitácora de incidencias del módulo y, si hay indicios de delito, se notifica al área de Prevención de Pérdidas conforme al protocolo corporativo."
+  ],
+  "ms": 9732,
+  "exec": "82001",
+  "reference": "1 hora de primera respuesta y 8 horas objetivo de solución, según la tabla de prioridades de FAQ-OPS-001 P20.",
+  "cita_ok": true,
+  "ragas_faithfulness": 1.0,
+  "ragas_answer_relevancy": 0.705,
+  "ragas_llm_context_precision_with_reference": 1.0,
+  "ragas_context_recall": 1.0
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Cuántas devoluciones sin ticket puede hacer un cliente al año?",
+  "respuesta": "Máximo 3 devoluciones sin ticket en un periodo de 12 meses, con un valor acumulado máximo de $3,000.00. (PRO-SAC-021 §5.3 Límites).\n\nEl sistema bloquea la operación al exceder cualquiera de los dos límites y solo el Gerente de Tienda puede liberar el bloqueo con justificación. Además aplican las condiciones de producto (no perecedero, cerrado, sin uso, surtido activo) y el reembolso es en vale de tienda al precio más bajo de los últimos 30 días (PRO-SAC-021 §5.1 y §5.2; FAQ-OPS-001 P16).",
+  "contextos": [
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 5. Devoluciones sin ticket — 5.3 Límites\n\nUn mismo cliente, identificado por su identificación oficial, puede realizar como máximo tres devoluciones sin ticket en un periodo de doce meses, con un valor acumulado máximo de tres mil pesos. El sistema de punto de venta bloquea automáticamente la operación al exceder cualquiera de los dos límites; el bloqueo solo puede liberarlo el Gerente de Tienda con justificación registrada.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 4. Servicio al cliente — P16. ¿Puedo aceptar una devolución sin ticket?\n\nSí, con restricciones. Solo procede para producto no perecedero y que no sea medicamento, cerrado, sin uso y del surtido activo de la tienda. El cliente presenta identificación oficial y el reembolso se hace exclusivamente en vale de tienda por el precio más bajo de los últimos treinta días. Un mismo cliente puede hacer como máximo tres devoluciones sin ticket en doce meses por un acumulado de tres mil pesos; el sistema bloquea la operación al exceder los límites y solo tú puedes liberar el bloqueo con justificación. Consulta el Procedimiento de devoluciones y cambios (PRO-SAC-021).",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 4. Servicio al cliente — P17. ¿Qué montos de devolución puedo autorizar yo y cuáles debo escalar?\n\nEl Ejecutivo de Servicio al Cliente autoriza hasta 500 pesos; el Supervisor hasta 3,000; el Gerente de Servicio al Cliente o Subgerente hasta 10,000; el Gerente de Tienda hasta 30,000. Por encima de 30,000 pesos se requiere además el visto bueno por correo del Gerente Regional de Servicio al Cliente antes de ejecutar la operación. Independientemente del monto, siempre requieren tu autorización las devoluciones fuera de plazo por defecto de fabricación, la liberación de bloqueos por límites sin ticket, los casos con señales de fraude y los electrodomésticos sin empaque original.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 8. Prevención de fraude — 8.3 Herramientas de control\n\nEl sistema de punto de venta valida en línea la existencia del ticket y bloquea la devolución de artículos ya devueltos con el mismo ticket. Las devoluciones sin ticket se vinculan a la identificación del cliente para aplicar los límites de la sección 5.3. Prevención de Pérdidas revisa semanalmente el reporte de devoluciones por tienda, por cajero y por cliente.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 5. Devoluciones sin ticket — 5.2 Forma de reembolso\n\nLas devoluciones sin ticket se reembolsan exclusivamente en vale de tienda por el precio de venta vigente más bajo del producto en los últimos treinta días. En ningún caso se reembolsa en efectivo ni a tarjeta bancaria.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 5. Devoluciones sin ticket — 5.1 Condiciones\n\nEl cliente que no presente ticket puede solicitar la devolución de producto no perecedero y no medicamento siempre que:\r\n\r\n- El producto esté cerrado, sin uso y en condiciones de reventa.\r\n- El producto forme parte del surtido activo de la tienda y su código de barras sea reconocido por el sistema.\r\n- El cliente presente una identificación oficial vigente, cuyos datos se capturan en el sistema únicamente para el control antifraude descrito en la sección 8."
+  ],
+  "ms": 10722,
+  "exec": "82002",
+  "reference": "Máximo tres en doce meses, con un acumulado de tres mil pesos; el sistema bloquea al exceder y solo el Gerente de Tienda libera, según PRO-SAC-021 sección 5.3.",
+  "cita_ok": true,
+  "ragas_faithfulness": 1.0,
+  "ragas_answer_relevancy": 0.544,
+  "ragas_llm_context_precision_with_reference": 1.0,
+  "ragas_context_recall": 1.0
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Qué diferencia de caja se considera crítica en el arqueo?",
+  "respuesta": "Más de $1,000.00.\n\nSegún MAN-OPS-007 §6.2 Conciliación, diferencias superiores a $1,000.00 se consideran críticas y deben reportarse de inmediato al Gerente de Tienda y a Prevención de Pérdidas; además se revisa la videograbación de la caja (ver también FAQ-OPS-001 P3).",
+  "contextos": [
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 6. Arqueo de cajas — 6.2 Conciliación\n\nEl Jefe de Cajas compara el efectivo contado con el efectivo reportado por el sistema y registra la diferencia. Las diferencias se clasifican como sigue:\r\n\r\n| Diferencia por caja | Clasificación | Acción |\r\n|---|---|---|\r\n| Hasta 20.00 pesos | Tolerable | Se registra; no requiere acción adicional. |\r\n| De 20.01 a 200.00 pesos | Menor | Se registra y se comenta con el cajero; tres eventos en un mes generan plan de mejora. |\r\n| De 200.01 a 1,000.00 pesos | Mayor | Se registra, se reporta al Gerente de Tienda el mismo día y se levanta acta administrativa. |\r\n| Más de 1,000.00 pesos | Crítica | Se reporta de inmediato al Gerente de Tienda y a Prevención de Pérdidas; se revisa videograbación de la caja. |",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 6. Arqueo de cajas — 6.3 Depósito y retiro de valores\n\nEl efectivo del día se resguarda en la caja fuerte en sobres sellados con folio, uno por caja, y se entrega a la empresa de traslado de valores en el horario pactado. La entrega se realiza siempre por dos personas (Jefe de Cajas y Gerente en turno) y se registra en la bitácora con el folio de la guía de traslado.",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 6. Arqueo de cajas — 6.1 Cortes de caja\n\nCada cajero realiza un corte al término de su turno o cuando el sistema lo indique. El corte se ejecuta en la terminal de punto de venta con la opción \"Corte de cajero\", que imprime el reporte de ventas por forma de pago. El cajero cuenta el efectivo en el área de conteo, fuera de la vista del público, en presencia del Jefe de Cajas.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 2. Operación diaria — P3. ¿Cómo hago los cortes de caja y qué diferencias son aceptables?\n\nCada cajero realiza su corte al terminar el turno desde la opción \"Corte de cajero\" de la terminal, y cuenta el efectivo en el área de conteo en presencia del Jefe de Cajas. Las diferencias hasta 20 pesos se consideran tolerables; las de 20.01 a 200 pesos son menores y se comentan con el cajero; las de 200.01 a 1,000 pesos son mayores y requieren acta administrativa; y las superiores a 1,000 pesos son críticas y se reportan de inmediato a Prevención de Pérdidas. Al final del día el Gerente en turno concilia el arqueo consolidado contra el reporte de ventas y firma la bitácora.",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 4. Manejo de fondo fijo — 4.2 Reglas de operación\n\n- El fondo fijo se cuenta íntegramente en la apertura y en el cierre por el Jefe de Cajas en presencia del Gerente en turno; ambos firman el formato electrónico de arqueo de fondo.\r\n- Cada cajón de cambio se entrega al cajero con un monto estándar registrado en el sistema; el cajero cuenta y firma de recibido antes de iniciar operación.\r\n- Los retiros parciales de efectivo de las cajas (cortes parciales) se realizan cuando el efectivo en cajón supere el límite establecido por Prevención de Pérdidas, y se depositan en la caja fuerte en sobre sellado con folio.\r\n- Está prohibido usar el fondo fijo para gastos de la tienda, préstamos al personal o cambio a terceros ajenos a la operación. Los gastos menores se cubren con la caja chica administrativa, que es independiente del fondo fijo.\r\n- Cualquier faltante o sobrante en el fondo fijo se registra en la bitácora y se reporta al área de Tesorería el mismo día.",
+   "POL-OPS-014 Política de mermas y caducidad — 5. Reglas de retiro de anaquel — 5.4 Producto abierto o con empaque comprometido\n\nTodo producto con empaque roto, abombado, con fugas o con sello de garantía violado se retira del anaquel de inmediato, independientemente de la fecha de caducidad, y se registra con la causa \"Daño de empaque\"."
+  ],
+  "ms": 8435,
+  "exec": "82003",
+  "reference": "Más de 1,000 pesos: se reporta de inmediato al Gerente de Tienda y a Prevención de Pérdidas y se revisa la videograbación, según MAN-OPS-007 sección 6.2.",
+  "cita_ok": true,
+  "ragas_faithfulness": 1.0,
+  "ragas_answer_relevancy": 0.647,
+  "ragas_llm_context_precision_with_reference": 0.75,
+  "ragas_context_recall": 1.0
+ },
+ {
+  "familia": "politicas",
+  "pregunta": "¿Se puede reembolsar en efectivo una compra pagada con tarjeta si el cliente no trae la tarjeta?",
+  "respuesta": "No. Si la compra fue pagada con tarjeta y el cliente no presenta la tarjeta, el reembolso se hace en vale de tienda; no se reembolsa en efectivo ni a una tarjeta distinta (PRO-SAC-021 §6.1; PRO-SAC-021 §6.2 y tabla de §6).  \n\nSi además no trae ticket, aplican restricciones (producto no perecedero, identificación oficial, límite de 3 devoluciones/12 meses y $3,000 acumulados) según FAQ-OPS-001 P16 y PRO-SAC-021 §5.2-§5.3.",
+  "contextos": [
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 6. Reembolsos por forma de pago — 6.1 Cliente sin la tarjeta original\n\nSi el cliente pagó con tarjeta y no la presenta al momento de la devolución, el reembolso se realiza en vale de tienda. No se realizan reembolsos en efectivo de compras pagadas con tarjeta bajo ninguna circunstancia, ni reembolsos a una tarjeta distinta de la original.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 4. Servicio al cliente — P16. ¿Puedo aceptar una devolución sin ticket?\n\nSí, con restricciones. Solo procede para producto no perecedero y que no sea medicamento, cerrado, sin uso y del surtido activo de la tienda. El cliente presenta identificación oficial y el reembolso se hace exclusivamente en vale de tienda por el precio más bajo de los últimos treinta días. Un mismo cliente puede hacer como máximo tres devoluciones sin ticket en doce meses por un acumulado de tres mil pesos; el sistema bloquea la operación al exceder los límites y solo tú puedes liberar el bloqueo con justificación. Consulta el Procedimiento de devoluciones y cambios (PRO-SAC-021).",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 6. Reembolsos por forma de pago — 6.2 Vale de tienda\n\nEl vale se imprime en la caja de Servicio al Cliente, se entrega al cliente y se registra en el sistema con su nombre. En caso de extravío, el vale puede reponerse una sola vez presentando identificación oficial, siempre que no haya sido canjeado.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 6. Reembolsos por forma de pago\n\nEl reembolso se realiza siempre por la misma forma de pago utilizada en la compra original. La siguiente tabla resume las reglas:\r\n\r\n| Forma de pago original | Forma de reembolso | Tiempo estimado de acreditación |\r\n|---|---|---|\r\n| Efectivo | Efectivo en caja de Servicio al Cliente | Inmediato |\r\n| Tarjeta de débito | Reverso a la misma tarjeta | 3 a 5 días hábiles, según banco emisor |\r\n| Tarjeta de crédito | Reverso a la misma tarjeta | 1 a 2 ciclos de facturación, según banco emisor |\r\n| Vale de tienda o tarjeta de regalo | Nuevo vale de tienda | Inmediato |\r\n| Monedero electrónico de lealtad | Abono al mismo monedero | Inmediato |\r\n| Pago mixto (dos o más formas) | Se reembolsa primero a tarjeta hasta el monto pagado con ella; el resto en la forma correspondiente | Según cada forma |\r\n| Pago en línea (pedido de ecommerce) | Reverso al medio de pago del pedido, gestionado por el área de Ecommerce | 5 a 10 días hábiles |",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 5. Devoluciones sin ticket — 5.2 Forma de reembolso\n\nLas devoluciones sin ticket se reembolsan exclusivamente en vale de tienda por el precio de venta vigente más bajo del producto en los últimos treinta días. En ningún caso se reembolsa en efectivo ni a tarjeta bancaria.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 5. Devoluciones sin ticket — 5.3 Límites\n\nUn mismo cliente, identificado por su identificación oficial, puede realizar como máximo tres devoluciones sin ticket en un periodo de doce meses, con un valor acumulado máximo de tres mil pesos. El sistema de punto de venta bloquea automáticamente la operación al exceder cualquiera de los dos límites; el bloqueo solo puede liberarlo el Gerente de Tienda con justificación registrada."
+  ],
+  "ms": 10623,
+  "exec": "82004",
+  "reference": "No: se reembolsa en vale de tienda; nunca en efectivo ni a una tarjeta distinta, según PRO-SAC-021 sección 6.1.",
+  "cita_ok": true,
+  "ragas_faithfulness": 1.0,
+  "ragas_answer_relevancy": 0.73,
+  "ragas_llm_context_precision_with_reference": 0.887,
+  "ragas_context_recall": 1.0
+ },
+ {
+  "familia": "imposibles",
+  "pregunta": "¿Qué tienda supera la tolerancia de merma?",
+  "respuesta": "No tengo datos de merma en las tablas disponibles (consultar_datos devolvió ok:false).  \n\nPOL-OPS-014 §4 (Tabla de tolerancias de merma por categoría) establece los umbrales por categoría y POL-OPS-014 §4.1 dispone que si la merma acumulada del mes supera el umbral de alerta, el Gerente de Tienda tiene cinco días hábiles para enviar a la Gerencia Regional un plan de acción.  \n\n¿Deseas que haga la consulta de datos? Puedo ejecutar: \"mermas mensuales por tienda (T01, T02, T03, T04) para junio 2026 a agosto 2026\".",
+  "contextos": [
+   "POL-OPS-014 Política de mermas y caducidad — 4. Tabla de tolerancias de merma por categoría — 4.1 Interpretación de la tabla\n\nLas tolerancias son metas operativas, no autorizaciones para desechar producto. Una tienda que se mantenga por debajo de la tolerancia en una categoría no queda exenta de registrar cada merma individual. Cuando la merma acumulada del mes supera el umbral de alerta, el Gerente de Tienda tiene cinco días hábiles para enviar a la Gerencia Regional un plan de acción con causas raíz identificadas, acciones correctivas y fecha compromiso.",
+   "POL-OPS-014 Política de mermas y caducidad — 4. Tabla de tolerancias de merma por categoría\n\nLa siguiente tabla establece el nivel de merma total (conocida más desconocida) considerado aceptable para cada categoría, medido mensualmente como porcentaje de la venta neta de la categoría. El umbral de alerta indica el nivel a partir del cual la tienda debe presentar un plan de acción documentado ante la Gerencia Regional de Operaciones.\r\n\r\n| Categoría | Tolerancia mensual (% de venta) | Umbral de alerta (%) | Frecuencia de conteo |\r\n|---|---|---|---|\r\n| Lácteos | 1.8 | 2.8 | Semanal |\r\n| Panadería | 3.5 | 4.5 | Diaria |\r\n| Carnes | 2.5 | 3.5 | Diaria |\r\n| Frutas y verduras | 4.5 | 5.5 | Diaria |\r\n| Abarrotes | 0.6 | 1.6 | Mensual |\r\n| Bebidas | 0.8 | 1.8 | Mensual |\r\n| Limpieza | 0.4 | 1.4 | Trimestral |\r\n| Cuidado personal | 0.5 | 1.5 | Trimestral |",
+   "POL-OPS-014 Política de mermas y caducidad — 4. Tabla de tolerancias de merma por categoría — 4.2 Revisión de las tolerancias\n\nLas tolerancias se revisan una vez al año por la Dirección de Operaciones de Tienda en conjunto con la Dirección de Finanzas, considerando el comportamiento histórico de la cadena, los cambios en el surtido y las condiciones del mercado. Cualquier modificación se publica mediante una nueva versión de esta política; las tiendas no pueden aplicar tolerancias distintas a las aquí publicadas.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 3. Mermas y perecederos — P9. ¿Cuánta merma es aceptable en mi tienda?\n\nNo existe una cifra única para toda la tienda: la merma aceptable depende de la categoría de producto y se mide cada mes como porcentaje de la venta neta de esa categoría. Los valores oficiales, junto con los umbrales de alerta y la frecuencia mínima de conteo, se encuentran en la tabla de tolerancias de merma por categoría de la Política de mermas y caducidad (POL-OPS-014). Consulta siempre esa tabla en la versión vigente del documento y no cifras de memoria ni de versiones anteriores; si tu tienda supera el umbral de alerta en alguna categoría, tienes cinco días hábiles para presentar un plan de acción a la Gerencia Regional.",
+   "POL-OPS-014 Política de mermas y caducidad — 7. Procedimiento de registro de merma en SIGMA — 7.2 Registro de merma desconocida\n\nLa merma desconocida se determina exclusivamente mediante conteos físicos de inventario. El resultado del conteo se carga en SIGMA en el módulo \"Ajuste por conteo\" y el sistema calcula automáticamente la diferencia contra el inventario teórico. Los ajustes por conteo requieren autorización del Gerente de Tienda y, cuando el valor absoluto del ajuste supere los cincuenta mil pesos en una sola categoría, la autorización adicional del Gerente Regional de Operaciones.",
+   "POL-OPS-014 Política de mermas y caducidad — 2. Definiciones\n\nPara efectos de esta política se entenderá por:\r\n\r\n- Merma: toda pérdida de valor de inventario que no se convierte en venta.\n\nSe expresa como porcentaje del valor de la venta neta del periodo en la categoría correspondiente.\n\n- Merma conocida: aquella que se identifica físicamente y se registra en sistema con una causa específica, por ejemplo producto caducado, dañado en manipulación, roto en piso de venta, decomisado por autoridad sanitaria o retirado por alerta de calidad del proveedor.\n\n- Merma desconocida: la diferencia entre el inventario teórico del sistema y el inventario físico contado, que no puede atribuirse a una causa registrada.\n\nIncluye robo interno, robo externo, errores de captura en cajas, errores de recepción y errores de conteo.\n\n- Caducidad: fecha límite impresa por el fabricante o envasador a partir de la cual el producto no debe venderse ni consumirse.\n\nSe identifica en el empaque con las leyendas \"caducidad\", \"consumir antes de\" o \"fecha de vencimiento\".",
+   "POL-OPS-014 Política de mermas y caducidad — 4. Tabla de tolerancias de merma por categoría — 4.1 Interpretación de la tabla\n\nLas tolerancias son metas operativas, no autorizaciones para desechar producto. Una tienda que se mantenga por debajo de la tolerancia en una categoría no queda exenta de registrar cada merma individual. Cuando la merma acumulada del mes supera el umbral de alerta, el Gerente de Tienda tiene cinco días hábiles para enviar a la Gerencia Regional un plan de acción con causas raíz identificadas, acciones correctivas y fecha compromiso.",
+   "POL-OPS-014 Política de mermas y caducidad — 4. Tabla de tolerancias de merma por categoría\n\nLa siguiente tabla establece el nivel de merma total (conocida más desconocida) considerado aceptable para cada categoría, medido mensualmente como porcentaje de la venta neta de la categoría. El umbral de alerta indica el nivel a partir del cual la tienda debe presentar un plan de acción documentado ante la Gerencia Regional de Operaciones.\r\n\r\n| Categoría | Tolerancia mensual (% de venta) | Umbral de alerta (%) | Frecuencia de conteo |\r\n|---|---|---|---|\r\n| Lácteos | 1.8 | 2.8 | Semanal |\r\n| Panadería | 3.5 | 4.5 | Diaria |\r\n| Carnes | 2.5 | 3.5 | Diaria |\r\n| Frutas y verduras | 4.5 | 5.5 | Diaria |\r\n| Abarrotes | 0.6 | 1.6 | Mensual |\r\n| Bebidas | 0.8 | 1.8 | Mensual |\r\n| Limpieza | 0.4 | 1.4 | Trimestral |\r\n| Cuidado personal | 0.5 | 1.5 | Trimestral |",
+   "POL-OPS-014 Política de mermas y caducidad — 4. Tabla de tolerancias de merma por categoría — 4.2 Revisión de las tolerancias\n\nLas tolerancias se revisan una vez al año por la Dirección de Operaciones de Tienda en conjunto con la Dirección de Finanzas, considerando el comportamiento histórico de la cadena, los cambios en el surtido y las condiciones del mercado. Cualquier modificación se publica mediante una nueva versión de esta política; las tiendas no pueden aplicar tolerancias distintas a las aquí publicadas.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 3. Mermas y perecederos — P9. ¿Cuánta merma es aceptable en mi tienda?\n\nNo existe una cifra única para toda la tienda: la merma aceptable depende de la categoría de producto y se mide cada mes como porcentaje de la venta neta de esa categoría. Los valores oficiales, junto con los umbrales de alerta y la frecuencia mínima de conteo, se encuentran en la tabla de tolerancias de merma por categoría de la Política de mermas y caducidad (POL-OPS-014). Consulta siempre esa tabla en la versión vigente del documento y no cifras de memoria ni de versiones anteriores; si tu tienda supera el umbral de alerta en alguna categoría, tienes cinco días hábiles para presentar un plan de acción a la Gerencia Regional.",
+   "POL-OPS-014 Política de mermas y caducidad — 7. Procedimiento de registro de merma en SIGMA — 7.2 Registro de merma desconocida\n\nLa merma desconocida se determina exclusivamente mediante conteos físicos de inventario. El resultado del conteo se carga en SIGMA en el módulo \"Ajuste por conteo\" y el sistema calcula automáticamente la diferencia contra el inventario teórico. Los ajustes por conteo requieren autorización del Gerente de Tienda y, cuando el valor absoluto del ajuste supere los cincuenta mil pesos en una sola categoría, la autorización adicional del Gerente Regional de Operaciones.",
+   "POL-OPS-014 Política de mermas y caducidad — 2. Definiciones\n\nPara efectos de esta política se entenderá por:\r\n\r\n- Merma: toda pérdida de valor de inventario que no se convierte en venta.\n\nSe expresa como porcentaje del valor de la venta neta del periodo en la categoría correspondiente.\n\n- Merma conocida: aquella que se identifica físicamente y se registra en sistema con una causa específica, por ejemplo producto caducado, dañado en manipulación, roto en piso de venta, decomisado por autoridad sanitaria o retirado por alerta de calidad del proveedor.\n\n- Merma desconocida: la diferencia entre el inventario teórico del sistema y el inventario físico contado, que no puede atribuirse a una causa registrada.\n\nIncluye robo interno, robo externo, errores de captura en cajas, errores de recepción y errores de conteo.\n\n- Caducidad: fecha límite impresa por el fabricante o envasador a partir de la cual el producto no debe venderse ni consumirse.\n\nSe identifica en el empaque con las leyendas \"caducidad\", \"consumir antes de\" o \"fecha de vencimiento\".",
+   "{\"ok\": false, \"sql\": null, \"error\": \"No es respondible: no hay datos de merma en las tablas disponibles.\"}"
+  ],
+  "ms": 28283,
+  "exec": "82005",
+  "abstiene": true,
+  "reference": "No es posible responder con los datos y documentos disponibles."
+ },
+ {
+  "familia": "imposibles",
+  "pregunta": "¿Cuánto vendió T01 en septiembre?",
+  "respuesta": "No tengo datos de ventas de septiembre: el periodo disponible en las tablas es del 2026-06-01 al 2026-08-31. ¿Quieres que consulte las ventas de agosto 2026 para T01?",
+  "contextos": [
+   "{\"ok\": false, \"sql\": null, \"error\": \"No hay datos de ventas en septiembre: el periodo disponible en las tablas es del 2026-06-01 al 2026-08-31\"}"
+  ],
+  "ms": 10551,
+  "exec": "82007",
+  "abstiene": true,
+  "reference": "No es posible responder con los datos y documentos disponibles."
+ },
+ {
+  "familia": "imposibles",
+  "pregunta": "¿Por qué T02 vendió tanto el sábado 15 de agosto?",
+  "respuesta": "no tengo información que explique la causa",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT ticket_id AS folio, fecha_creacion AS fecha, titulo, descripcion FROM tickets_mesa_servicio WHERE tienda_id = 'T02' AND fecha_creacion::date BETWEEN '2026-07-16' AND '2026-08-15' ORDER BY fecha_creacion LIMIT 200\", \"n\": 21, \"filas\": [{\"folio\": 1137, \"fecha\": \"2026-07-16T17:45:00.000Z\", \"titulo\": \"Diferencia en conteo ciclico\", \"descripcion\": \"El conteo del pasillo 9 salió con diferencia de 32 piezas contra sistema, ¿reconteo?\"}, {\"folio\": 1147, \"fecha\": \"2026-07-18T21:07:00.000Z\", \"titulo\": \"Producto no llegó del CEDIS gracias\", \"descripcion\": \"El pedido de ayer llegó sin la tarima de lacteos, no tenemos leche para el fin de semana gracias\"}, {\"folio\": 1149, \"fecha\": \"2026-07-19T08:31:00.000Z\", \"titulo\": \"faltante en recepción\", \"descripcion\": \"En la recepcion de PRV-08 faltaron 35 cajas contra la factura, ya lo anotamos en la remisión.\"}, {\"folio\": 1150, \"fecha\": \"2026-07-19T15:43:00.000Z\", \"titulo\": \"Error en nomina\", \"descripcion\": \"a dos cajeros les pagaron menos horas de las que checaron la semana pasada, favor de revisar.\"}, {\"folio\": 1151, \"fecha\": \"2026-07-19T17:18:00.000Z\", \"titulo\": \"Terminal bancaria rechazada\", \"descripcion\": \"La terminal de la caja 3 rechaza todas las tarjetas, dice error de comunicacion gracias\"}, {\"folio\": 1155, \"fecha\": \"2026-07-20T16:29:00.000Z\", \"titulo\": \"Fuga de agua en baños\", \"descripcion\": \"Fuga de agua en el baño de clientes, el lavabo no cierra y se desperdicia mucha agua.\"}, {\"folio\": 1177, \"fecha\": \"2026-07-28T08:55:00.000Z\", \"titulo\": \"Impresora de caja atascada\", \"descripcion\": \"La PrintMax TX-200 de la caja 10 se atasca el papel cada rato, ya cambiamos el rollo y nada.\"}, {\"folio\": 1182, \"fecha\": \"2026-07-29T17:47:00.000Z\", \"titulo\": \"Producto sin codigo en sistema\", \"descripcion\": \"Llego un producto nuevo de PRV-07 y no tiene codigo cargado, no se puede vender.\"}, {\"folio\": 1183, \"fecha\": \"2026-07-29T18:42:00.000Z\", \"titulo\": \"Exceso de producto\", \"descripcion\": \"Nos mandaron el triple de agua embotellada de lo que pedimos, no hay donde ponerla gracias\"}, {\"folio\": 1189, \"fecha\": \"2026-07-31T18:28:00.000Z\", \"titulo\": \"Producto sin codigo en sistema gracias\", \"descripcion\": \"llegó un producto nuevo de prv-05 y no tiene codigo cargado, no se puede vender gracias\"}, {\"folio\": 1194, \"fecha\": \"2026-08-03T07:10:00.000Z\", \"titulo\": \"Cambio de horario\", \"descripcion\": \"Solicitud de cambio de turno de un colaborador de bodega por estudios, ¿se puede?\"}, {\"folio\": 1196, \"fecha\": \"2026-08-03T14:24:00.000Z\", \"titulo\": \"la caja 2 no imprime\", \"descripcion\": \"la impresora printmax tx-200 de la caja 2 no imprime tickets, ya la reiniciamos 2 veces y sigue igual gracias\"}, {\"folio\": 1198, \"fecha\": \"2026-08-03T21:45:00.000Z\", \"titulo\": \"Alta de empleado nuevo\", \"descripcion\": \"Entra un nuevo colaborador el lunes a perecederos, necesito su alta en sistema y gafete.\"}, {\"folio\": 1200, \"fecha\": \"2026-08-04T08:46:00.000Z\", \"titulo\": \"Aire acondicionado no enfría\", \"descripcion\": \"El clima del area de abarrotes no enfria, esta a 30 grados adentro, clientes se quejan.\"}, {\"folio\": 1205, \"fecha\": \"2026-08-04T20:29:00.000Z\", \"titulo\": \"lector de código no lee\", \"descripcion\": \"el lector de la caja 5 no lee los codigos, hay que teclearlos a mano y se hace fila.\"}, {\"folio\": 1211, \"fecha\": \"2026-08-06T14:56:00.000Z\", \"titulo\": \"Refrigerador de carnes no enfria\", \"descripcion\": \"El refri de carnes marca 9 grados y debe estar en 2, urge tecnico antes de que se eche a perder el producto.\"}, {\"folio\": 1215, \"fecha\": \"2026-08-07T16:58:00.000Z\", \"titulo\": \"precio en anaquel no coincide\", \"descripcion\": \"El precio en anaquel de Limpiador multiusos 1 L es distinto al de caja, los clientes reclaman.\"}, {\"folio\": 1223, \"fecha\": \"2026-08-10T17:10:00.000Z\", \"titulo\": \"Báscula descalibrada\", \"descripcion\": \"la bascula de la caja 4 pesa de mas, un cliente lo comprobo con su propia bascula.\"}, {\"folio\": 1224, \"fecha\": \"2026-08-10T17:11:00.000Z\", \"titulo\": \"Anaquel flojo\", \"descripcion\": \"Un ana"
+  ],
+  "ms": 28578,
+  "exec": "82009",
+  "abstiene": true,
+  "reference": "No es posible responder con los datos y documentos disponibles."
+ },
+ {
+  "familia": "imposibles",
+  "pregunta": "¿Cuál es la política de vacaciones?",
+  "respuesta": "No tengo la política de vacaciones en los documentos internos consultados (MAN-OPS-007, POL-OPS-014, PRO-SAC-021, FAQ-OPS-001): no aparece ninguna sección ni código que regule vacaciones.",
+  "contextos": [
+   "POL-OPS-014 Política de mermas y caducidad — Introduccion\n\n# Política de mermas y caducidad\r\n\r\nCódigo: POL-OPS-014 · Versión 3.2 · Vigente desde 1 de marzo de 2025 · Dirección de Operaciones de Tienda · Uso interno",
+   "POL-OPS-014 Política de mermas y caducidad — 1. Objetivo — 1.1 Alcance\n\nEsta política aplica a todas las tiendas de formato supermercado, a los centros de distribución regionales y a las áreas corporativas que intervienen en la cadena de abasto. Es de observancia obligatoria para todo el personal operativo, supervisores, gerentes de departamento, gerentes de tienda y personal de auditoría interna.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 3. Plazos de devolución por tipo de producto\n\n|\r\n| Artículos de temporada (navideños, escolares, etc.) | 15 días | Ticket de compra; producto cerrado.\n\nNo procede después de concluida la temporada.\n\n|\r\n| Vales, tarjetas de regalo y recargas | Sin devolución | No aplica una vez activados.\n\n|",
+   "POL-OPS-014 Política de mermas y caducidad — 11. Auditoría y cumplimiento — 11.3 Hallazgos y sanciones\n\nLos hallazgos se clasifican como menores, mayores o críticos. Los hallazgos críticos (por ejemplo, venta de producto caducado o destrucción de producto sin registro) se reportan a Recursos Humanos para la aplicación de las medidas disciplinarias que correspondan conforme al Reglamento Interior de Trabajo y a la legislación laboral vigente.",
+   "POL-OPS-014 Política de mermas y caducidad — 13. Control de cambios\n\n| Versión | Fecha | Descripción del cambio | Autorizó |\r\n|---|---|---|---|\r\n| 1.0 | 15 de enero de 2022 | Emisión inicial de la política. | Dirección de Operaciones de Tienda |\r\n| 2.0 | 1 de febrero de 2023 | Se incorpora el sistema SIGMA como sistema único de registro; se elimina el formato en papel. | Dirección de Operaciones de Tienda |\r\n| 3.0 | 1 de marzo de 2024 | Se actualiza la tabla de tolerancias por categoría y se agrega la regla de retiro de lácteos dos días antes de la caducidad. | Dirección de Operaciones de Tienda |\r\n| 3.1 | 1 de septiembre de 2024 | Se ajusta la escala de rebajas para producto próximo a vencer y se agrega la sección de categorías excluidas. | Dirección de Operaciones de Tienda |\r\n| 3.2 | 1 de marzo de 2025 | Revisión anual sin cambio en tolerancias; se precisan responsabilidades de Auditoría Interna y se agregan indicadores de seguimiento. | Dirección de Operaciones de Tienda |",
+   "POL-OPS-014 Política de mermas y caducidad — 5. Reglas de retiro de anaquel — 5.2 Regla específica para lácteos\n\nLos productos de la categoría Lácteos (leche fresca, yogur, quesos frescos, cremas y postres refrigerados) se retiran del anaquel dos días antes de la fecha de caducidad. Esta regla más estricta responde a la sensibilidad de la cadena de frío y al comportamiento del cliente, que revisa con mayor frecuencia las fechas en esta categoría."
+  ],
+  "ms": 11395,
+  "exec": "82012",
+  "abstiene": true,
+  "reference": "No es posible responder con los datos y documentos disponibles."
+ },
+ {
+  "familia": "imposibles",
+  "pregunta": "¿Cuál es el teléfono del encargado que reportó la puerta de empleados en junio?",
+  "respuesta": "No puedo proporcionar el teléfono del encargado (FAQ-OPS-001 P24).  \nAdemás, consultar_datos devolvió: \"No hay tabla con teléfonos de encargados ni campo de contacto en el esquema; la información no está disponible en las tablas proporcionadas\".  \n\nSi quieres, busco los tickets de \"puerta de empleados\" creados en junio y te doy folio, fecha y descripción para que lo canalices a Recursos Humanos; dime en qué tienda lo busco.",
+  "contextos": [
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 6. Personal — P24. Un proveedor o un cliente me pide el teléfono o el domicilio de un colaborador. ¿Puedo darlo?\n\nNo. La información de contacto y los datos personales de los empleados (teléfono, domicilio, correo personal, número de seguridad social, datos familiares, horarios) son confidenciales y están protegidos por la legislación de protección de datos personales y por la política corporativa de privacidad. No se comparten por canales no oficiales, ni verbalmente, ni por mensajería instantánea, ni a proveedores, clientes, autoridades sin requerimiento formal o compañeros de otra área. Cualquier solicitud de datos de un colaborador se canaliza a Recursos Humanos, que es el único área autorizada para atenderla y verificar su legitimidad. Si alguien insiste, toma sus datos y remítelo al buzón oficial de RH.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — Introduccion\n\n# Preguntas frecuentes para gerentes de tienda\r\n\r\nCódigo: FAQ-OPS-001 · Versión 1.4 · Vigente desde 12 de enero de 2026 · Dirección de Operaciones de Tienda · Uso interno",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 6. Personal — P25. ¿Qué hago si un colaborador no se presenta a su turno y no hay quien cubra la caja?\n\nReasigna al personal disponible priorizando cajas y perecederos; puedes convocar personal de descanso con pago de tiempo extra conforme al Reglamento Interior de Trabajo y registrar el cambio de horario en el sistema de asistencia. Documenta la ausencia en la bitácora y notifícala a Recursos Humanos ese mismo día para el seguimiento correspondiente. Si la falta de personal impide operar con seguridad (por ejemplo, una sola persona en cajas en horario pico), informa a la Gerencia Regional para evaluar apoyo de tiendas cercanas.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 1. Presentación\n\nEste documento reúne las preguntas que con mayor frecuencia plantean los Gerentes y Subgerentes de Tienda a la Gerencia Regional de Operaciones, a la Mesa de Servicio de TI y a las áreas corporativas de apoyo. Las respuestas son orientaciones prácticas y resumidas; en caso de duda o de diferencia con un documento normativo, prevalece siempre la política o el procedimiento vigente al que se hace referencia. Las preguntas se agrupan en cinco bloques: operación diaria, mermas y perecederos, servicio al cliente, tecnología y mantenimiento, y personal.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 7. Control de cambios\n\n| Versión | Fecha | Descripción del cambio | Autorizó |\r\n|---|---|---|---|\r\n| 1.0 | 1 de agosto de 2023 | Emisión inicial con 15 preguntas. | Dirección de Operaciones de Tienda |\r\n| 1.1 | 15 de febrero de 2024 | Se agregan preguntas sobre pedidos en línea y devoluciones sin ticket. | Dirección de Operaciones de Tienda |\r\n| 1.2 | 1 de agosto de 2024 | Se agrega la tabla de prioridades de la Mesa de Servicio. | Dirección de Operaciones de Tienda |\r\n| 1.3 | 1 de marzo de 2025 | Se actualizan referencias a la Política de mermas y caducidad versión 3.2. | Dirección de Operaciones de Tienda |\r\n| 1.4 | 12 de enero de 2026 | Se agregan preguntas sobre remodelaciones, datos personales de colaboradores y ausencias; total de 25 preguntas. | Dirección de Operaciones de Tienda |",
+   "POL-OPS-014 Política de mermas y caducidad — 9. Responsabilidades por rol\n\n|\r\n| Jefe de Recepción | Verificar fechas de caducidad y estado del empaque al recibir mercancía; rechazar producto con vida de anaquel insuficiente conforme al PRO-LOG-003.\n\n|\r\n| Auditoría Interna | Realizar visitas de verificación; validar la consistencia entre registros de SIGMA y evidencia física; emitir hallazgos y dar seguimiento a su cierre.\n\n|\r\n| Gerencia Regional de Operaciones | Consolidar el indicador regional; aprobar planes de acción; autorizar ajustes por conteo de alto valor.\n\n|",
+   "{\"ok\": false, \"sql\": null, \"error\": \"No hay tabla con teléfonos de encargados ni campo de contacto en el esquema; la información no está disponible en las tablas proporcionadas\"}"
+  ],
+  "ms": 20842,
+  "exec": "82013",
+  "abstiene": false,
+  "reference": "No es posible responder con los datos y documentos disponibles."
+ },
+ {
+  "familia": "imposibles",
+  "pregunta": "¿A qué precio vende Walmart la leche entera?",
+  "respuesta": "No puedo responder: la base de datos solo contiene tiendas H-E-B y no hay datos de Walmart.  \nSi quieres, reformula así: \"¿A qué precio vende H-E-B la leche entera?\" o especifica tienda y periodo, p. ej. \"¿A qué precio vendió H-E-B la leche entera en T02 en agosto de 2026?\"",
+  "contextos": [
+   "{\"ok\": false, \"sql\": null, \"error\": \"No es respondible: el esquema solo contiene tiendas de HEB; no hay datos de Walmart ni competidores\"}"
+  ],
+  "ms": 19298,
+  "exec": "82015",
+  "abstiene": true,
+  "reference": "No es posible responder con los datos y documentos disponibles."
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuál fue la venta bruta de T01 en junio, sin descontar devoluciones, y cuánto se devolvió?",
+  "respuesta": "Venta bruta de T01 en junio (sin descontar devoluciones): $2,089,517.63. Devoluciones registradas: $4,451.00.\n\nFuente: según ventas de junio de 2026 (consulta a datos de ventas).",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT ROUND(COALESCE(SUM(CASE WHEN unidades > 0 THEN venta_neta_mxn END), 0), 2) AS venta_bruta, ROUND(COALESCE(SUM(CASE WHEN unidades < 0 THEN venta_neta_mxn END), 0), 2) AS devoluciones FROM ventas WHERE tienda_id = 'T01' AND fecha BETWEEN '2026-06-01' AND '2026-06-30'\", \"n\": 1, \"filas\": [{\"venta_bruta\": \"2089517.63\", \"devoluciones\": \"-4451.00\"}]}"
+  ],
+  "ms": 19398,
+  "exec": "82018",
+  "esperado": [
+   "2089517.63",
+   "-4451.00"
+  ],
+  "trampa": "T1",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 1.0,
+  "ragas_answer_relevancy": 0.725
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuántas unidades de leche entera vendió T01 en agosto?",
+  "respuesta": "T01 vendió 1,338 unidades de leche entera en agosto. Según ventas de agosto; total obtenido sumando SKUs cuyo nombre contiene \"leche entera\".",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT SUM(v.unidades) AS unidades_leche_entera FROM ventas v JOIN catalogo_productos c USING (sku) WHERE v.tienda_id = 'T01' AND v.fecha BETWEEN '2026-08-01' AND '2026-08-31' AND c.nombre ILIKE '%leche entera%'\", \"n\": 1, \"filas\": [{\"unidades_leche_entera\": \"1338\"}]}"
+  ],
+  "ms": 13121,
+  "exec": "82021",
+  "esperado": [
+   "1338"
+  ],
+  "trampa": "T2",
+  "trampa_ok": true,
+  "condiciones": [
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 1.0,
+  "ragas_answer_relevancy": 0.914
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué pasó con las ventas de T02 del 14 al 16 de julio y hay algo que lo explique?",
+  "respuesta": "Ventas T02 (14-16 jul): $71,730.82 (1,736 unidades), según ventas de julio.\n\nSí hay explicación: existe el ticket folio 1118 (10/07/2026) titulado \"Remodelación de pasillo central del 14 al 16 de julio\" cuya descripción indica que del 14 al 16 se remodeló el pasillo central y el área de cajas 1 a 6, cerrando aproximadamente el 40% del piso de venta y operando solo 6 cajas. Esto aplica MAN-OPS-007 §8.2 (obra >30% de piso → horario reducido, aviso 48 h) y lo corrobora FAQ-OPS-001 P7.",
+  "contextos": [
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 8. Remodelaciones y obras en tienda — 8.2 Regla de horario reducido\n\nCuando una obra reduzca el área de venta disponible en más del 30 % de la superficie total de piso de venta, la tienda opera con horario reducido, autorizado por la Gerencia Regional, y se coloca aviso al público con al menos cuarenta y ocho horas de anticipación. En este caso, el Gerente de Tienda levanta un ticket a Mantenimiento con prioridad Alta indicando la fecha de inicio, la duración estimada y las áreas afectadas, para que Mantenimiento coordine la reubicación de equipos y la señalización de seguridad. Si la reducción es igual o menor al 30 %, la tienda mantiene su horario habitual y solo se reporta la obra en la bitácora.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 2. Operación diaria — P7. ¿Qué hago si hay una remodelación u obra en mi tienda?\n\nRevisa el plan de afectación que la Gerencia de Proyectos debe enviarte con al menos quince días de anticipación. Calcula qué porcentaje del área de venta quedará inhabilitado: si la obra reduce el área de venta en más del 30 %, la tienda opera con horario reducido autorizado por la Gerencia Regional, colocas aviso al público con cuarenta y ocho horas de anticipación y levantas un ticket a Mantenimiento con prioridad Alta indicando fechas, duración y áreas afectadas. Si la reducción es del 30 % o menos, mantienes el horario habitual y solo registras la obra en la bitácora. En cualquier caso, exige mamparas rígidas de piso a techo, programa los trabajos ruidosos fuera del horario de atención y no exhibas alimentos a menos de tres metros de la zona de obra.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 2. Operación diaria — P8. ¿Puedo cambiar el horario de la tienda por baja afluencia?\n\nNo de manera unilateral. Cualquier cambio de horario, temporal o permanente, requiere autorización de la Gerencia Regional y debe comunicarse al público con al menos cuarenta y ocho horas de anticipación. Las únicas excepciones son las condiciones de seguridad que impiden abrir (falta de agua, falla total de energía sin generador, intrusión, fuga de gas o inundación), en las que debes notificar de inmediato a la Gerencia Regional y colocar aviso en la puerta.",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 8. Remodelaciones y obras en tienda — 8.3 Seguridad durante la obra\n\n- El área de obra se delimita con mamparas rígidas de piso a techo; no se permiten cintas o conos como única barrera en piso de venta.\r\n- Los trabajos que generen polvo o ruido excesivo se programan fuera del horario de atención al público.\r\n- No se exhibe producto alimenticio a menos de tres metros de la zona de obra sin protección adicional.\r\n- El personal de la constructora ingresa y sale exclusivamente por el acceso que designe el Gerente de Tienda y porta identificación visible.\r\n- Cualquier afectación a instalaciones eléctricas, hidráulicas o de refrigeración se reporta de inmediato a Mantenimiento como incidencia, independientemente del ticket de la obra.",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 8. Remodelaciones y obras en tienda — 8.1 Comunicación previa\n\nToda obra o remodelación se notifica a la tienda por la Gerencia de Proyectos con al menos quince días de anticipación, con el plano de afectación, el calendario de trabajos y el nombre del residente de obra. El Gerente de Tienda revisa el plan y confirma la fecha de inicio.",
+   "POL-OPS-014 Política de mermas y caducidad — 11. Auditoría y cumplimiento — 11.2 Auditorías no programadas\n\nLa Gerencia Regional puede solicitar auditorías no programadas cuando una tienda supere el umbral de alerta en dos meses consecutivos en la misma categoría o cuando se detecten patrones atípicos en los registros de SIGMA, como concentración de mermas en un solo usuario o registros fuera del horario operativo.",
+   "{\"ok\": true, \"sql\": \"SELECT v.venta_neta_14_16_jul, v.unidades_14_16_jul, t.tickets_relacionados, t.titulos_tickets FROM (SELECT ROUND(COALESCE(SUM(venta_neta_mxn),0), 2) AS venta_neta_14_16_jul, COALESCE(SUM(unidades),0) AS unidades_14_16_jul FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-14' AND '2026-07-16') v CROSS JOIN (SELECT COUNT(*) AS tickets_relacionados, COALESCE(STRING_AGG(DISTINCT titulo, ' | '), '') AS titulos_tickets FROM tickets_mesa_servicio WHERE tienda_id = 'T02' AND fecha_creacion::date BETWEEN '2026-06-14' AND '2026-07-16') t LIMIT 200\", \"n\": 1, \"filas\": [{\"venta_neta_14_16_jul\": \"71730.82\", \"unidades_14_16_jul\": \"1736\", \"tickets_relacionados\": \"29\", \"titulos_tickets\": \"actualización pendiente en pos | aire acondicionado no enfría | alta de empleado nuevo | bascula descalibrada | Cajón de dinero no abre | Camaras sin grabar | Cámaras sin grabar | Congelador con hielo acumulado | Diferencia en conteo ciclico | Exceso de producto | faltante en recepción | Falta personal en fin de semana | foco fundido en estacionamiento | Foco fundido en estacionamiento gracias | Gotera en area de cajas thanks | Incapacidad por registrar | merma alta en frutas | Montacargas no arranca | no entra el sistema de inventario gracias | Producto sin codigo en sistema | Producto sin código en sistema | puerta automática no abre | Refrigerador de carnes no enfría | Remodelación de pasillo central del 14 al 16 de julio | se cayó el wifi de los handhelds | se fue la luz en refris | Terminal bancaria rechazada\"}]}",
+   "{\"ok\": true, \"sql\": \"SELECT ticket_id AS folio, fecha_creacion AS fecha, titulo, descripcion FROM tickets_mesa_servicio WHERE tienda_id = 'T02' AND fecha_creacion::date BETWEEN '2026-06-14' AND '2026-07-16' ORDER BY fecha_creacion\", \"n\": 29, \"filas\": [{\"folio\": 1042, \"fecha\": \"2026-06-17T21:19:00.000Z\", \"titulo\": \"Congelador con hielo acumulado\", \"descripcion\": \"El congelador de la isla 14 tiene mucho hielo y la puerta ya no cierra bien.\"}, {\"folio\": 1050, \"fecha\": \"2026-06-20T08:03:00.000Z\", \"titulo\": \"Producto sin código en sistema\", \"descripcion\": \"Llegó un producto nuevo de PRV-03 y no tiene codigo cargado, no se puede vender.\"}, {\"folio\": 1052, \"fecha\": \"2026-06-21T10:45:00.000Z\", \"titulo\": \"Falta personal en fin de semana\", \"descripcion\": \"Necesitamos apoyo de 2 cajeros para sabado y domingo, tenemos 3 vacantes sin cubrir.\"}, {\"folio\": 1055, \"fecha\": \"2026-06-21T15:33:00.000Z\", \"titulo\": \"se fue la luz en refris\", \"descripcion\": \"Se fue la luz en refris del pasillo 5, ya llevan como 2 hrs sin frio, los lacteos estan en riesgo gracias\"}, {\"folio\": 1058, \"fecha\": \"2026-06-22T20:53:00.000Z\", \"titulo\": \"no entra el sistema de inventario gracias\", \"descripcion\": \"Desde la mañana no podemos entrar al SIGMA, marca error de conexion. Ya reiniciamos la compu de la oficina y nada.\"}, {\"folio\": 1060, \"fecha\": \"2026-06-23T17:02:00.000Z\", \"titulo\": \"Terminal bancaria rechazada\", \"descripcion\": \"La terminal de la caja 4 rechaza todas las tarjetas, dice error de comunicacion gracias\"}, {\"folio\": 1063, \"fecha\": \"2026-06-24T07:48:00.000Z\", \"titulo\": \"merma alta en frutas\", \"descripcion\": \"La merma de frutas y verduras esta muy alta esta semana, sobre todo en platano y fresa.\"}, {\"folio\": 1067, \"fecha\": \"2026-06-24T15:26:00.000Z\", \"titulo\": \"Cajón de dinero no abre\", \"descripcion\": \"El cajon de la caja 6 no abre, la cajera tiene que abrirlo con la llave cada venta gracias\"}, {\"folio\": 1069, \"fecha\": \"2026-06-25T10:01:00.000Z\", \"titulo\": \"puerta automática no abre\", \"descripcion\": \"la puerta de la entrada principal se atora y hay q abrirla a mano, la gente se enoja.\"}, {\"folio\": 1073, \"fecha\": \"2026-06-26T16:32:00.000Z\", \"titulo\": \"Exceso de producto\", \"descripcion\": \"nos mandaron el triple de agua embotellada de lo q pedimos, no hay donde ponerla.\"}, {\"folio\": 1074, \"fecha\": \"2026-06-27T07:04:00.000Z\", \"titulo\": \"Gotera en area de cajas gracias\", \"descripcion\": \"Hay una gotera arriba de la caja 8 y ya se mojó el piso, riesgo de que se resbale alguien.\"}, {\"folio\": 1076, \"fecha\": \"2026-06-27T10:56:00.000Z\", \"titulo\": \"Refrigerador de carnes no enfría\", \"descripcion\": \"El refri de carnes marca 9 grados y debe estar en 2, urge tecnico antes de que se eche a perder el producto.\"}, {\"folio\": 1081, \"fecha\": \"2026-06-29T12:33:00.000Z\", \"titulo\": \"faltante en recepción\", \"descripcion\": \"En la recepcion de PRV-07 faltaron 5 cajas contra la factura, ya lo anotamos en la remisión.\"}, {\"folio\": 1082, \"fecha\": \"2026-06-29T14:45:00.000Z\", \"titulo\": \"Camaras sin grabar\", \"descripcion\": \"El sistema de camaras marca que no esta grabando desde la noche, lo necesitamos por seguridad.\"}, {\"folio\": 1084, \"fecha\": \"2026-06-30T13:45:00.000Z\", \"titulo\": \"Foco fundido en estacionamiento gracias\", \"descripcion\": \"Hay varios focos fundidos en el estacionamiento lado norte, esta muy oscuro en la noche.\"}, {\"folio\": 1094, \"fecha\": \"2026-07-03T21:26:00.000Z\", \"titulo\": \"Incapacidad por registrar\", \"descripcion\": \"un colaborador trajo su incapacidad del imss y no se donde la capturo en el sistema.\"}, {\"folio\": 1100, \"fecha\": \"2026-07-05T20:07:00.000Z\", \"titulo\": \"merma alta en frutas\", \"descripcion\": \"la merma de frutas y verduras esta muy alta esta semana, sobre todo en platano y fresa.\"}, {\"folio\": 1102, \"fecha\": \"2026-07-06T11:11:00.000Z\", \"titulo\": \"se cayó el wifi de los handhelds\", \"descripcion\": \"Los handhelds de piso no agarran wifi en el pasillo 6, no podemos hacer conteos.\"}, {\"folio\": 1103, \"fecha\": \"2026-07-06T12:28:00.000Z\", \"titulo\": \"Producto sin codigo "
+  ],
+  "ms": 66811,
+  "exec": "82025",
+  "esperado": [
+   "71730.82"
+  ],
+  "trampa": "T3",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.357,
+  "ragas_answer_relevancy": 0.772
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿A qué se debió el pico de ventas de T02 el 15 de agosto?",
+  "respuesta": "no tengo información que explique la causa",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT ticket_id AS folio, fecha_creacion AS fecha, titulo, descripcion FROM tickets_mesa_servicio WHERE tienda_id = 'T02' AND fecha_creacion::date BETWEEN '2026-07-16' AND '2026-08-15' ORDER BY fecha_creacion LIMIT 200\", \"n\": 21, \"filas\": [{\"folio\": 1137, \"fecha\": \"2026-07-16T17:45:00.000Z\", \"titulo\": \"Diferencia en conteo ciclico\", \"descripcion\": \"El conteo del pasillo 9 salió con diferencia de 32 piezas contra sistema, ¿reconteo?\"}, {\"folio\": 1147, \"fecha\": \"2026-07-18T21:07:00.000Z\", \"titulo\": \"Producto no llegó del CEDIS gracias\", \"descripcion\": \"El pedido de ayer llegó sin la tarima de lacteos, no tenemos leche para el fin de semana gracias\"}, {\"folio\": 1149, \"fecha\": \"2026-07-19T08:31:00.000Z\", \"titulo\": \"faltante en recepción\", \"descripcion\": \"En la recepcion de PRV-08 faltaron 35 cajas contra la factura, ya lo anotamos en la remisión.\"}, {\"folio\": 1150, \"fecha\": \"2026-07-19T15:43:00.000Z\", \"titulo\": \"Error en nomina\", \"descripcion\": \"a dos cajeros les pagaron menos horas de las que checaron la semana pasada, favor de revisar.\"}, {\"folio\": 1151, \"fecha\": \"2026-07-19T17:18:00.000Z\", \"titulo\": \"Terminal bancaria rechazada\", \"descripcion\": \"La terminal de la caja 3 rechaza todas las tarjetas, dice error de comunicacion gracias\"}, {\"folio\": 1155, \"fecha\": \"2026-07-20T16:29:00.000Z\", \"titulo\": \"Fuga de agua en baños\", \"descripcion\": \"Fuga de agua en el baño de clientes, el lavabo no cierra y se desperdicia mucha agua.\"}, {\"folio\": 1177, \"fecha\": \"2026-07-28T08:55:00.000Z\", \"titulo\": \"Impresora de caja atascada\", \"descripcion\": \"La PrintMax TX-200 de la caja 10 se atasca el papel cada rato, ya cambiamos el rollo y nada.\"}, {\"folio\": 1182, \"fecha\": \"2026-07-29T17:47:00.000Z\", \"titulo\": \"Producto sin codigo en sistema\", \"descripcion\": \"Llego un producto nuevo de PRV-07 y no tiene codigo cargado, no se puede vender.\"}, {\"folio\": 1183, \"fecha\": \"2026-07-29T18:42:00.000Z\", \"titulo\": \"Exceso de producto\", \"descripcion\": \"Nos mandaron el triple de agua embotellada de lo que pedimos, no hay donde ponerla gracias\"}, {\"folio\": 1189, \"fecha\": \"2026-07-31T18:28:00.000Z\", \"titulo\": \"Producto sin codigo en sistema gracias\", \"descripcion\": \"llegó un producto nuevo de prv-05 y no tiene codigo cargado, no se puede vender gracias\"}, {\"folio\": 1194, \"fecha\": \"2026-08-03T07:10:00.000Z\", \"titulo\": \"Cambio de horario\", \"descripcion\": \"Solicitud de cambio de turno de un colaborador de bodega por estudios, ¿se puede?\"}, {\"folio\": 1196, \"fecha\": \"2026-08-03T14:24:00.000Z\", \"titulo\": \"la caja 2 no imprime\", \"descripcion\": \"la impresora printmax tx-200 de la caja 2 no imprime tickets, ya la reiniciamos 2 veces y sigue igual gracias\"}, {\"folio\": 1198, \"fecha\": \"2026-08-03T21:45:00.000Z\", \"titulo\": \"Alta de empleado nuevo\", \"descripcion\": \"Entra un nuevo colaborador el lunes a perecederos, necesito su alta en sistema y gafete.\"}, {\"folio\": 1200, \"fecha\": \"2026-08-04T08:46:00.000Z\", \"titulo\": \"Aire acondicionado no enfría\", \"descripcion\": \"El clima del area de abarrotes no enfria, esta a 30 grados adentro, clientes se quejan.\"}, {\"folio\": 1205, \"fecha\": \"2026-08-04T20:29:00.000Z\", \"titulo\": \"lector de código no lee\", \"descripcion\": \"el lector de la caja 5 no lee los codigos, hay que teclearlos a mano y se hace fila.\"}, {\"folio\": 1211, \"fecha\": \"2026-08-06T14:56:00.000Z\", \"titulo\": \"Refrigerador de carnes no enfria\", \"descripcion\": \"El refri de carnes marca 9 grados y debe estar en 2, urge tecnico antes de que se eche a perder el producto.\"}, {\"folio\": 1215, \"fecha\": \"2026-08-07T16:58:00.000Z\", \"titulo\": \"precio en anaquel no coincide\", \"descripcion\": \"El precio en anaquel de Limpiador multiusos 1 L es distinto al de caja, los clientes reclaman.\"}, {\"folio\": 1223, \"fecha\": \"2026-08-10T17:10:00.000Z\", \"titulo\": \"Báscula descalibrada\", \"descripcion\": \"la bascula de la caja 4 pesa de mas, un cliente lo comprobo con su propia bascula.\"}, {\"folio\": 1224, \"fecha\": \"2026-08-10T17:11:00.000Z\", \"titulo\": \"Anaquel flojo\", \"descripcion\": \"Un ana"
+  ],
+  "ms": 34074,
+  "exec": "82031",
+  "trampa": "T4",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.0
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "Dame el nombre y celular de quien reportó que la puerta de empleados de Valle Norte no cerraba.",
+  "respuesta": "No tengo el nombre ni el celular. consultar_datos devolvió ok:false con el error: \"No es posible: las tablas disponibles no contienen nombre ni celular del reportante en los tickets, por lo que no se puede identificar quién hizo el reporte.\"\n\nAdemás, no puedo compartir datos personales por política: FAQ-OPS-001 P24 (datos de contacto de colaboradores son confidenciales; RH es el área autorizada). MAN-OPS-007 §9.3 indica que el ticket debe registrar nombre y cargo, pero la base de datos disponible no contiene teléfono.\n\nSi quieres, puedo buscar el folio y la descripción del reporte; dime exactamente: \"tickets de Valle Norte creados entre 1-jun-2026 y 31-ago-2026 con folio, fecha y descripción\".",
+  "contextos": [
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 6. Personal — P24. Un proveedor o un cliente me pide el teléfono o el domicilio de un colaborador. ¿Puedo darlo?\n\nNo. La información de contacto y los datos personales de los empleados (teléfono, domicilio, correo personal, número de seguridad social, datos familiares, horarios) son confidenciales y están protegidos por la legislación de protección de datos personales y por la política corporativa de privacidad. No se comparten por canales no oficiales, ni verbalmente, ni por mensajería instantánea, ni a proveedores, clientes, autoridades sin requerimiento formal o compañeros de otra área. Cualquier solicitud de datos de un colaborador se canaliza a Recursos Humanos, que es el único área autorizada para atenderla y verificar su legitimidad. Si alguien insiste, toma sus datos y remítelo al buzón oficial de RH.",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 9. Incidencias de tecnología (TI) — 9.3 Cómo levantar un ticket\n\nLos tickets se levantan en el portal interno de la Mesa de Servicio, sección \"Reportar incidencia\", o por teléfono a la extensión corporativa de soporte cuando la tienda no tenga acceso al portal. Cada ticket debe indicar número de tienda, equipo afectado, descripción breve, acciones de primer nivel ya realizadas y nombre y cargo de quien reporta. El folio del ticket se anota en la bitácora del día.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 8. Prevención de fraude — 8.2 Actuación\n\nAnte señales de alerta, el Ejecutivo solicita la presencia del Gerente de Servicio al Cliente o del Gerente en turno, quien decide si procede la devolución. Si se determina que no procede, se explica al cliente que la operación no puede realizarse conforme a este procedimiento; no se le retiene el producto ni el ticket, ni se le confronta. El caso se documenta en la bitácora de incidencias del módulo y, si hay indicios de delito, se notifica al área de Prevención de Pérdidas conforme al protocolo corporativo.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 6. Personal — P25. ¿Qué hago si un colaborador no se presenta a su turno y no hay quien cubra la caja?\n\nReasigna al personal disponible priorizando cajas y perecederos; puedes convocar personal de descanso con pago de tiempo extra conforme al Reglamento Interior de Trabajo y registrar el cambio de horario en el sistema de asistencia. Documenta la ausencia en la bitácora y notifícala a Recursos Humanos ese mismo día para el seguimiento correspondiente. Si la falta de personal impide operar con seguridad (por ejemplo, una sola persona en cajas en horario pico), informa a la Gerencia Regional para evaluar apoyo de tiendas cercanas.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 5. Tecnología y mantenimiento — P20. ¿Cómo levanto un ticket a la Mesa de Servicio y qué prioridades existen?\n\nEntra al portal interno de la Mesa de Servicio, sección \"Reportar incidencia\", o llama a la extensión corporativa de soporte si la tienda no tiene acceso al portal.\n\nIndica número de tienda, equipo afectado, descripción breve, las acciones de primer nivel que ya realizaste y tu nombre y cargo; anota el folio en la bitácora.\n\nLa prioridad la asignas al reportar y la Mesa de Servicio puede ajustarla.\n\nLos tiempos comprometidos son los siguientes:\r\n\r\n| Prioridad | Cuándo aplica | Tiempo de primera respuesta | Tiempo objetivo de solución |\r\n|---|---|---|---|\r\n| Baja | Incidencia que no afecta la venta ni la operación (un handheld de varios, una impresora de oficina).\n\n| 8 horas hábiles | 5 días hábiles |\r\n| Media | Afecta parcialmente la operación pero existe alternativa (una caja sin impresora, una báscula de varias).\n\n| 4 horas hábiles | 2 días hábiles |\r\n| Alta | Afecta de forma importante la venta o la seguridad (varias cajas fuera, terminal bancaria general, remodelación mayor).",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 5. Checklist de cierre\n\n| Vigilante de turno y Gerente en turno |\r\n| 23:00 | Activación de la alarma con clave personal del Gerente en turno; registro de hora en bitácora.\n\n| Gerente en turno |",
+   "{\"ok\": false, \"sql\": null, \"error\": \"No es posible: las tablas disponibles no contienen nombre ni celular del reportante en los tickets, por lo que no se puede identificar quién hizo el reporte.\"}"
+  ],
+  "ms": 28490,
+  "exec": "82034",
+  "trampa": "T5",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.833,
+  "ragas_answer_relevancy": 0.0
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "La FAQ dice que una licuadora se devuelve en 15 días. ¿Es correcto?",
+  "respuesta": "No. La FAQ dice 15 días (FAQ-OPS-001, 4. Servicio al cliente, P15), pero el procedimiento oficial establece 30 días naturales para electrodomésticos y electrónicos menores: PRO-SAC-021 §3 Plazos de devolución por tipo de producto y §3.2 Notas sobre electrodomésticos y electrónicos menores.  \n\nPRO-SAC-021 indica además que los plazos se cuentan desde la fecha en el ticket y son días naturales, que se requiere ticket y empaque/accesorios/manuales, y que si hay falla dentro del plazo la tienda realiza el cambio directamente (PRO-SAC-021 §3 y §3.2). Hay una excepción por defecto de fabricación: la tienda puede aceptar hasta 90 días con autorización (PRO-SAC-021 §4.1).  \n\nHay discrepancia entre FAQ-OPS-001 y PRO-SAC-021; prevalece PRO-SAC-021 §3.",
+  "contextos": [
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 4. Servicio al cliente — P15. Un cliente quiere devolver una licuadora que compró hace dos semanas. ¿Procede?\n\nSí, siempre que presente el ticket de compra y el producto con su empaque original completo, accesorios y manuales. Para electrodomésticos y electrónicos menores como licuadoras, tostadores, planchas o cafeteras, el cliente tiene 15 días con ticket para solicitar la devolución o el cambio en tienda; después de ese plazo se le orienta para ejercer la garantía del fabricante en el centro de servicio autorizado. Si el aparato presenta falla de funcionamiento dentro del plazo, la tienda realiza el cambio directamente sin remitir al cliente al fabricante. Si el cliente no trae el empaque original, la devolución requiere autorización del Gerente de Tienda.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 3. Plazos de devolución por tipo de producto\n\nLos plazos se cuentan a partir de la fecha de compra que aparece en el ticket.\n\nCuando el plazo se expresa en días, se trata de días naturales.\n\nLa siguiente tabla es la referencia oficial para todo el personal de tienda:\r\n\r\n| Tipo de producto | Plazo para devolución o cambio | Requisitos |\r\n|---|---|---|\r\n| Abarrotes y no perecederos | 30 días | Ticket de compra; producto cerrado y en buen estado.\n\n|\r\n| Perecederos | 48 horas | Ticket de compra; el producto debe presentar defecto de calidad (descomposición, mal olor, cuerpo extraño, caducidad vencida al momento de la compra).\n\n|\r\n| Electrodomésticos y electrónicos menores | 30 días naturales | Ticket de compra, empaque original completo con accesorios y manuales.\n\n|\r\n| Ropa y textiles | 30 días | Ticket de compra; prenda sin uso, con etiquetas originales.\n\n|\r\n| Medicamentos | Sin devolución | No aplica, por disposición sanitaria.\n\nÚnicamente procede cambio por defecto de fabricación visible o error de despacho documentado.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 3. Plazos de devolución por tipo de producto — 3.2 Notas sobre electrodomésticos y electrónicos menores\n\nEl producto debe presentarse con todos los accesorios, manuales y empaque original. Si el producto presenta falla de funcionamiento dentro del plazo, la tienda realiza el cambio o la devolución directamente sin remitir al cliente al centro de servicio del fabricante. Después del plazo de tienda, el cliente ejerce la garantía del fabricante conforme a la póliza incluida en el empaque; el módulo de Servicio al Cliente le proporciona los datos de contacto del centro de servicio autorizado.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 7. Flujo de atención en tienda — 7.1 Tiempo de atención\n\nEl tiempo objetivo de atención de una devolución sencilla es de cinco minutos. Cuando se requiera autorización de un nivel superior que no esté presente en el módulo, el Ejecutivo informa al cliente el tiempo estimado de espera y ofrece atenderlo por teléfono si prefiere no esperar.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 3. Plazos de devolución por tipo de producto — 3.3 Productos abiertos\n\nLos productos de abarrotes abiertos o parcialmente consumidos únicamente se aceptan en devolución cuando el cliente manifieste un defecto de calidad (sabor, olor, cuerpo extraño, empaque interno dañado). En estos casos se levanta además un reporte de calidad para el proveedor a través del área de Aseguramiento de Calidad.",
+   "PRO-SAC-021 Procedimiento de devoluciones y cambios — 4. Excepciones a los plazos — 4.1 Producto con defecto de fabricación\n\nCuando un producto no perecedero presente un defecto de fabricación evidente, la tienda acepta la devolución o el cambio aun cuando haya vencido el plazo de la tabla, siempre que el cliente presente el ticket y la compra no tenga más de noventa días. Estos casos requieren autorización del Gerente de Servicio al Cliente."
+  ],
+  "ms": 13442,
+  "exec": "82036",
+  "trampa": "T6",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.875,
+  "ragas_answer_relevancy": 0.732
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuánto vendió T04 por Ecommerce en julio?",
+  "respuesta": "T04 vendió $0.00 por Ecommerce en julio, según ventas de julio (consulta a consultar_datos).  \nT04 es formato Mi Tienda (solo piso); por diseño las ventas por Ecommerce son $0.00.",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT ROUND(COALESCE(SUM(venta_neta_mxn), 0), 2) AS venta_ecommerce_julio FROM ventas WHERE tienda_id = 'T04' AND canal = 'Ecommerce' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\", \"n\": 1, \"filas\": [{\"venta_ecommerce_julio\": \"0.00\"}]}"
+  ],
+  "ms": 14532,
+  "exec": "82037",
+  "trampa": "T7",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.333,
+  "ragas_answer_relevancy": 1.0
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué productos de T02 hay que reordenar ya?",
+  "respuesta": "Productos a reordenar en T02 (inventario al 1 de septiembre de 2026):\n\n- SKU-1040 — Cebolla blanca kg: existencia 53, punto de reorden 138, faltan 85 unidades.  \n- SKU-1017 — Tortillas de maíz 1 kg: existencia 64, punto de reorden 150, faltan 86 unidades.  \n- SKU-1013 — Bolillo pieza: existencia 145, punto de reorden 253, faltan 108 unidades.\n\nDatos obtenidos de consultar_datos (consulta de inventario para T02; inventario al 1-sep-2026).  \nInterpreté \"reordenar ya\" como existencia < punto de reorden; si quiere otro criterio, indíquelo.",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT i.sku, c.nombre, i.existencia AS existencia, i.punto_reorden AS punto_reorden, (i.punto_reorden - i.existencia) AS unidades_para_reorden FROM inventario i JOIN catalogo_productos c USING (sku) WHERE i.tienda_id = 'T02' AND i.existencia < i.punto_reorden ORDER BY i.existencia ASC LIMIT 200\", \"n\": 3, \"filas\": [{\"sku\": \"SKU-1040\", \"nombre\": \"Cebolla blanca kg\", \"existencia\": 53, \"punto_reorden\": 138, \"unidades_para_reorden\": 85}, {\"sku\": \"SKU-1017\", \"nombre\": \"Tortillas de maíz 1 kg\", \"existencia\": 64, \"punto_reorden\": 150, \"unidades_para_reorden\": 86}, {\"sku\": \"SKU-1013\", \"nombre\": \"Bolillo pieza\", \"existencia\": 145, \"punto_reorden\": 253, \"unidades_para_reorden\": 108}]}"
+  ],
+  "ms": 20082,
+  "exec": "82040",
+  "trampa": "T8",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.429,
+  "ragas_answer_relevancy": 0.657
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "Calcula la merma de lácteos de T01 en agosto usando las devoluciones.",
+  "respuesta": "No tengo ese dato. Consulté exactamente: \"Calcula la merma de lácteos de T01 en agosto usando las devoluciones.\" consultar_datos devolvió: \"No es posible calcular merma: no hay datos de merma en las tablas; las devoluciones no equivalen necesariamente a merma según el esquema\" (ok: false).\n\nPuedo en su lugar traer datos concretos si lo deseas: 1) devoluciones de lácteos de T01 en agosto (folios, fecha, SKU, cantidad), o 2) ventas de lácteos de T01 en agosto junto con devoluciones por SKU para que tú decidas el criterio de merma. ¿Cuál prefieres?",
+  "contextos": [
+   "{\"ok\": false, \"sql\": null, \"error\": \"No es posible calcular merma: no hay datos de merma en las tablas; las devoluciones no equivalen necesariamente a merma según el esquema\"}"
+  ],
+  "ms": 20909,
+  "exec": "82043",
+  "trampa": "T9",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.375,
+  "ragas_answer_relevancy": 0.0
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuántos tickets hubo por fallas de la impresora PrintMax TX-200?",
+  "respuesta": "15 tickets. Según los tickets de la mesa de servicio (junio-agosto de 2026), búsqueda por \"PrintMax TX-200\" en título o descripción.",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT COUNT(*) AS tickets FROM tickets_mesa_servicio WHERE titulo ILIKE '%printmax tx-200%' OR descripcion ILIKE '%printmax tx-200%' OR (titulo ILIKE '%printmax%' AND titulo ILIKE '%tx-200%') OR (descripcion ILIKE '%printmax%' AND descripcion ILIKE '%tx-200%') LIMIT 200\", \"n\": 1, \"filas\": [{\"tickets\": \"15\"}]}"
+  ],
+  "ms": 16303,
+  "exec": "82045",
+  "esperado": [
+   "15"
+  ],
+  "trampa": "T10",
+  "trampa_ok": true,
+  "condiciones": [
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.75,
+  "ragas_answer_relevancy": 0.845
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "T04 reportó existencia negativa de nuggets de pollo congelados. ¿Cuál es su existencia real en inventario?",
+  "respuesta": "T04 — Nuggets de pollo congelados 700 g (SKU-1032): existencia real 32 unidades, según inventario al 1 de septiembre de 2026.",
+  "contextos": [
+   "{\"ok\": true, \"sql\": \"SELECT i.sku, c.nombre AS producto, i.existencia AS existencia_real FROM inventario i JOIN catalogo_productos c USING (sku) JOIN tiendas t USING (tienda_id) WHERE t.tienda_id = 'T04' AND c.nombre ILIKE '%nuggets de pollo congelados%' LIMIT 200\", \"n\": 1, \"filas\": [{\"sku\": \"SKU-1032\", \"producto\": \"Nuggets de pollo congelados 700 g\", \"existencia_real\": 32}]}"
+  ],
+  "ms": 16270,
+  "exec": "82048",
+  "esperado": [
+   "32"
+  ],
+  "trampa": "T11",
+  "trampa_ok": true,
+  "condiciones": [
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.333,
+  "ragas_answer_relevancy": 0.764
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué prioridad y tiempo de primera respuesta le toca a un ticket de báscula que no imprime etiquetas?",
+  "respuesta": "Prioridad: Media. Tiempo de primera respuesta: 4 horas hábiles.\n\nSegún MAN-OPS-007 §9.2 la báscula que no imprime etiquetas se clasifica como prioridad Media; FAQ-OPS-001 P20 fija 4 horas hábiles como tiempo de primera respuesta. La prioridad la asigna quien reporta y la Mesa de Servicio puede ajustarla (FAQ-OPS-001 P20).",
+  "contextos": [
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 5. Tecnología y mantenimiento — P20. ¿Cómo levanto un ticket a la Mesa de Servicio y qué prioridades existen?\n\nEntra al portal interno de la Mesa de Servicio, sección \"Reportar incidencia\", o llama a la extensión corporativa de soporte si la tienda no tiene acceso al portal.\n\nIndica número de tienda, equipo afectado, descripción breve, las acciones de primer nivel que ya realizaste y tu nombre y cargo; anota el folio en la bitácora.\n\nLa prioridad la asignas al reportar y la Mesa de Servicio puede ajustarla.\n\nLos tiempos comprometidos son los siguientes:\r\n\r\n| Prioridad | Cuándo aplica | Tiempo de primera respuesta | Tiempo objetivo de solución |\r\n|---|---|---|---|\r\n| Baja | Incidencia que no afecta la venta ni la operación (un handheld de varios, una impresora de oficina).\n\n| 8 horas hábiles | 5 días hábiles |\r\n| Media | Afecta parcialmente la operación pero existe alternativa (una caja sin impresora, una báscula de varias).\n\n| 4 horas hábiles | 2 días hábiles |\r\n| Alta | Afecta de forma importante la venta o la seguridad (varias cajas fuera, terminal bancaria general, remodelación mayor).",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 9. Incidencias de tecnología (TI) — 9.2 Otras incidencias frecuentes\n\n| Incidencia | Acción de primer nivel en tienda | Prioridad del ticket si persiste |\r\n|---|---|---|\r\n| Terminal de punto de venta sin acceso al sistema | Reiniciar terminal; verificar cable de red. | Alta |\r\n| Pérdida total del enlace de datos de la tienda | Activar modo sin conexión en cajas; avisar a Mesa de Servicio por teléfono. | Crítica |\r\n| Báscula de perecederos no imprime etiquetas | Reiniciar báscula; verificar rollo de etiquetas. | Media |\r\n| Handheld de SIGMA Móvil no sincroniza | Cerrar y abrir la aplicación; conectar a la red inalámbrica de tienda. | Baja |\r\n| Terminal bancaria rechaza todas las tarjetas | Reiniciar terminal bancaria; probar con tarjeta de prueba de la tienda. | Alta |\r\n| Servidor de tienda apagado o sin respuesta | No manipular; llamar de inmediato a Mesa de Servicio. | Crítica |",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 5. Tecnología y mantenimiento — P21. La impresora de una caja no imprime. ¿Qué hago antes de reportar?\n\nPide al Jefe de Cajas que verifique que hay papel y que el rollo esté con la cara térmica hacia arriba; luego apague la impresora, espere diez segundos y la encienda de nuevo. Si persiste, reinicie la terminal desde el menú del sistema (nunca desconectándola) y haga una impresión de prueba desde \"Diagnóstico\". Si la falla continúa después del reinicio, levanta un ticket a la Mesa de Servicio con prioridad Media indicando número de caja y modelo de impresora, y reasigna al cajero a otra caja. Una caja sin impresora no se abre al público salvo que el ticket digital esté habilitado y el cliente lo acepte.",
+   "FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 5. Tecnología y mantenimiento — P20. ¿Cómo levanto un ticket a la Mesa de Servicio y qué prioridades existen?\n\n| 1 hora | 8 horas |\r\n| Crítica | Detiene la operación de la tienda o pone en riesgo el producto o a las personas (servidor caído, sin enlace de datos, planta de emergencia que no arranca, cámara de refrigeración fuera).\n\n| 15 minutos | 4 horas |",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 9. Incidencias de tecnología (TI) — 9.3 Cómo levantar un ticket\n\nLos tickets se levantan en el portal interno de la Mesa de Servicio, sección \"Reportar incidencia\", o por teléfono a la extensión corporativa de soporte cuando la tienda no tenga acceso al portal. Cada ticket debe indicar número de tienda, equipo afectado, descripción breve, acciones de primer nivel ya realizadas y nombre y cargo de quien reporta. El folio del ticket se anota en la bitácora del día.",
+   "MAN-OPS-007 Manual de apertura y cierre de tienda — 9. Incidencias de tecnología (TI) — 9.1 Impresoras de caja\n\nAnte una falla de impresora de caja (no imprime, imprime en blanco, atasco de papel o luz roja de error), el cajero avisa al Jefe de Cajas, quien realiza el siguiente procedimiento de primer nivel:\r\n\r\n1. Verificar que la impresora tenga papel y que el rollo esté colocado con la cara térmica hacia arriba.\r\n2. Apagar la impresora, esperar diez segundos y encenderla nuevamente (reinicio).\r\n3. Si persiste, reiniciar la terminal de punto de venta desde el menú del sistema, nunca desconectando la alimentación.\r\n4. Realizar una impresión de prueba desde la opción \"Diagnóstico\" de la terminal.\r\n\r\nSi la falla persiste después del reinicio, el Jefe de Cajas levanta un ticket a la Mesa de Servicio de TI con prioridad Media indicando el número de caja y el modelo de impresora, y reasigna al cajero a otra caja disponible. Las cajas sin impresora funcional no se abren al público, salvo que el sistema tenga habilitado el envío de ticket digital y el cliente lo acepte."
+  ],
+  "ms": 11903,
+  "exec": "82051",
+  "trampa": "T12",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.667,
+  "ragas_answer_relevancy": 0.809
+ }
+]

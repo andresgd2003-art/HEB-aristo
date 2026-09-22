@@ -1,0 +1,119 @@
+{
+  "_motivo_descarte": "Endpoint de diagnostico /heb-aristo/v1/buscar heredado de BANO: devolvia fragmentos con distancia. Redundante con consultar_politicas del chat; ninguna prueba lo usa (los contextos se leen de la ejecucion). Quitado 2026-09-19.",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "heb-aristo/v1/buscar",
+        "authentication": "headerAuth",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "whb",
+      "name": "Webhook Buscar",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -240,
+        288
+      ],
+      "webhookId": "d4302822-2558-482c-bd82-398eea0aa5ba",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "YEwALJ8HDfzC3ufR",
+          "name": "BANO ingesta (header auth)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "tableName": "heb_aristo_corpus",
+        "prompt": "={{ $json.body.pregunta }}",
+        "topK": "={{ $json.body.top_k || 4 }}",
+        "options": {}
+      },
+      "id": "pgb",
+      "name": "PGVector Buscar",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        -64,
+        288
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "V0RcqGuqWSuowyhM",
+          "name": "BANO Postgres (pgvector)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "embb",
+      "name": "Embeddings OpenAI (busqueda)",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -16,
+        496
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "khGoYB8EqlxK66fW",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Devuelve los fragmentos recuperados con su seccion y su distancia,\n// para que el gate pueda comprobar de donde salieron y con cuanta conviccion.\nconst r = $input.all().map((i) => i.json);\nreturn [{ json: {\n  pregunta: $('Webhook Buscar').first().json.body.pregunta,\n  resultados: r.map((x) => ({\n    seccion: x.document?.metadata?.seccion ?? null,\n    subseccion: x.document?.metadata?.subseccion || null,\n    documento: x.document?.metadata?.documento ?? null,\n    distancia: x.score,\n    // El fragmento va COMPLETO: recortarlo hacia un gate que busca palabras clave\n    // produce fallos falsos cuando la palabra queda mas alla del recorte.\n    texto: x.document?.pageContent ?? '',\n  })),\n} }];"
+      },
+      "id": "fmt",
+      "name": "Formatear resultados",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        288
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Buscar": {
+      "main": [
+        [
+          {
+            "node": "PGVector Buscar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PGVector Buscar": {
+      "main": [
+        [
+          {
+            "node": "Formatear resultados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI (busqueda)": {
+      "ai_embedding": [
+        [
+          {
+            "node": "PGVector Buscar",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

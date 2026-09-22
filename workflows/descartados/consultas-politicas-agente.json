@@ -1,0 +1,204 @@
+{
+  "_motivo_descarte": "Sub-agente solo para RAG (ticket 05): misma precision que la herramienta pgvector directa, +65 % de latencia y una llamada mas a gpt-5-mini por pregunta. Descartada 2026-09-18.",
+  "name": "HEB-aristo — Consultas políticas (agente)",
+  "nodes": [
+    {
+      "id": "t",
+      "name": "Cuando lo llaman",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "inputSource": "workflowInputs",
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "pregunta",
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "a",
+      "name": "Agente políticas",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        260,
+        0
+      ],
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.pregunta }}",
+        "options": {
+          "systemMessage": "Eres el bibliotecario de politicas de H-E-B. Respondes SOLO con lo que devuelve la herramienta buscar_politicas.\nBusca al menos una vez; si la pregunta toca dos documentos (por ejemplo una FAQ y un procedimiento), busca dos veces con\nformulaciones distintas y compara. Si los documentos difieren, prevalece la politica/manual/procedimiento sobre la FAQ y lo dices.\nCita SIEMPRE con codigo y seccion tal como aparecen en la cabecera del fragmento (ej. PRO-SAC-021 > 3. Plazos de devolucion).\nSi no encuentras nada pertinente, di exactamente: NO_ENCONTRADO y en que documentos buscaste.\nResponde en espanol, en 2-6 frases, sin saludos.",
+          "maxIterations": 5
+        }
+      }
+    },
+    {
+      "id": "m",
+      "name": "Modelo",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        140,
+        220
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gpt-5-mini"
+        },
+        "options": {
+          "reasoningEffort": "low",
+          "maxTokens": 4000,
+          "timeout": 90000
+        }
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "khGoYB8EqlxK66fW",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "id": "v",
+      "name": "buscar_politicas",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        420,
+        220
+      ],
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Busca en los 4 documentos internos de H-E-B: Manual de apertura y cierre (MAN-OPS-007), Politica de mermas y caducidad (POL-OPS-014), Procedimiento de devoluciones y cambios (PRO-SAC-021) y Preguntas frecuentes para gerentes (FAQ-OPS-001). Cada fragmento empieza con su documento y seccion: citalos. Usala para toda pregunta de reglas, plazos, procedimientos, responsables o politicas.",
+        "tableName": "heb_aristo_corpus",
+        "topK": 6,
+        "options": {}
+      },
+      "credentials": {
+        "postgres": {
+          "id": "V0RcqGuqWSuowyhM",
+          "name": "BANO Postgres (pgvector)"
+        }
+      }
+    },
+    {
+      "id": "e",
+      "name": "Embeddings",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        420,
+        420
+      ],
+      "parameters": {
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "khGoYB8EqlxK66fW",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "id": "s",
+      "name": "Salida",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        0
+      ],
+      "parameters": {
+        "jsCode": "return [{ json: { respuesta: String($input.first().json.output ?? '') } }];"
+      }
+    },
+    {
+      "id": "nota",
+      "name": "Nota",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -300
+      ],
+      "parameters": {
+        "color": 4,
+        "width": 640,
+        "height": 240,
+        "content": "## HEB-aristo — Consultas políticas (agente) — variante 'hijo'\n\n`{pregunta}` -> `{respuesta}` con citas. AI Agent propio con la herramienta pgvector (`heb_aristo_corpus`, top-6): puede buscar varias veces y comparar documentos antes de contestar al agente de chat.\n\nComparado contra la herramienta pgvector directa en el chat (variante 'directo') con `tests/gate_prompt.mjs 2 politicas`. Se regenera con `node infra/crear-consultas-politicas.mjs hijo|directo`."
+      }
+    }
+  ],
+  "connections": {
+    "Cuando lo llaman": {
+      "main": [
+        [
+          {
+            "node": "Agente políticas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agente políticas",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "buscar_politicas": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agente políticas",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "buscar_politicas",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agente políticas": {
+      "main": [
+        [
+          {
+            "node": "Salida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

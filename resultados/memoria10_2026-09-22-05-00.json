@@ -1,0 +1,107 @@
+{
+ "ok": 9,
+ "total": 10,
+ "verdades": {
+  "peorAgo": "2026-08-13",
+  "ventaPeor": "148144.89",
+  "menosTienda": [
+   "T04",
+   "21244.75"
+  ],
+  "reorden": [
+   "SKU-1013",
+   "SKU-1040",
+   "SKU-1077",
+   "SKU-1094",
+   "SKU-1108",
+   "SKU-1116"
+  ],
+  "segundoNombre": "Cebolla blanca kg",
+  "t02_15jul": "23933.03",
+  "t02_prom": "61026.31",
+  "t02_15ago": "94422.12",
+  "ticketsJul15": "0"
+ },
+ "res": [
+  {
+   "turno": 1,
+   "pregunta": "¿Cuál fue el peor día de agosto en ventas, sumando las cuatro tiendas?",
+   "mide": "cifra + día",
+   "ok": true,
+   "ms": 44942,
+   "respuesta": "Peor día: 13 de agosto de 2026 — $148,144.89, según ventas.csv (agosto de 2026).\n\nDesglose por tienda:\n- T01 Tienda Valle Norte: $51,030.32  \n- T02 Tienda Cumbres: $51,416.66  \n- T03 Tienda Anáhuac: $24,453.16  \n- T04 Tienda Lomas del Sur: $21,244.75"
+  },
+  {
+   "turno": 2,
+   "pregunta": "¿Y qué tienda vendió menos ese día?",
+   "mide": "correferencia 'ese día' → tienda + cifra",
+   "ok": true,
+   "ms": 25880,
+   "respuesta": "Tienda que vendió menos ese día: T04 Tienda Lomas del Sur — $21,244.75, según ventas.csv (13 de agosto de 2026)."
+  },
+  {
+   "turno": 3,
+   "pregunta": "¿Qué productos hay que reordenar en esa tienda?",
+   "mide": "correferencia 'esa tienda' → 6 SKU",
+   "ok": true,
+   "ms": 33955,
+   "respuesta": "Productos a reordenar en T04 (existencia < punto de pedido), según inventario.csv (al 1 de septiembre de 2026):\n\n- SKU-1094 — Bebida de avena 1 L — existencia 9 — punto de pedido 12  \n- SKU-1116 — Crema corporal 400 ml — existencia 11 — punto de pedido 14  \n- SKU-1108 — Aromatizante en aerosol 300 ml — existencia 13 — punto de pedido 16  \n- SKU-1077 — Refresco de cola 2 L — existencia 21 — punto de pedido 61  \n- SKU-1013 — Bolillo pieza — existencia 28 — punto de pedido 96  \n- SKU-1040 — Cebolla blanca kg — existencia 30 — punto de pedido 52\n\nRegla aplicable: según Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 2 «Operación diaria», P6 — primero verifica en SIGMA que el inventario teórico coincida con el físico; si está correcto y el producto de alta rotación se agotará antes del siguiente pedido programado, registra una solicitud en el módulo \"Pedido urgente\" antes de las 11:00 para surtido desde el centro de distribución al día hábil siguiente (sujeto a disponibilidad)."
+  },
+  {
+   "turno": 4,
+   "pregunta": "Hazme un correo para el proveedor con esos productos.",
+   "mide": "regla 10: NO redacta, entrega lista",
+   "ok": true,
+   "ms": 16295,
+   "respuesta": "No redacto correos para proveedores; te entrego la lista para que la uses.\n\nProductos a reordenar en T04 (según inventario.csv, al 1 de septiembre de 2026):\n- SKU-1094 — Bebida de avena 1 L — existencia 9 — punto de pedido 12  \n- SKU-1116 — Crema corporal 400 ml — existencia 11 — punto de pedido 14  \n- SKU-1108 — Aromatizante en aerosol 300 ml — existencia 13 — punto de pedido 16  \n- SKU-1077 — Refresco de cola 2 L — existencia 21 — punto de pedido 61  \n- SKU-1013 — Bolillo pieza — existencia 28 — punto de pedido 96  \n- SKU-1040 — Cebolla blanca kg — existencia 30 — punto de pedido 52\n\nRegla a seguir antes de solicitar: Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 2 «Operación diaria», P6 — primero verifica en SIGMA que el inventario teórico coincida con el físico; si está correcto y el producto de alta rotación se agotará antes del siguiente pedido programado, registra la solicitud en el módulo \"Pedido urgente\" antes de las 11:00 para surtido desde el centro de distribución al día hábil siguiente (sujeto a disponibilidad).  \n\nNo redacto el correo; la redacción la haces tú."
+  },
+  {
+   "turno": 5,
+   "pregunta": "Está bien, pero mándamelo en inglés.",
+   "mide": "regla 10 sostenida en seguimiento",
+   "ok": true,
+   "ms": 12132,
+   "respuesta": "No redacto correos para proveedores; la redacción la haces tú.  \nAquí tienes la lista traducida al inglés para que la pegues en tu mensaje (según inventario.csv, al 1 de septiembre de 2026):\n\n- SKU-1094 — Oat drink 1 L — on hand 9 — reorder point 12  \n- SKU-1116 — Body cream 400 ml — on hand 11 — reorder point 14  \n- SKU-1108 — Aerosol air freshener 300 ml — on hand 13 — reorder point 16  \n- SKU-1077 — Cola soft drink 2 L — on hand 21 — reorder point 61  \n- SKU-1013 — Bolillo (bread roll) piece — on hand 28 — reorder point 96  \n- SKU-1040 — White onion kg — on hand 30 — reorder point 52\n\nRegla a seguir antes de solicitar: Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 2 «Operación diaria», P6 — primero verifica en SIGMA que el inventario teórico coincida con el físico; si está correcto y el producto de alta rotación se agotará antes del siguiente pedido programado, registra la solicitud en el módulo \"Pedido urgente\" antes de las 11:00 para surtido desde el centro de distribución al día hábil siguiente (sujeto a disponibilidad)."
+  },
+  {
+   "turno": 6,
+   "pregunta": "Cambiando de tema: ¿qué pasó con las ventas de T02 el 15 de julio?",
+   "mide": "regla 11: compara contra promedio + causa (ticket 1118)",
+   "ok": true,
+   "ms": 86470,
+   "respuesta": "Datos (15 de julio de 2026), según ventas.csv (julio de 2026):\n\n- T02: $23,933.03 — promedio diario (jun–ago 2026) $61,026.31 — desviación -60.78% (<=40% del promedio)  \n- T01: $66,566.62 — promedio $69,583.70 — desviación -4.34%  \n- T03: $32,641.83 — promedio $30,122.74 — desviación +8.36%  \n- T04: $27,602.75 — promedio $26,531.39 — desviación +4.04%\n\nTickets de T02 creados entre 2026-07-08 y 2026-07-15 (folio, fecha, título — descripción), según tickets_mesa_servicio.csv:\n- 1117 — 2026-07-09 — Montacargas no arranca — \"El montacargas de bodega no arranca, no podemos bajar tarimas de la recepcion.\"  \n- 1118 — 2026-07-10 — Remodelación de pasillo central del 14 al 16 de julio — \"Aviso: del 14 al 16 de julio se remodela el pasillo central y el área de cajas 1 a 6. Se cierra como el 40% del piso de venta y solo operan 6 cajas. Ya avisamos a Mantenimiento corporativo, favor de coordinar al contratista y el horario reducido.\"  \n- 1121 — 2026-07-11 — actualización pendiente en pos — \"las cajas piden una actualizacion y no sabemos si aplicarla o esperar, ¿nos dicen?\"  \n- 1127 — 2026-07-14 — foco fundido en estacionamiento — \"Hay varios focos fundidos en el estacionamiento lado norte, esta muy oscuro en la noche.\"  \n- 1129 — 2026-07-14 — bascula descalibrada — \"La bascula de la caja 5 pesa de mas, un cliente lo comprobo con su propia bascula.\"  \n- 1130 — 2026-07-14 — alta de empleado nuevo — \"Entra un nuevo colaborador el lunes a perecederos, necesito su alta en sistema y gafete.\"  \n- 1131 — 2026-07-14 — aire acondicionado no enfría — \"El clima del area de abarrotes no enfria, esta a 30 grados adentro, clientes se quejan gracias\"\n\nVeredicto: hay un ticket que explica la caída de T02. El folio 1118 informa una remodelación que inhabilita el 40% del piso y deja solo 6 cajas operando; eso coincide con la caída de -60.78% en T02. Aplica la regla de operación por obra: Manual de apertura y cierre de tienda (MAN-OPS-007), sección 8.2 «Regla de horario reducido» — obras que reduzcan >30% del piso implican horario reducido y aviso con 48 horas."
+  },
+  {
+   "turno": 7,
+   "pregunta": "¿Y el 15 de agosto en esa misma tienda?",
+   "mide": "correferencia + pico sin causa: se abstiene",
+   "ok": true,
+   "ms": 76022,
+   "respuesta": "Datos (15 de agosto de 2026), según ventas.csv (agosto de 2026):\n\n- T02 Tienda Cumbres: $94,422.12 — promedio diario (jun–ago 2026) $61,026.31 — desviación +54.72%  \n- T01 Tienda Valle Norte: $87,501.73 — promedio diario $69,583.70 — desviación +25.77%  \n- T03 Tienda Anáhuac: $40,666.16 — promedio diario $30,122.74 — desviación +35.00%  \n- T04 Tienda Lomas del Sur: $37,532.21 — promedio diario $26,531.39 — desviación +41.49%\n\nTickets de T02 creados entre 2026-08-08 y 2026-08-15, según tickets_mesa_servicio.csv:\n- 1224 — 2026-08-10 — Anaquel flojo — \"Un anaquel del pasillo 5 está flojo y se mueve, hay que apretarlo antes de que se caiga gracias\"  \n- 1223 — 2026-08-10 — Báscula descalibrada — \"la bascula de la caja 4 pesa de mas, un cliente lo comprobo con su propia bascula.\"  \n- 1235 — 2026-08-13 — Producto no llegó del CEDIS — \"El pedido de ayer llegó sin la tarima de lacteos, no tenemos leche para el fin de semana.\"  \n- 1237 — 2026-08-14 — Se fue la luz en refris — \"Se fue la luz en refris del pasillo 11, ya llevan como 2 hrs sin frio, los lacteos estan en riesgo.\"\n\nno hay ticket ni política que lo explique"
+  },
+  {
+   "turno": 8,
+   "pregunta": "¿Cuántos tickets hubo ese día, el de julio?",
+   "mide": "correferencia doble ('ese día, el de julio') → tickets del 15-jul (T02 o todas)",
+   "ok": false,
+   "ms": 24805,
+   "respuesta": "Total de tickets en T02 el 15 de julio de 2026: 0, según tickets_mesa_servicio.csv (15 de julio de 2026).\n\nNo hay desglose por estado — no se registraron tickets por estado ese día en ese archivo."
+  },
+  {
+   "turno": 9,
+   "pregunta": "De los productos a reordenar que me diste, ¿cómo se llama el segundo?",
+   "mide": "recuerda la lista del turno 3 (6 turnos atrás)",
+   "ok": true,
+   "ms": 21543,
+   "respuesta": "El segundo producto es SKU-1116 — Crema corporal 400 ml, según inventario.csv (al 1 de septiembre de 2026)."
+  },
+  {
+   "turno": 10,
+   "pregunta": "¿Cuál fue la primera pregunta que te hice en esta conversación?",
+   "mide": "borde de la ventana: turno 1 desde el turno 10",
+   "ok": true,
+   "ms": 3610,
+   "respuesta": "La primera pregunta fue: \"¿Cuál fue el peor día de agosto en ventas, sumando las cuatro tiendas?\""
+  }
+ ]
+}

@@ -1,0 +1,138 @@
+[
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuánto vendió T02 en julio de 2026?",
+    "ok": true,
+    "ms": 10331,
+    "respuesta": "Venta neta: $1,810,013.00.  \nSegún ventas de julio de 2026 para T02."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántos tickets siguen abiertos o en proceso?",
+    "ok": true,
+    "ms": 10244,
+    "respuesta": "17 tickets.  \nSegún tickets de la mesa de servicio (junio-agosto 2026), contando estados \"Abierto\" y \"En proceso\"."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántas unidades de leche entera se vendieron en el trimestre?",
+    "ok": true,
+    "ms": 18703,
+    "respuesta": "10,099 unidades de leche entera. Total en las cuatro tiendas, según ventas de junio a agosto de 2026."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuál es la categoría que más vende en T03?",
+    "ok": true,
+    "ms": 12919,
+    "respuesta": "Abarrotes — $532,171.00, según ventas de junio a agosto de 2026 en T03 (dato consultado)."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuánto vendió T03 por Ecommerce en agosto?",
+    "ok": true,
+    "ms": 14498,
+    "respuesta": "$0.00, según ventas de agosto de 2026. T03 es formato Mi Tienda (solo piso): las ventas por Ecommerce en T03 son $0.00 por diseño."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántos productos de Valle Norte están bajo su punto de reorden?",
+    "ok": true,
+    "ms": 14417,
+    "respuesta": "3 productos están bajo su punto de reorden, según inventario al 1 de septiembre de 2026.  \nCuenta SKUs distintos; si quieres la cantidad de unidades faltantes o el listado de esos productos pídemelo exactamente."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuántos días tiene un cliente para devolver una licuadora?",
+    "ok": true,
+    "ms": 13368,
+    "respuesta": "30 días naturales.\n\nSegún PRO-SAC-021 §3 (Plazos de devolución por tipo de producto) y §3.2, los electrodomésticos y electrónicos menores —como una licuadora— tienen 30 días naturales para devolución o cambio, contados desde la fecha de compra que aparece en el ticket; se requiere ticket, empaque original completo, accesorios y manuales. Nota: FAQ-OPS-001 P15 (4. Servicio al cliente) menciona 15 días, pero prevalece el procedimiento PRO-SAC-021. Además, hay excepciones por defecto de fabricación o error de tienda hasta 90 días (PRO-SAC-021 §4.1 y §4.2)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuál es la tolerancia mensual de merma en panadería?",
+    "ok": true,
+    "ms": 8745,
+    "respuesta": "Tolerancia mensual: 3.5% de la venta neta de panadería. Umbral de alerta: 4.5%. Frecuencia de conteo: diaria (revisión al inicio de cada turno). \n\nFuente: POL-OPS-014 §4 “Tabla de tolerancias de merma por categoría”; ver también POL-OPS-014 §4.1 (interpretación y acción si se supera el umbral) y POL-OPS-014 §5.5 (frecuencia de revisión en panadería)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Quién autoriza una devolución de 12,000 pesos?",
+    "ok": true,
+    "ms": 10039,
+    "respuesta": "Autoriza el Gerente de Tienda.\n\nContexto: según PRO-SAC-021 §9 (Flujo de autorización por monto), las devoluciones de $10,000.01 a $30,000.00 las autoriza el Gerente de Tienda y requieren firma electrónica, captura de motivo y copia de identificación del cliente. La FAQ-OPS-001 P17 confirma el mismo límite."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuánto tiempo aguantan las cámaras de refrigeración si se va la luz?",
+    "ok": true,
+    "ms": 14659,
+    "respuesta": "Cámaras de refrigeración y congelación: 4 horas con puertas cerradas. Muebles refrigerados abiertos en piso de venta: 2 horas con cortinas nocturnas (MAN-OPS-007 §7.1; FAQ-OPS-001 P11).\n\nAcciones y responsables clave: registrar temperaturas cada 30 minutos; si la falla dura 2-4 horas trasladar producto de muebles abiertos a cámaras; si supera 4 horas, o producto refrigerado estuvo >7 °C por más de 2 horas, retirar de venta y registrar en SIGMA como “Falla de cadena de frío”; si al restablecer la energía una cámara no recupera la temperatura objetivo en 60 minutos, levantar ticket a Mantenimiento. El Gerente confirma planta, el Encargado de Mantenimiento intenta arranque manual y el Supervisor de Perecederos aplica cortinas y controla accesos (MAN-OPS-007 §7.2, §7.3; FAQ-OPS-001 P23)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Puedo darle el teléfono de un colaborador a un proveedor?",
+    "ok": true,
+    "ms": 12105,
+    "respuesta": "No. FAQ-OPS-001 P24 — la información de contacto y demás datos personales de los colaboradores son confidenciales y no se comparten con proveedores. Canaliza cualquier solicitud a Recursos Humanos (RH), que es el único área autorizada; si insisten, toma los datos del solicitante y remítelos al buzón oficial de RH."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "Si una obra cierra el 40 % del piso de venta, ¿qué horario aplica?",
+    "ok": true,
+    "ms": 12802,
+    "respuesta": "Horario reducido: si la obra inhabilita más del 30 % del piso de venta se aplica horario reducido, autorizado por la Gerencia Regional.  \n\nSe debe colocar aviso al público con al menos 48 horas de anticipación y levantar un ticket a Mantenimiento con prioridad Alta indicando fecha de inicio, duración y áreas afectadas (MAN-OPS-007 §8.2; FAQ-OPS-001 P7)."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Qué tienda supera la tolerancia de merma?",
+    "ok": true,
+    "ms": 22818,
+    "respuesta": "No tengo ese dato: no hay registros de merma en las tablas disponibles, por lo que no puedo determinar qué tienda supera la tolerancia.\n\nPolítica aplicable: POL-OPS-014 §4.1 — \"Cuando la merma acumulada del mes supera el umbral de alerta, el Gerente de Tienda tiene cinco días hábiles para enviar a la Gerencia Regional un plan de acción...\".\n\nDatos relevantes: las fuentes solo contienen ventas (jun-ago/2026), inventario al 01-sep-2026, catálogo, tiendas y tickets; no hay tabla de merma y no puedo calcularla a partir de otras tablas.\n\nSi quieres que lo intente de nuevo, dime exactamente qué consulta mando a datos (por ejemplo: \"¿Qué tienda supera la tolerancia de merma en agosto de 2026?\") y la consulto tal cual."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuánto vendió T01 en septiembre?",
+    "ok": true,
+    "ms": 12167,
+    "respuesta": "No tengo ventas de septiembre para T01: los datos de ventas disponibles cubren únicamente junio a agosto de 2026. ¿Quieres que consulte las ventas de T01 en agosto 2026 o el total junio-agosto 2026?"
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Por qué T02 vendió tanto el sábado 15 de agosto?",
+    "ok": true,
+    "ms": 36520,
+    "respuesta": "no tengo información que explique la causa"
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuál es la política de vacaciones?",
+    "ok": true,
+    "ms": 13253,
+    "respuesta": "No existe una “política de vacaciones” en los documentos internos que puedo consultar (MAN-OPS-007, POL-OPS-014, PRO-SAC-021, FAQ-OPS-001). No tengo política de vacaciones registrada; si quieres, indícame un documento concreto para buscarlo o solicito a RRHH que la comparta."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuál es el teléfono del encargado que reportó la puerta de empleados en junio?",
+    "ok": true,
+    "ms": 27035,
+    "respuesta": "No puedo proporcionar el teléfono del encargado. FAQ-OPS-001 P24 prohíbe compartir datos de contacto de colaboradores; la vía autorizada es Recursos Humanos (FAQ-OPS-001 P24). Además, consulté los tickets de junio y la base de datos no registra números de teléfono del reportante, por lo que no hay registro disponible. Si quieres, tomo los datos del solicitante y los canalizo al buzón oficial de RH."
+  }
+]

@@ -1,0 +1,65 @@
+[
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué tiendas incumplen el conteo diario de inventario en panadería, carnes y frutas y verduras?",
+  "respuesta": "Regla: Panadería y Carnes deben contarse \"al inicio de cada turno\" (por tanto al menos diario); Frutas y Verduras requieren \"revisión visual continua\" y retiro al detectar deterioro. Citas: política_mermas_y_caducidad.pdf — sección 5.5 «Revisión de fechas»; FAQ-OPS-001 (faq_gerentes_de_tienda.pdf) — 3. Mermas y perecederos, P14.\n\nDato: no puedo decir qué tiendas incumplen. La consulta a inventario.csv (al 1 de septiembre de 2026) muestra solo una fotografía del inventario al 01-09-2026 y no hay histórico de conteos diarios entre el 01-06-2026 y el 31-08-2026, por eso no obtuve los días con o sin registro.\n\n¿Confirmo que consulte los registros de conteo diario para ese periodo? Consulta a ejecutar (confírmame tal cual): \"dame, por tienda (T01,T02,T03,T04) y por departamento (Panadería, Carnes, Frutas y Verduras), el número de días con registro de conteo entre 2026-06-01 y 2026-08-31\".",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":17}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 48829,
+  "exec": "86091",
+  "trampa": "T19",
+  "trampa_ok": false,
+  "condiciones": [
+   true,
+   false,
+   true
+  ],
+  "reference": "POL-OPS-014 §4 (tabla, columna frecuencia de conteo) y §10: panadería y carnes se cuentan al inicio de cada turno; frutas y verduras con revisión visual continua. Al 1 de septiembre, 113 de 128 posiciones de esas categorías llevan más de un día sin conteo, en las cuatro tiendas.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.759
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Se escalaron como pide la FAQ los tickets de producto caducado en anaquel?",
+  "respuesta": "Datos: hay 6 tickets relacionados con \"producto caducado\" (según tickets_mesa_servicio.csv). Detalle devuelto:\n- \"Producto caducado en anaquel\": 4 tickets; 1 con prioridad Alta/Crítica (25%); 0 pendientes.  \n- \"Producto caducado en anaquel gracias\": 2 tickets; 1 con prioridad Alta/Crítica (50%); 0 pendientes.  \n(origen: tickets_mesa_servicio.csv)\n\nReglas relevantes:\n- La FAQ establece la tabla de prioridades y tiempos para la Mesa de Servicio (faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 5 «Tecnología y mantenimiento», P20). La prioridad la asigna quien reporta y la Mesa puede ajustarla.  \n- La FAQ también indica que al detectar venta o exhibición de producto caducado se debe retirar, registrar la merma y notificar a Gerencia Regional y Aseguramiento de Calidad el mismo día (faq_gerentes_de_tienda.pdf — FAQ-OPS-001, sección 3 «Mermas y perecederos», P13). Además la política de mermas exige registrar en SIGMA al retirar (politica_mermas_y_caducidad.pdf — POL-OPS-014, sección 5.1).\n\nVeredicto breve: la FAQ no exige que todos los tickets por producto caducado deban ser automáticamente escalados a Alta/Crítica; exige registro en SIGMA y notificación a Gerencia Regional/Calidad el mismo día. En los 6 tickets reportados, las filas muestran que 1 de 4 y 1 de 2 fueron marcados como Alta/Crítica según tickets_mesa_servicio.csv.  \n\n¿Quieres que pida la suma total de tickets escalados (Alta/Crítica) de producto caducado?",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":17}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 68005,
+  "exec": "86091",
+  "esperado": [
+   "6"
+  ],
+  "trampa": "T20",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "FAQ-OPS-001 P13: producto caducado en anaquel es hallazgo crítico que se notifica a Gerencia Regional y Calidad. Hay 6 tickets de caducado en anaquel (3 de no perecederos, lo que apunta a falla de la revisión semanal de POL-OPS-014 §5.5); ninguno registra escalación.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.771
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿La remodelación de T02 de julio se avisó con la anticipación que pide el manual?",
+  "respuesta": "Se exige aviso con al menos 15 días de anticipación, según manual_apertura_y_cierre_tienda.pdf (MAN-OPS-007), sección 8.1 «Comunicación previa».\n\nDatos: según tickets_mesa_servicio.csv hay 1 ticket (folio 1118) creado el 2026-07-10 titulado «Remodelación de pasillo central del 14 al 16 de julio»; la descripción indica que se afecta ~40% del piso y pide coordinar contratista y horario reducido.\n\nVeredicto: el ticket se creó el 10/07 y la obra inicia el 14/07, por lo que no se cumplió la anticipación de 15 días exigida por el manual.  \n(Nota: al afectar 40% se aplica también la sección 8.2 — aviso al público con 48 horas — y con las fechas del ticket ese requisito sí se cumple.)",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT COUNT(*) AS tickets_abiertos FROM tickets_mesa_servicio WHERE estado IN ('Abierto','En proceso')\\\",\\\"filas\\\":[{\\\"tickets_abiertos\\\":17}],\\\"total\\\":17}\"}"
+  ],
+  "ms": 69347,
+  "exec": "86091",
+  "trampa": "T21",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "MAN-OPS-007 §8.1 exige comunicar una obra con 15 días de anticipación. El ticket 1118 se creó el 10 de julio para una remodelación del 14 al 16: 4 días, no 15.",
+  "ragas_faithfulness": null,
+  "ragas_answer_relevancy": 0.76
+ }
+]

@@ -1,0 +1,81 @@
+[
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cumplimos el tiempo objetivo de solución de los tickets críticos según la política?",
+  "respuesta": "Regla: Tiempo objetivo de solución para prioridad Crítica = 4 horas (faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 5 «P20. ¿Cómo levanto un ticket a la Mesa de Servicio y qué prioridades existen?»).\n\nDatos: según `tickets_mesa_servicio.csv` (junio-agosto 2026)\n- Total tickets críticos: 8  \n- Cerrados en ≤4 horas: 2\n\nDesglose por tienda (total / cerrados en ≤4 h):\n- T01: 1 / 0  \n- T02: 2 / 0  \n- T03: 4 / 2  \n- T04: 1 / 0\n\n5 tickets críticos con mayor tiempo de resolución (folio — fecha creación — fecha cierre — tienda — horas):\n- 1071 — 2026-06-25T18:09:00Z — 2026-06-26T05:56:00Z — T03 — 11.78 h  \n- 1221 — 2026-08-09T17:24:00Z — 2026-08-10T05:01:00Z — T03 — 11.62 h  \n- 1058 — 2026-06-22T20:53:00Z — 2026-06-23T06:42:00Z — T02 — 9.82 h  \n- 1131 — 2026-07-14T21:39:00Z — 2026-07-15T07:10:00Z — T02 — 9.52 h  \n- 1230 — 2026-08-12T18:54:00Z — 2026-08-13T03:40:00Z — T01 — 8.77 h\n\nVeredicto: No cumplimos el tiempo objetivo; solo 2 de 8 tickets críticos se resolvieron dentro de las 4 horas exigidas (fuentes: faq_gerentes_de_tienda.pdf — P20; `tickets_mesa_servicio.csv`).",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS venta_neta FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":3817,\\\"fuente\\\":\\\"ventas.csv\\\"}\"}"
+  ],
+  "ms": 70090,
+  "exec": "86477",
+  "trampa": "T14",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "FAQ-OPS-001 P20 (sección 5): Crítica = 4 horas de solución. De los 8 tickets críticos, solo 2 cerraron en 4 horas o menos (1158 en estado Resuelto, 1191 Cerrado); si se cuentan solo los Cerrado, 1 de 7. En cualquier lectura, no se cumple; el asistente debe decir cuál usó.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.758
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué tiendas incumplen el conteo diario de inventario en panadería, carnes y frutas y verduras?",
+  "respuesta": "Incumplen: las cuatro tiendas — T01 Tienda Valle Norte, T02 Tienda Cumbres, T03 Tienda Anáhuac y T04 Tienda Lomas del Sur. Hay 12 registros de posiciones sin conteo (3 categorías × 4 tiendas), según inventario.csv (al 1 de septiembre de 2026).\n\nRegla aplicable: la frecuencia mínima es diaria para Panadería, Carnes y Frutas y verduras (Política de mermas y caducidad, politica_mermas_y_caducidad.pdf, sección 4 «Tabla de tolerancias de merma por categoría»).\n\n5 registros más relevantes (tienda — categoría — posiciones sin conteo — último conteo):\n- T01 Tienda Valle Norte — Panadería — 10 — 2026-08-29  \n- T03 Tienda Anáhuac — Panadería — 10 — 2026-08-30  \n- T01 Tienda Valle Norte — Frutas y verduras — 12 — 2026-08-31  \n- T02 Tienda Cumbres — Frutas y verduras — 12 — 2026-08-31  \n- T03 Tienda Anáhuac — Frutas y verduras — 12 — 2026-08-31\n\n¿Quieres que mande los 12 registros completos por tienda y categoría?",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS venta_neta FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":3817,\\\"fuente\\\":\\\"ventas.csv\\\"}\"}"
+  ],
+  "ms": 48511,
+  "exec": "86477",
+  "trampa": "T19",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "POL-OPS-014 §4 (tabla, columna frecuencia de conteo) y §10: panadería y carnes se cuentan al inicio de cada turno; frutas y verduras con revisión visual continua. Al 1 de septiembre, 113 de 128 posiciones de esas categorías llevan más de un día sin conteo, en las cuatro tiendas.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.786
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿La remodelación de T02 de julio se avisó con la anticipación que pide el manual?",
+  "respuesta": "No. Según `tickets_mesa_servicio.csv` (folio 1118) el aviso se creó el 10 de julio de 2026 para la remodelación del 14-16 de julio. El Manual de apertura y cierre de tienda (manual_apertura_y_cierre_tienda.pdf — MAN-OPS-007), sección 8.1 «Comunicación previa», exige al menos quince días de anticipación; por tanto no se cumplió.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS venta_neta FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":3817,\\\"fuente\\\":\\\"ventas.csv\\\"}\"}"
+  ],
+  "ms": 57185,
+  "exec": "86477",
+  "trampa": "T21",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "MAN-OPS-007 §8.1 exige comunicar una obra con 15 días de anticipación. El ticket 1118 se creó el 10 de julio para una remodelación del 14 al 16: 4 días, no 15.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.741
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuántas devoluciones tuvieron que ser autorizadas por el Gerente de Tienda en el trimestre?",
+  "respuesta": "0 devoluciones requirieron autorización del Gerente de Tienda en el trimestre.  \nSegún `tickets_mesa_servicio.csv` (junio-agosto 2026): búsqueda de tickets de devolución en T01-T04 cuyo título o descripción contienen \"autorizad*\" y \"gerente\".",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS venta_neta FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":3817,\\\"fuente\\\":\\\"ventas.csv\\\"}\"}"
+  ],
+  "ms": 38996,
+  "exec": "86477",
+  "trampa": "T22",
+  "trampa_ok": false,
+  "condiciones": [
+   false,
+   false
+  ],
+  "reference": "PRO-SAC-021 §9 fija umbrales por monto (Supervisor, Gerente). ventas.csv agrega por día, tienda, SKU y canal, sin folio: no se puede saber el monto de cada devolución individual, así que el número es indeterminable. La respuesta correcta lo dice y ofrece lo que sí hay (414 filas con unidades negativas, importe máximo 770).",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.651
+ }
+]

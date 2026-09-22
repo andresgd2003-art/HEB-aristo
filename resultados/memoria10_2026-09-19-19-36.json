@@ -1,0 +1,107 @@
+{
+ "ok": 8,
+ "total": 10,
+ "verdades": {
+  "peorAgo": "2026-08-13",
+  "ventaPeor": "148144.89",
+  "menosTienda": [
+   "T04",
+   "21244.75"
+  ],
+  "reorden": [
+   "SKU-1013",
+   "SKU-1040",
+   "SKU-1077",
+   "SKU-1094",
+   "SKU-1108",
+   "SKU-1116"
+  ],
+  "segundoNombre": "Cebolla blanca kg",
+  "t02_15jul": "23933.03",
+  "t02_prom": "61026.31",
+  "t02_15ago": "94422.12",
+  "ticketsJul15": "4"
+ },
+ "res": [
+  {
+   "turno": 1,
+   "pregunta": "¿Cuál fue el peor día de agosto en ventas, sumando las cuatro tiendas?",
+   "mide": "cifra + día",
+   "ok": true,
+   "ms": 25256,
+   "respuesta": "Peor día: 13 de agosto de 2026 — $148,144.89 en ventas (3,852 unidades), según ventas.csv (junio–agosto 2026).  \nEs el total mínimo diario de agosto sumando las cuatro tiendas."
+  },
+  {
+   "turno": 2,
+   "pregunta": "¿Y qué tienda vendió menos ese día?",
+   "mide": "correferencia 'ese día' → tienda + cifra",
+   "ok": true,
+   "ms": 58078,
+   "respuesta": "Tienda que vendió menos el 13 de agosto de 2026: T04 (Tienda Lomas del Sur) — $21,244.75 en ventas (528 unidades), según ventas.csv (junio–agosto 2026)."
+  },
+  {
+   "turno": 3,
+   "pregunta": "¿Qué productos hay que reordenar en esa tienda?",
+   "mide": "correferencia 'esa tienda' → 6 SKU",
+   "ok": true,
+   "ms": 31243,
+   "respuesta": "6 productos para reordenar en T04 (Tienda Lomas del Sur):  \nSKU-1094 — Bebida de avena 1 L — existencia 9, punto de reorden 12  \nSKU-1116 — Crema corporal 400 ml — existencia 11, punto de reorden 14  \nSKU-1108 — Aromatizante en aerosol 300 ml — existencia 13, punto de reorden 16  \nSKU-1077 — Refresco de cola 2 L — existencia 21, punto de reorden 61  \nSKU-1013 — Bolillo pieza — existencia 28, punto de reorden 96  \nSKU-1040 — Cebolla blanca kg — existencia 30, punto de reorden 52\n\nCriterio: existencia < punto de reorden; según inventario.csv (al 1 de septiembre de 2026)."
+  },
+  {
+   "turno": 4,
+   "pregunta": "Hazme un correo para el proveedor con esos productos.",
+   "mide": "regla 10: NO redacta, entrega lista",
+   "ok": true,
+   "ms": 11056,
+   "respuesta": "No redacto correos para proveedores; te doy la lista y la redacción la haces tú.\n\n6 productos para reordenar en T04 (Tienda Lomas del Sur):  \nSKU-1094 — Bebida de avena 1 L — existencia 9, punto de reorden 12  \nSKU-1116 — Crema corporal 400 ml — existencia 11, punto de reorden 14  \nSKU-1108 — Aromatizante en aerosol 300 ml — existencia 13, punto de reorden 16  \nSKU-1077 — Refresco de cola 2 L — existencia 21, punto de reorden 61  \nSKU-1013 — Bolillo pieza — existencia 28, punto de reorden 96  \nSKU-1040 — Cebolla blanca kg — existencia 30, punto de reorden 52\n\nCriterio: existencia < punto de reorden; según inventario.csv (al 1 de septiembre de 2026)."
+  },
+  {
+   "turno": 5,
+   "pregunta": "Está bien, pero mándamelo en inglés.",
+   "mide": "regla 10 sostenida en seguimiento",
+   "ok": true,
+   "ms": 13962,
+   "respuesta": "No redacto correos para proveedores; te doy la lista en inglés y la redacción la haces tú.\n\n6 products to reorder in T04 (Tienda Lomas del Sur):  \nSKU-1094 — Oat drink 1 L — on hand 9, reorder point 12  \nSKU-1116 — Body cream 400 ml — on hand 11, reorder point 14  \nSKU-1108 — Aerosol air freshener 300 ml — on hand 13, reorder point 16  \nSKU-1077 — Cola soda 2 L — on hand 21, reorder point 61  \nSKU-1013 — Bolillo (bread roll) — on hand 28, reorder point 96  \nSKU-1040 — White onion kg — on hand 30, reorder point 52\n\nCriterio: existencia < punto de reorden; según inventario.csv (al 1 de septiembre de 2026)."
+  },
+  {
+   "turno": 6,
+   "pregunta": "Cambiando de tema: ¿qué pasó con las ventas de T02 el 15 de julio?",
+   "mide": "regla 11: compara contra promedio + causa (ticket 1118)",
+   "ok": true,
+   "ms": 83464,
+   "respuesta": "T02 el 15 de julio de 2026: $23,933.03 — 39.23% del promedio diario de T02 ($61,026.31), es una caída significativa, según `ventas.csv` (junio–agosto 2026).\n\nTickets (14–15 jul) que pueden explicar la baja, según `tickets_mesa_servicio.csv` (junio–agosto 2026):  \n1127 — 2026-07-14 — foco fundido en estacionamiento — “Hay varios focos fundidos en el estacionamiento lado norte, esta muy oscuro en la noche.”  \n1129 — 2026-07-14 — báscula descalibrada — “La báscula de la caja 5 pesa de más, un cliente lo comprobó con su propia báscula.”  \n1130 — 2026-07-14 — alta de empleado nuevo — “Entra un nuevo colaborador el lunes a perecederos, necesito su alta en sistema y gafete.”  \n1131 — 2026-07-14 — aire acondicionado no enfría — “El clima del área de abarrotes no enfría, está a 30 grados adentro, clientes se quejan.”\n\nEl ticket folio 1131 (aire acondicionado no enfría) podría explicar la caída de ventas."
+  },
+  {
+   "turno": 7,
+   "pregunta": "¿Y el 15 de agosto en esa misma tienda?",
+   "mide": "correferencia + pico sin causa: se abstiene",
+   "ok": false,
+   "ms": 64106,
+   "respuesta": "T02 el 15 de agosto de 2026: $94,422.12 — 154.70% del promedio diario de T02 ($61,026.31), es un aumento significativo, según ventas.csv (junio–agosto 2026).\n\nTickets (14–15 ago) que podrían explicar la variación, según tickets_mesa_servicio.csv (junio–agosto 2026):  \n1237 — 2026-08-14 — Se fue la luz en refris — “Se fue la luz en refris del pasillo 11, ya llevan como 2 hrs sin frio, los lacteos estan en riesgo.”\n\nEl ticket folio 1237 podría estar relacionado con la variación."
+  },
+  {
+   "turno": 8,
+   "pregunta": "¿Cuántos tickets hubo ese día, el de julio?",
+   "mide": "correferencia doble ('ese día, el de julio') → tickets 15-jul",
+   "ok": true,
+   "ms": 22619,
+   "respuesta": "0 tickets creados en T02 el 15 de julio de 2026, según tickets_mesa_servicio.csv (junio–agosto 2026).  \nContexto: los 4 tickets relacionados que mencioné antes fueron del 14 de julio, no del 15."
+  },
+  {
+   "turno": 9,
+   "pregunta": "De los productos a reordenar que me diste, ¿cómo se llama el segundo?",
+   "mide": "recuerda la lista del turno 3 (6 turnos atrás)",
+   "ok": true,
+   "ms": 47212,
+   "respuesta": "Crema corporal 400 ml (SKU-1116).  \nSegún inventario.csv (al 1 de septiembre de 2026), es el segundo producto de la lista de reorden para T04."
+  },
+  {
+   "turno": 10,
+   "pregunta": "¿Cuál fue la primera pregunta que te hice en esta conversación?",
+   "mide": "borde de la ventana: turno 1 desde el turno 10",
+   "ok": false,
+   "ms": 6691,
+   "respuesta": "Tu primera pregunta fue: \"Está bien, pero mándamelo en inglés.\""
+  }
+ ]
+}

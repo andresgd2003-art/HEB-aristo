@@ -1,0 +1,44 @@
+[
+ {
+  "familia": "trampas",
+  "pregunta": "¿Se escalaron como pide la FAQ los tickets de producto caducado en anaquel?",
+  "respuesta": "No puedo confirmar que se escalara según la FAQ.\n\n- Regla aplicable: faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 3 «Mermas y perecederos», P13: \"retira unidades del lote, registra la merma en SIGMA con causa 'Caducidad' el mismo día y notifica el mismo día a la Gerencia Regional y al área de Aseguramiento de Calidad.\"  \n\n- Datos: hay 6 tickets entre junio y agosto 2026 relacionados con \"caducad*\". Según tickets_mesa_servicio.csv (junio-agosto 2026): total 6. Lista (folio — fecha creación — tienda — prioridad — estado — fecha cierre — escalado):\n  - 1233 — 2026-08-13T12:33 — T03 — Media — Cerrado — 2026-08-16T01:47 — no  \n  - 1197 — 2026-08-03T19:54 — T03 — Alta — Cerrado — 2026-08-04T18:21 — sí  \n  - 1111 — 2026-07-08T16:11 — T01 — Alta — Cerrado — 2026-07-10T05:29 — sí  \n  - 1065 — 2026-06-24T11:31 — T01 — Media — Cerrado — 2026-06-27T04:31 — no  \n  - 1031 — 2026-06-13T11:16 — T01 — Media — Cerrado — 2026-06-14T19:54 — no  \n  - 1015 — 2026-06-08T15:52 — T04 — Baja — Resuelto — 2026-06-13T06:51 — no\n\n- Veredicto: en el sistema 2 de 6 tickets aparecen con prioridad Alta (folios 1197 y 1111), por lo que en el ticketing se marcaron como \"escalados\". Sin embargo, la FAQ exige notificar a Gerencia Regional y a Aseguramiento de Calidad y registrar la merma en SIGMA el mismo día; esa información (notificaciones a Gerencia Regional / registro en SIGMA) no aparece en tickets_mesa_servicio.csv, por lo que no tengo datos que confirmen que se cumplió exactamente lo que pide la FAQ.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS venta_neta FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":3817,\\\"fuente\\\":\\\"ventas.csv\\\"}\"}"
+  ],
+  "ms": 63599,
+  "exec": "86477",
+  "esperado": [
+   "6"
+  ],
+  "trampa": "T20",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "FAQ-OPS-001 P13: producto caducado en anaquel es hallazgo crítico que se notifica a Gerencia Regional y Calidad. Hay 6 tickets de caducado en anaquel (3 de no perecederos, lo que apunta a falla de la revisión semanal de POL-OPS-014 §5.5); ninguno registra escalación.",
+  "ragas_faithfulness": 1.0,
+  "ragas_answer_relevancy": 0.0
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuántas devoluciones tuvieron que ser autorizadas por el Gerente de Tienda en el trimestre?",
+  "respuesta": "0 devoluciones entre $10,000.01 y $30,000.00, según las ventas (junio-agosto 2026) en ventas.csv.\n\nRegla aplicable: Procedimiento de devoluciones y cambios (procedimiento_devoluciones.pdf), sección 9 «Flujo de autorización por monto» y sección 9.1 «Excepciones que siempre requieren autorización del Gerente de Tienda». Las excepciones que siempre requieren tu autorización son, entre otras:\n- Devoluciones fuera de plazo por defecto de fabricación (sección 4.1).\n- Liberación de bloqueos por límites de devoluciones sin ticket (sección 5.3).\n- Casos con señales de alerta de fraude (sección 8).\n- Electrodomésticos/electrónicos menores sin empaque original.\n\nLimitación de datos: los registros de ventas (ventas.csv) no contienen un campo que indique quién autorizó la devolución ni una marca de autorización; por eso no puedo contar las devoluciones que requirieron tu firma por las excepciones anteriores.",
+  "contextos": [
+   "{\"output\": \"{\\\"sql\\\":\\\"SELECT ROUND(SUM(venta_neta_mxn), 2) AS venta_neta FROM ventas WHERE tienda_id = 'T02' AND fecha BETWEEN '2026-07-01' AND '2026-07-31'\\\",\\\"filas\\\":[{\\\"venta_neta\\\":\\\"1810013.00\\\"}],\\\"total\\\":3817,\\\"fuente\\\":\\\"ventas.csv\\\"}\"}"
+  ],
+  "ms": 55737,
+  "exec": "86477",
+  "trampa": "T22",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "PRO-SAC-021 §9 fija umbrales por monto (Supervisor, Gerente). ventas.csv agrega por día, tienda, SKU y canal, sin folio: no se puede saber el monto de cada devolución individual, así que el número es indeterminable. La respuesta correcta lo dice y ofrece lo que sí hay (414 filas con unidades negativas, importe máximo 770).",
+  "ragas_faithfulness": 0.333,
+  "ragas_answer_relevancy": 0.775
+ }
+]

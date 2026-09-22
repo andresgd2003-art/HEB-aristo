@@ -1,0 +1,107 @@
+{
+ "ok": 3,
+ "total": 10,
+ "verdades": {
+  "peorAgo": "2026-08-13",
+  "ventaPeor": "148144.89",
+  "menosTienda": [
+   "T04",
+   "21244.75"
+  ],
+  "reorden": [
+   "SKU-1013",
+   "SKU-1040",
+   "SKU-1077",
+   "SKU-1094",
+   "SKU-1108",
+   "SKU-1116"
+  ],
+  "segundoNombre": "Cebolla blanca kg",
+  "t02_15jul": "23933.03",
+  "t02_prom": "61026.31",
+  "t02_15ago": "94422.12",
+  "ticketsJul15": "0"
+ },
+ "res": [
+  {
+   "turno": 1,
+   "pregunta": "¿Cuál fue el peor día de agosto en ventas, sumando las cuatro tiendas?",
+   "mide": "cifra + día",
+   "ok": false,
+   "ms": 7939,
+   "respuesta": "No obtuve ese dato debido a un límite de consultas. Por favor, inténtalo de nuevo más tarde o reformula la pregunta (por ejemplo, preguntando por una tienda específica o por un rango de fechas más corto)."
+  },
+  {
+   "turno": 2,
+   "pregunta": "¿Y qué tienda vendió menos ese día?",
+   "mide": "correferencia 'ese día' → tienda + cifra",
+   "ok": false,
+   "ms": 144947,
+   "respuesta": "Se alcanzo el limite de peticiones del proveedor. Intentalo en unos momentos."
+  },
+  {
+   "turno": 3,
+   "pregunta": "¿Qué productos hay que reordenar en esa tienda?",
+   "mide": "correferencia 'esa tienda' → 6 SKU",
+   "ok": false,
+   "ms": 7406,
+   "respuesta": "No tengo claro a cuál tienda te refieres con “esa tienda”, ya que no obtuve el dato del peor día de agosto en ventas. Para poder responder necesito que especifiques la tienda (por ejemplo T01, T02, T03 o T04) y, además, qué criterio utilizas para definir que un producto debe reordenarse (por ejemplo, inventario bajo un nivel de seguridad, falta de stock, etc.). Con esa información podré consultar los datos de inventario y darte la lista exacta."
+  },
+  {
+   "turno": 4,
+   "pregunta": "Hazme un correo para el proveedor con esos productos.",
+   "mide": "regla 10: NO redacta, entrega lista",
+   "ok": true,
+   "ms": 5847,
+   "respuesta": "Para poder indicarte qué productos deben reordenarse, necesito que me confirmes:\n\n1. **¿A cuál tienda te refieres?** (T01, T02, T03 o T04)  \n2. **¿Qué criterio utilizas para definir que un producto debe reordenarse?** Por ejemplo, inventario por debajo de un nivel de seguridad, stock cero, o alguna otra regla interna.\n\nUna vez que tenga esa información, consultaré el inventario y te daré la lista exacta de los productos que cumplen ese criterio.  \n\nRespecto a la redacción de un correo al proveedor, no puedo generar ese tipo de mensaje; solo puedo proporcionarte la lista o la cifra solicitada. Si deseas, puedes usar esa lista para elaborar el correo tú mismo/a."
+  },
+  {
+   "turno": 5,
+   "pregunta": "Está bien, pero mándamelo en inglés.",
+   "mide": "regla 10 sostenida en seguimiento",
+   "ok": true,
+   "ms": 756,
+   "respuesta": "Se alcanzo el limite de peticiones del proveedor. Intentalo en unos momentos."
+  },
+  {
+   "turno": 6,
+   "pregunta": "Cambiando de tema: ¿qué pasó con las ventas de T02 el 15 de julio?",
+   "mide": "regla 11: compara contra promedio + causa (ticket 1118)",
+   "ok": false,
+   "ms": 1420,
+   "respuesta": "Se alcanzo el limite de peticiones del proveedor. Intentalo en unos momentos."
+  },
+  {
+   "turno": 7,
+   "pregunta": "¿Y el 15 de agosto en esa misma tienda?",
+   "mide": "correferencia + pico sin causa: se abstiene",
+   "ok": false,
+   "ms": 587,
+   "respuesta": "Se alcanzo el limite de peticiones del proveedor. Intentalo en unos momentos."
+  },
+  {
+   "turno": 8,
+   "pregunta": "¿Cuántos tickets hubo ese día, el de julio?",
+   "mide": "correferencia doble ('ese día, el de julio') → tickets del 15-jul (T02 o todas)",
+   "ok": false,
+   "ms": 4257,
+   "respuesta": "No obtuve el dato del peor día de agosto en ventas, por lo que no puedo determinar a qué día te refieres cuando preguntas por los tickets de “ese día, el de julio”. Para poder responder necesito que especifiques la fecha exacta (por ejemplo, “15 de julio de 2026”) o que me indiques nuevamente cuál fue el peor día de agosto en ventas, de modo que pueda consultar los tickets correspondientes. ¿Podrías aclarar la fecha o volver a pedir el peor día de agosto?"
+  },
+  {
+   "turno": 9,
+   "pregunta": "De los productos a reordenar que me diste, ¿cómo se llama el segundo?",
+   "mide": "recuerda la lista del turno 3 (6 turnos atrás)",
+   "ok": false,
+   "ms": 949,
+   "respuesta": "Se alcanzo el limite de peticiones del proveedor. Intentalo en unos momentos."
+  },
+  {
+   "turno": 10,
+   "pregunta": "¿Cuál fue la primera pregunta que te hice en esta conversación?",
+   "mide": "borde de la ventana: turno 1 desde el turno 10",
+   "ok": true,
+   "ms": 4608,
+   "respuesta": "Tu primera pregunta fue: **“¿Cuál fue el peor día de agosto en ventas, sumando las cuatro tiendas?”**."
+  }
+ ]
+}

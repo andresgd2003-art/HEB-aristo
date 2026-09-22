@@ -1,0 +1,98 @@
+[
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuántos días tiene un cliente para devolver una licuadora?",
+    "ok": true,
+    "ms": 21127,
+    "respuesta": "30 días naturales.\n\nSegún PRO-SAC-021 §3 Plazos de devolución por tipo de producto: “Electrodomésticos y electrónicos menores | 30 días naturales | Ticket de compra, empaque original completo con accesorios y manuales.” (También existe FAQ-OPS-001 P15 que indica 15 días, pero hay discrepancia y prevalece el procedimiento PRO-SAC-021.)"
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuál es la tolerancia mensual de merma en panadería?",
+    "ok": true,
+    "ms": 19251,
+    "respuesta": "Tolerancia mensual: 3.5% de ventas.  \n\nUmbral de alerta: 4.5%; conteo diario. Si se supera el umbral, el Gerente de Tienda debe enviar, en cinco días hábiles, un plan de acción a la Gerencia Regional (POL-OPS-014 §4 y §4.1). Fuente adicional: FAQ-OPS-001 §3 P9 remite a POL-OPS-014."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Quién autoriza una devolución de 12,000 pesos?",
+    "ok": true,
+    "ms": 25117,
+    "respuesta": "Lo autoriza el Gerente de Tienda.\n\nCita: PRO-SAC-021 §9 Flujo de autorización por monto: \"De 10,000.01 a 30,000.00 | Gerente de Tienda | Firma electrónica, captura de motivo y copia de identificación del cliente.\" y FAQ-OPS-001 §4 P17: \"El Gerente de Tienda hasta 30,000.\" Ambos documentos coinciden."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuánto tiempo aguantan las cámaras de refrigeración si se va la luz?",
+    "ok": true,
+    "ms": 28834,
+    "respuesta": "MAN-OPS-007 > 7.1 Respaldo disponible: Las cámaras de refrigeración y congelación conservan la temperatura interna dentro del rango seguro durante cuatro horas con las puertas cerradas; los muebles refrigerados abiertos conservan la temperatura únicamente durante dos horas con las cortinas nocturnas colocadas.\n\nMAN-OPS-007 > 7.3 Manejo de perecederos según duración de la falla: Si la falla dura entre dos y cuatro horas, traslada el producto de los muebles abiertos a las cámaras; si supera cuatro horas, o el producto refrigerado pasó de 7 °C por más de dos horas, retira el producto de la venta y regístralo en SIGMA como \"Falla de cadena de frío\".\n\nFAQ-OPS-001 > 3. Mermas y perecederos — P11. ¿Qué hago si se va la luz y los refrigeradores dejan de funcionar?: Confirma arranque de planta, coloca cortinas nocturnas, mantén cerradas las puertas de cámaras, registra temperaturas cada treinta minutos y, si al restablecerse la energía una cámara no recupera su temperatura objetivo en sesenta minutos, levanta ticket a Mantenimiento.\n\nResumen: cámaras cerradas = 4 horas; muebles abiertos con cortinas = 2 horas; proceda según MAN-OPS-007 §7.3 y FAQ-OPS-001 P11."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Puedo darle el teléfono de un colaborador a un proveedor?",
+    "ok": true,
+    "ms": 21471,
+    "respuesta": "No. \"La información de contacto y los datos personales de los empleados (teléfono, domicilio, correo personal, número de seguridad social, datos familiares, horarios) son confidenciales y no se comparten con proveedores; cualquier solicitud debe canalizarse a Recursos Humanos, que es el único área autorizada para atenderla.\" (FAQ-OPS-001 > 6. Personal — P24).  \nBusqué en PRO-SAC-021 y no encontré ninguna norma que autorice compartir esos datos."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "Si una obra cierra el 40 % del piso de venta, ¿qué horario aplica?",
+    "ok": true,
+    "ms": 25295,
+    "respuesta": "Aplica horario reducido, autorizado por la Gerencia Regional.\n\nCitas:\n- MAN-OPS-007 §8.2 “Cuando una obra reduzca el área de venta disponible en más del 30 % de la superficie total de piso de venta, la tienda opera con horario reducido, autorizado por la Gerencia Regional, y se coloca aviso al público con al menos cuarenta y ocho horas de anticipación. ... Si la reducción es igual o menor al 30 %, la tienda mantiene su horario habitual y solo se reporta la obra en la bitácora.”\n- FAQ-OPS-001 §2 P7 “... si la obra reduce el área de venta en más del 30 %, la tienda opera con horario reducido autorizado por la Gerencia Regional, colocas aviso al público con cuarenta y ocho horas de anticipación y levantas un ticket a Mantenimiento con prioridad Alta indicando fechas, duración y áreas afectadas. Si la reducción es del 30 % o menos, mantienes el horario habitual y solo registras la obra en la bitácora.”\n\nAcciones requeridas: aviso público con 48 horas de anticipación y levantar ticket a Mantenimiento (Prioridad Alta)."
+  },
+  {
+    "corrida": 2,
+    "familia": "politicas",
+    "pregunta": "¿Cuántos días tiene un cliente para devolver una licuadora?",
+    "ok": true,
+    "ms": 17150,
+    "respuesta": "30 días naturales para electrodomésticos menores (licuadoras), con ticket y empaque original — según PRO-SAC-021 §3 Plazos de devolución.  \nNota: FAQ-OPS-001 P15 indica 15 días, pero el procedimiento PRO-SAC-021 prevalece."
+  },
+  {
+    "corrida": 2,
+    "familia": "politicas",
+    "pregunta": "¿Cuál es la tolerancia mensual de merma en panadería?",
+    "ok": true,
+    "ms": 20651,
+    "respuesta": "Tolerancia mensual: 3.5% de la venta de la categoría (umbral de alerta 4.5%). — POL-OPS-014 §4.\n\nSi la merma acumulada del mes supera el umbral de alerta (4.5%), el Gerente de Tienda tiene cinco días hábiles para enviar un plan de acción a la Gerencia Regional. — POL-OPS-014 §4.1.\n\nLa FAQ remite a la POL-OPS-014; prevalece la política oficial. — FAQ-OPS-001 §3."
+  },
+  {
+    "corrida": 2,
+    "familia": "politicas",
+    "pregunta": "¿Quién autoriza una devolución de 12,000 pesos?",
+    "ok": true,
+    "ms": 22288,
+    "respuesta": "La autorización corresponde al Gerente de Tienda. (PRO-SAC-021 §9: “De $10,000.01 a $30,000.00 | Gerente de Tienda | Firma electrónica, captura de motivo y copia de identificación del cliente.”; confirmado en FAQ-OPS-001 §4)."
+  },
+  {
+    "corrida": 2,
+    "familia": "politicas",
+    "pregunta": "¿Cuánto tiempo aguantan las cámaras de refrigeración si se va la luz?",
+    "ok": true,
+    "ms": 19296,
+    "respuesta": "Cuánto: 4 horas si las cámaras de refrigeración/congelación permanecen con las puertas cerradas; 2 horas para muebles refrigerados abiertos (temperatura segura).  \n\nFuente: MAN-OPS-007 §7.1 Respaldo disponible y FAQ-OPS-001 §3 P11 (ambos coinciden). Además la FAQ indica registrar temperaturas cada 30 minutos durante el evento."
+  },
+  {
+    "corrida": 2,
+    "familia": "politicas",
+    "pregunta": "¿Puedo darle el teléfono de un colaborador a un proveedor?",
+    "ok": true,
+    "ms": 19522,
+    "respuesta": "No. FAQ-OPS-001 Preguntas frecuentes para gerentes de tienda — 6. Personal — P24.\n\n“No. La información de contacto y los datos personales de los empleados (teléfono, domicilio, correo personal, número de seguridad social, datos familiares, horarios) son confidenciales... No se comparten por canales no oficiales... Cualquier solicitud de datos de un colaborador se canaliza a Recursos Humanos, que es el único área autorizada para atenderla y verificar su legitimidad. Si alguien insiste, toma sus datos y remítelo al buzón oficial de RH.”\n\nProcedimiento corto: no proporciones el teléfono; deriva la solicitud a Recursos Humanos y, si insisten, anota los datos del solicitante y envíalos a RH."
+  },
+  {
+    "corrida": 2,
+    "familia": "politicas",
+    "pregunta": "Si una obra cierra el 40 % del piso de venta, ¿qué horario aplica?",
+    "ok": true,
+    "ms": 20819,
+    "respuesta": "Horario reducido, autorizado por la Gerencia Regional; debe colocarse aviso al público con al menos 48 horas de anticipación. (MAN-OPS-007 §8.2; FAQ-OPS-001 P7 — coinciden)."
+  }
+]

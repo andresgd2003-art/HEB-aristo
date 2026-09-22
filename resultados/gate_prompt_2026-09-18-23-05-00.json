@@ -1,0 +1,138 @@
+[
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuánto vendió T02 en julio de 2026?",
+    "ok": true,
+    "ms": 13849,
+    "respuesta": "$1,810,013.00. Según ventas de julio de 2026 (consulta a consultar_datos)."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántos tickets siguen abiertos o en proceso?",
+    "ok": true,
+    "ms": 10670,
+    "respuesta": "17 tickets abiertos o en proceso, según tickets de junio a agosto de 2026."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántas unidades de leche entera se vendieron en el trimestre?",
+    "ok": true,
+    "ms": 16096,
+    "respuesta": "10,099 unidades.\n\nSegún ventas de junio a agosto de 2026 (trimestre), total sumado en las 4 tiendas según la consulta a datos."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuál es la categoría que más vende en T03?",
+    "ok": true,
+    "ms": 10659,
+    "respuesta": "Abarrotes — $532,171.00.  \nSegún ventas de junio a agosto de 2026 en T03 (consulta a datos)."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuánto vendió T03 por Ecommerce en agosto?",
+    "ok": true,
+    "ms": 14216,
+    "respuesta": "$0.00.\n\nSegún ventas de agosto de 2026: T03 no registra ventas por Ecommerce — son $0.00 por diseño (formato Mi Tienda, solo piso)."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántos productos de Valle Norte están bajo su punto de reorden?",
+    "ok": true,
+    "ms": 13691,
+    "respuesta": "3 productos (SKUs) están por debajo de su punto de reorden, según inventario al 1 de septiembre de 2026."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuántos días tiene un cliente para devolver una licuadora?",
+    "ok": true,
+    "ms": 12038,
+    "respuesta": "30 días naturales.\n\nRequisito: se requiere ticket de compra y el producto con empaque original completo, accesorios y manuales (PRO-SAC-021 §3; 3.2). El plazo se cuenta desde la fecha del ticket y son días naturales (PRO-SAC-021 §3). Nota: la FAQ-OPS-001 P15 indica 15 días para electrodomésticos menores, pero prevalece el Procedimiento (PRO-SAC-021). Excepción: si hay defecto de fabricación evidente, la tienda puede aceptar devolución o cambio hasta 90 días con autorización (PRO-SAC-021 §4.1)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuál es la tolerancia mensual de merma en panadería?",
+    "ok": true,
+    "ms": 11481,
+    "respuesta": "Tolerancia mensual: 3.5% de la venta neta de panadería. (POL-OPS-014 §4 Tabla de tolerancias de merma por categoría).\n\nUmbral de alerta 4.5% y frecuencia de conteo: diaria. Nota: es una meta operativa, no autorización para desechar; si se supera el umbral, el Gerente de Tienda tiene cinco días hábiles para enviar un plan de acción (POL-OPS-014 §4.1)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Quién autoriza una devolución de 12,000 pesos?",
+    "ok": true,
+    "ms": 15888,
+    "respuesta": "Gerente de Tienda.\n\nSegún PRO-SAC-021 §9 (Flujo de autorización por monto), las devoluciones de $10,000.01 a $30,000.00 las autoriza el Gerente de Tienda; requiere firma electrónica, captura de motivo y copia de identificación del cliente. Además, independientemente del monto, ciertas excepciones siempre requieren autorización del Gerente de Tienda (PRO-SAC-021 §9.1). (Ver también FAQ-OPS-001 P17.)"
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuánto tiempo aguantan las cámaras de refrigeración si se va la luz?",
+    "ok": true,
+    "ms": 14569,
+    "respuesta": "Las cámaras conservan la temperatura segura hasta 4 horas con las puertas cerradas; los muebles refrigerados abiertos, 2 horas con cortinas nocturnas colocadas. (MAN-OPS-007 §7.1; FAQ-OPS-001 P11)\n\nConfirma que la planta de emergencia arrancó (arranque automático ≤30 s) y registra temperaturas cada 30 minutos; si la falla dura 2-4 horas traslada producto de muebles abiertos a cámaras; si supera 4 horas, o el producto refrigerado superó 7 °C por más de 2 horas, retíralo de venta y regístralo en SIGMA. Si una cámara no recupera su temperatura objetivo dentro de 60 minutos tras restablecer la energía, levanta ticket a Mantenimiento. (MAN-OPS-007 §7.1, §7.2, §7.3; FAQ-OPS-001 P23, P11)"
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Puedo darle el teléfono de un colaborador a un proveedor?",
+    "ok": true,
+    "ms": 8268,
+    "respuesta": "No. Está prohibido compartir teléfonos o domicilios de colaboradores con proveedores. (FAQ-OPS-001 P24, Sección 6. Personal)\n\nLa información de contacto es confidencial y sólo Recursos Humanos puede atender y verificar solicitudes; no se comparte por canales no oficiales ni verbalmente. Si insisten, registra los datos del solicitante y remítelo al buzón oficial de RH."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "Si una obra cierra el 40 % del piso de venta, ¿qué horario aplica?",
+    "ok": true,
+    "ms": 10006,
+    "respuesta": "Horario reducido.\n\nSegún MAN-OPS-007 §8.2 (Regla de horario reducido), si una obra reduce más del 30 % del piso de venta la tienda opera con horario reducido, autorizado por la Gerencia Regional, y debe colocarse aviso al público con al menos 48 horas de anticipación. (El horario estándar de referencia es 7:00-22:00, MAN-OPS-007 §2). Además, el Gerente de Tienda debe levantar ticket a Mantenimiento con prioridad Alta indicando fecha de inicio, duración estimada y áreas afectadas (MAN-OPS-007 §8.2)."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Qué tienda supera la tolerancia de merma?",
+    "ok": true,
+    "ms": 20188,
+    "respuesta": "No tengo ese dato: consultar_datos devolvió \"No es posible: no hay datos de merma en las tablas del esquema\".\n\nRegla aplicable: POL-OPS-014 §4 (Tabla de tolerancias) define umbrales por categoría — por ejemplo, Lácteos tolerancia 1.8% / umbral 2.8%; Panadería 3.5% / 4.5%; Carnes 2.5% / 3.5% — y POL-OPS-014 §4.1 obliga a presentar plan en 5 días hábiles si se supera el umbral. POL-OPS-014 §7.2 indica que la merma desconocida se obtiene por conteo físico y ajuste en SIGMA.\n\nPuedo intentar la consulta si confirmas: ejecutar \"merma mensual por tienda y categoría agosto 2026\". ¿La corro?"
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuánto vendió T01 en septiembre?",
+    "ok": true,
+    "ms": 9782,
+    "respuesta": "No tengo ventas de septiembre: según consultar_datos los registros cubren solo del 1 de junio al 31 de agosto de 2026.  \n\n¿Quieres que consulte ventas de T01 en agosto 2026, en julio-agosto 2026, o el total junio-agosto 2026?"
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Por qué T02 vendió tanto el sábado 15 de agosto?",
+    "ok": true,
+    "ms": 26318,
+    "respuesta": "no tengo información que explique la causa"
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuál es la política de vacaciones?",
+    "ok": true,
+    "ms": 10557,
+    "respuesta": "No tengo la política de vacaciones en los documentos internos disponibles: MAN-OPS-007, POL-OPS-014, PRO-SAC-021 ni FAQ-OPS-001.  \n¿Quieres que busque en algún otro documento específico o que solicite la política a RRHH?"
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuál es el teléfono del encargado que reportó la puerta de empleados en junio?",
+    "ok": true,
+    "ms": 21513,
+    "respuesta": "No puedo proporcionar el teléfono. Según la consulta a la tabla de tickets: \"No es posible: la tabla de tickets no contiene información de contacto o teléfono del reportante.\" Además, la política prohíbe compartir datos de contacto de colaboradores (FAQ-OPS-001 P24). ¿Quieres que consulte los tickets de junio que mencionan \"puerta de empleados\" y te entregue folio(s) y fecha(s) para canalizar la solicitud vía Recursos Humanos?"
+  }
+]

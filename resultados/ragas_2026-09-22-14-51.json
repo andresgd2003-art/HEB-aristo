@@ -1,0 +1,94 @@
+[
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cumplimos el tiempo objetivo de solución de los tickets críticos según la política?",
+  "respuesta": "La política dice: tiempo objetivo de solución para prioridad \"Crítica\" = 4 horas (faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 5 «P20»).\n\nCumplimiento: no. Según `tickets_mesa_servicio.csv` (junio-agosto 2026):\n- Total tickets críticos: 8; cerrados en ≤4 h: 2; cerrados después de 4 h: 6; pendientes (Abierto+En proceso): 0; resuelto sin cerrar: 0.\n\nDesglose por tienda (según `tickets_mesa_servicio.csv`):\n- T03 (Tienda Anáhuac): total 4 — cerrados ≤4 h: 2 — cerrados >4 h: 2 — pendientes: 0.  \n- T02 (Tienda Cumbres): total 2 — cerrados ≤4 h: 0 — cerrados >4 h: 2 — pendientes: 0.  \n- T01 (Tienda Valle Norte): total 1 — cerrados ≤4 h: 0 — cerrados >4 h: 1 — pendientes: 0.  \n- T04 (Tienda Lomas del Sur): total 1 — cerrados ≤4 h: 0 — cerrados >4 h: 1 — pendientes: 0.\n\nHasta 5 tickets críticos que no cumplieron (folio — tiempo de solución):\n- Folio 1071 — 11 h 47 min.  \n- Folio 1221 — 11 h 37 min.  \n- Folio 1058 — 9 h 49 min.  \n- Folio 1131 — 9 h 31 min.  \n- Folio 1230 — 8 h 46 min.\n\nTodos los datos arriba citados provienen de `tickets_mesa_servicio.csv` (junio-agosto 2026).",
+  "contextos": [
+   "(sin contexto recuperado)"
+  ],
+  "ms": 179037,
+  "exec": "86698",
+  "trampa": "T14",
+  "trampa_ok": false,
+  "condiciones": [
+   true,
+   false,
+   true
+  ],
+  "reference": "FAQ-OPS-001 P20 (sección 5): Crítica = 4 horas de solución. De los 8 tickets críticos, solo 2 cerraron en 4 horas o menos (1158 en estado Resuelto, 1191 Cerrado); si se cuentan solo los Cerrado, 1 de 7. En cualquier lectura, no se cumple; el asistente debe decir cuál usó.",
+  "ragas_faithfulness": 0.906,
+  "ragas_answer_relevancy": 0.745
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuántos tickets siguen sin cerrar y cuántos están resueltos pero no cerrados?",
+  "respuesta": "Hay 285 tickets en total; 17 siguen sin cerrar (conté estados Abierto + En proceso) y 72 están Resuelto pero no cerrados.  \nSegún tickets_mesa_servicio.csv (junio-agosto 2026).",
+  "contextos": [
+   "(sin contexto recuperado)"
+  ],
+  "ms": 30934,
+  "exec": "86698",
+  "esperado": [
+   "17",
+   "72"
+  ],
+  "trampa": "T15",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "reference": "17 tickets en Abierto o En proceso; 72 en Resuelto con fecha de cierre. Ningún documento define la diferencia entre Resuelto y Cerrado: el asistente debe declarar qué contó y no inventar una definición.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.749
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Estamos atendiendo las fallas de refrigeración con la prioridad que pide la política?",
+  "respuesta": "No. Resumen y evidencia:\n\nDatos: según tickets_mesa_servicio.csv (junio-agosto 2026) — total 12 tickets de refrigeración:\n- T02 Tienda Cumbres — Prioridad Media — En proceso — 1\n- T02 Tienda Cumbres — Prioridad Media — Resuelto — 1\n- T02 Tienda Cumbres — Prioridad Baja — Resuelto — 1\n- T02 Tienda Cumbres — Prioridad Alta — Cerrado — 2\n- T03 Tienda Anáhuac — Prioridad Media — Cerrado — 1\n- T03 Tienda Anáhuac — Prioridad Crítica — Resuelto — 1\n- T03 Tienda Anáhuac — Prioridad Baja — Cerrado — 3\n- T04 Tienda Lomas del Sur — Prioridad Baja — Cerrado — 1\n- T04 Tienda Lomas del Sur — Prioridad Alta — Cerrado — 1\n\nPolítica aplicable:\n- Prioridades y SLA: faq_gerentes_de_tienda.pdf (FAQ-OPS-001), sección 5 P20 — Crítica: primera respuesta 15 min, solución objetivo 4 horas; Alta: 1 h / 8 horas; Media: 4 h / 2 días hábiles; Baja: 8 h / 5 días hábiles.\n- Protocolo sobre perecederos y tickets: manual_apertura_y_cierre_tienda.pdf (MAN-OPS-007), sección 7.3 — si una cámara no recupera la temperatura objetivo en 60 minutos al restablecerse la energía, se debe levantar ticket a Mantenimiento; cámaras fuera o planta de emergencia que no arranca implican prioridad Crítica (ver P11 en la FAQ).\n\nVeredicto:\n- La política exige PRIORIDAD Crítica para cámaras de refrigeración fuera o fallas de planta que pongan en riesgo producto/personas. En los tickets de refrigeración del periodo solo 1 de 12 aparece como Crítica; hay varias Alta, Media y Baja. Por tanto, no se está asignando consistentemente la prioridad Crítica según la política citada.",
+  "contextos": [
+   "(sin contexto recuperado)"
+  ],
+  "ms": 85564,
+  "exec": "86698",
+  "esperado": [
+   "11|12"
+  ],
+  "trampa": "T18",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "reference": "FAQ-OPS-001 P20 define Crítica incluyendo 'cámara de refrigeración fuera'; MAN-OPS-007 §7.3 exige trasladar a cámaras a las 2 horas. De 12 tickets de refrigeración solo 1 (1158) es Crítica; los otros 11 son Baja/Media/Alta y tardaron entre 4.7 y 202 horas.",
+  "ragas_faithfulness": 0.625,
+  "ragas_answer_relevancy": null
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Se escalaron como pide la FAQ los tickets de producto caducado en anaquel?",
+  "respuesta": "No hay registro de notificaciones ni de registro en SIGMA tal como exige la FAQ.\n\nDatos: hay 6 tickets de producto caducado en anaquel (junio-agosto 2026), según tickets_mesa_servicio.csv (junio-agosto 2026):\n- Folio 1197 | 2026-08-03 | T03 Tienda Anáhuac | Estado: Cerrado | Prioridad: Alta\n- Folio 1233 | 2026-08-13 | T03 Tienda Anáhuac | Estado: Cerrado | Prioridad: Media\n- Folio 1111 | 2026-07-08 | T01 Tienda Valle Norte | Estado: Cerrado | Prioridad: Alta\n- Folio 1065 | 2026-06-24 | T01 Tienda Valle Norte | Estado: Cerrado | Prioridad: Media\n- Folio 1031 | 2026-06-13 | T01 Tienda Valle Norte | Estado: Cerrado | Prioridad: Media\n- Folio 1015 | 2026-06-08 | T04 Tienda Lomas del Sur | Estado: Resuelto | Prioridad: Baja\n\nRegla aplicable: la FAQ indica que debe retirarse el lote, registrarse la merma en SIGMA con causa \"Caducidad\" y notificarse el mismo día a la Gerencia Regional y a Aseguramiento de Calidad (faq_gerentes_de_tienda.pdf — 3. Mermas y perecederos — P13).\n\nVeredicto: en las notas de los tickets consultadas no aparece evidencia de las notificaciones a Gerencia Regional ni a Aseguramiento de Calidad ni del registro en SIGMA; por tanto, no puedo confirmar que se haya escalado según la FAQ.",
+  "contextos": [
+   "(sin contexto recuperado)"
+  ],
+  "ms": 136160,
+  "exec": "86698",
+  "esperado": [
+   "6"
+  ],
+  "trampa": "T20",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "FAQ-OPS-001 P13: producto caducado en anaquel es hallazgo crítico que se notifica a Gerencia Regional y Calidad. Hay 6 tickets de caducado en anaquel (3 de no perecederos, lo que apunta a falla de la revisión semanal de POL-OPS-014 §5.5); ninguno registra escalación.",
+  "ragas_faithfulness": 0.947,
+  "ragas_answer_relevancy": 0.0
+ }
+]

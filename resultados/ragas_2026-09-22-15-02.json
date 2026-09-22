@@ -1,0 +1,22 @@
+[
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cumplimos el tiempo objetivo de solución de los tickets críticos según la política?",
+  "respuesta": "No. La política fija tiempo objetivo de solución para prioridad Crítica en 4 horas (faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), sección 5 «Tecnología y mantenimiento» — P20).\n\nSegún tickets_mesa_servicio.csv (creados entre 01/06/2026 y 31/08/2026): 8 tickets críticos; 2 cerrados en 4 horas o menos; 6 no cerraron en 4 horas o menos. Desglose por tienda:\n- T03 Tienda Anáhuac: 4 (2 cerrados ≤4h, 2 no)  \n- T02 Tienda Cumbres: 2 (0 cerrados ≤4h, 2 no)  \n- T01 Tienda Valle Norte: 1 (0 cerrados ≤4h, 1 no)  \n- T04 Tienda Lomas del Sur: 1 (0 cerrados ≤4h, 1 no)",
+  "contextos": [
+   "(sin contexto recuperado)"
+  ],
+  "ms": 144919,
+  "exec": "86698",
+  "trampa": "T14",
+  "trampa_ok": false,
+  "condiciones": [
+   true,
+   false,
+   true
+  ],
+  "reference": "FAQ-OPS-001 P20 (sección 5): Crítica = 4 horas de solución. De los 8 tickets críticos, solo 2 cerraron en 4 horas o menos (1158 en estado Resuelto, 1191 Cerrado); si se cuentan solo los Cerrado, 1 de 7. En cualquier lectura, no se cumple; el asistente debe decir cuál usó.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.803
+ }
+]

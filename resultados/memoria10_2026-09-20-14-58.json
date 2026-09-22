@@ -1,0 +1,107 @@
+{
+ "ok": 10,
+ "total": 10,
+ "verdades": {
+  "peorAgo": "2026-08-13",
+  "ventaPeor": "148144.89",
+  "menosTienda": [
+   "T04",
+   "21244.75"
+  ],
+  "reorden": [
+   "SKU-1013",
+   "SKU-1040",
+   "SKU-1077",
+   "SKU-1094",
+   "SKU-1108",
+   "SKU-1116"
+  ],
+  "segundoNombre": "Cebolla blanca kg",
+  "t02_15jul": "23933.03",
+  "t02_prom": "61026.31",
+  "t02_15ago": "94422.12",
+  "ticketsJul15": "0"
+ },
+ "res": [
+  {
+   "turno": 1,
+   "pregunta": "¿Cuál fue el peor día de agosto en ventas, sumando las cuatro tiendas?",
+   "mide": "cifra + día",
+   "ok": true,
+   "ms": 29171,
+   "respuesta": "13 de agosto de 2026 — $148,144.89, según ventas.csv (junio–agosto 2026).  \nEs la venta total sumando T01, T02, T03 y T04."
+  },
+  {
+   "turno": 2,
+   "pregunta": "¿Y qué tienda vendió menos ese día?",
+   "mide": "correferencia 'ese día' → tienda + cifra",
+   "ok": true,
+   "ms": 28020,
+   "respuesta": "T04 (Tienda Lomas del Sur) — $21,244.75, según ventas.csv (junio–agosto 2026).  \nEs la venta registrada para T04 el 13 de agosto de 2026."
+  },
+  {
+   "turno": 3,
+   "pregunta": "¿Qué productos hay que reordenar en esa tienda?",
+   "mide": "correferencia 'esa tienda' → 6 SKU",
+   "ok": true,
+   "ms": 37507,
+   "respuesta": "Hay 6 productos que hay que reordenar en T04, según inventario.csv (al 1 de septiembre de 2026).  \nSon los SKU cuya existencia está por debajo del punto de reorden:\n\n- SKU-1013 — Bolillo pieza — Existencia: 28 — Punto de reorden: 96  \n- SKU-1077 — Refresco de cola 2 L — Existencia: 21 — Punto de reorden: 61  \n- SKU-1040 — Cebolla blanca kg — Existencia: 30 — Punto de reorden: 52  \n- SKU-1094 — Bebida de avena 1 L — Existencia: 9 — Punto de reorden: 12  \n- SKU-1108 — Aromatizante en aerosol 300 ml — Existencia: 13 — Punto de reorden: 16  \n- SKU-1116 — Crema corporal 400 ml — Existencia: 11 — Punto de reorden: 14"
+  },
+  {
+   "turno": 4,
+   "pregunta": "Hazme un correo para el proveedor con esos productos.",
+   "mide": "regla 10: NO redacta, entrega lista",
+   "ok": true,
+   "ms": 16254,
+   "respuesta": "No puedo redactar correos. Copia esta lista para enviar al proveedor —son los productos a reordenar en T04, según inventario.csv (al 1 de septiembre de 2026):\n\n- SKU-1013 — Bolillo pieza — Existencia: 28 — Punto de reorden: 96  \n- SKU-1077 — Refresco de cola 2 L — Existencia: 21 — Punto de reorden: 61  \n- SKU-1040 — Cebolla blanca kg — Existencia: 30 — Punto de reorden: 52  \n- SKU-1094 — Bebida de avena 1 L — Existencia: 9 — Punto de reorden: 12  \n- SKU-1108 — Aromatizante en aerosol 300 ml — Existencia: 13 — Punto de reorden: 16  \n- SKU-1116 — Crema corporal 400 ml — Existencia: 11 — Punto de reorden: 14"
+  },
+  {
+   "turno": 5,
+   "pregunta": "Está bien, pero mándamelo en inglés.",
+   "mide": "regla 10 sostenida en seguimiento",
+   "ok": true,
+   "ms": 14936,
+   "respuesta": "Aquí tienes la lista en inglés, según inventario.csv (al 1 de septiembre de 2026):\n\n- SKU-1013 — Bolillo (bread roll) — Stock: 28 — Reorder point: 96  \n- SKU-1077 — Cola soda 2 L — Stock: 21 — Reorder point: 61  \n- SKU-1040 — White onion (kg) — Stock: 30 — Reorder point: 52  \n- SKU-1094 — Oat drink 1 L — Stock: 9 — Reorder point: 12  \n- SKU-1108 — Aerosol air freshener 300 ml — Stock: 13 — Reorder point: 16  \n- SKU-1116 — Body cream 400 ml — Stock: 11 — Reorder point: 14\n\nNo redactaré el correo; esto es solo la lista para que la pegues en tu mensaje al proveedor."
+  },
+  {
+   "turno": 6,
+   "pregunta": "Cambiando de tema: ¿qué pasó con las ventas de T02 el 15 de julio?",
+   "mide": "regla 11: compara contra promedio + causa (ticket 1118)",
+   "ok": true,
+   "ms": 94183,
+   "respuesta": "T02 vendió $23,933.03 el 15 de julio de 2026; su promedio diario (jun–ago 2026) es $61,026.31 — eso representa 39.2% del promedio (caída de 60.8%), según ventas.csv (junio–agosto 2026).\n\nHay un ticket que explica la caída: folio 1118, creado el 10 de julio de 2026, título “Remodelación de pasillo central del 14 al 16 de julio”, descripción: “del 14 al 16 de julio se remodela el pasillo central y el área de cajas 1 a 6. Se cierra como el 40% del piso de venta y solo operan 6 cajas.” (según tickets_mesa_servicio.csv, junio–agosto 2026).  \n\nEsto coincide con la regla del Manual de apertura y cierre de tienda (MAN-OPS-007), sección 8.2 «Regla de horario reducido»: si la obra reduce más del 30% del área de venta, la tienda opera con horario reducido y se autoriza por Gerencia Regional."
+  },
+  {
+   "turno": 7,
+   "pregunta": "¿Y el 15 de agosto en esa misma tienda?",
+   "mide": "correferencia + pico sin causa: se abstiene",
+   "ok": true,
+   "ms": 89090,
+   "respuesta": "T02 vendió $94,422.12 el 15 de agosto de 2026; su promedio diario (jun–ago 2026) es $61,026.31 — representa 154.8% del promedio (aumento de 54.8%), según ventas.csv (junio–agosto 2026).\n\nTickets creados entre el 8 y el 15 de agosto de 2026 (posibles incidencias), según tickets_mesa_servicio.csv (junio–agosto 2026):\n- Folio 1223 — 10/08/2026 — Báscula descalibrada.  \n- Folio 1224 — 10/08/2026 — Anaquel flojo.  \n- Folio 1235 — 13/08/2026 — Producto no llegó del CEDIS.  \n- Folio 1237 — 14/08/2026 — Se fue la luz en refris.\n\nNo hay ticket ni política que explique la subida de ventas del 15 de agosto."
+  },
+  {
+   "turno": 8,
+   "pregunta": "¿Cuántos tickets hubo ese día, el de julio?",
+   "mide": "correferencia doble ('ese día, el de julio') → tickets del 15-jul (T02 o todas)",
+   "ok": true,
+   "ms": 17247,
+   "respuesta": "0 tickets, según tickets_mesa_servicio.csv (junio–agosto 2026).  \nNo se registraron tickets en T02 el 15 de julio de 2026."
+  },
+  {
+   "turno": 9,
+   "pregunta": "De los productos a reordenar que me diste, ¿cómo se llama el segundo?",
+   "mide": "recuerda la lista del turno 3 (6 turnos atrás)",
+   "ok": true,
+   "ms": 33918,
+   "respuesta": "Refresco de cola 2 L — SKU-1077, según inventario.csv (al 1 de septiembre de 2026)."
+  },
+  {
+   "turno": 10,
+   "pregunta": "¿Cuál fue la primera pregunta que te hice en esta conversación?",
+   "mide": "borde de la ventana: turno 1 desde el turno 10",
+   "ok": true,
+   "ms": 3311,
+   "respuesta": "Tu primera pregunta fue: \"¿Cuál fue el peor día de agosto en ventas, sumando las cuatro tiendas?\""
+  }
+ ]
+}

@@ -1,0 +1,181 @@
+{
+  "_motivo_descarte": "Flujo TEST blue/green de las variantes SQL. Sin objeto tras borrar las variantes; los tests pegan al webhook del chat.",
+  "name": "HEB-aristo — TEST consultar_datos",
+  "nodes": [
+    {
+      "id": "w",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "heb-aristo-test-sql",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "heb-aristo/test/sql",
+        "responseMode": "lastNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "s",
+      "name": "Variante",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        260,
+        0
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "c",
+              "leftValue": "={{ $json.body.variante }}",
+              "rightValue": "agente",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ]
+        },
+        "looseTypeValidation": true
+      }
+    },
+    {
+      "id": "b",
+      "name": "Agente",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        520,
+        -100
+      ],
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "hvtOA1Vxq01Tnujq"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "pregunta": "={{ $('Webhook').first().json.body.pregunta }}"
+          },
+          "matchingColumns": [
+            "pregunta"
+          ],
+          "schema": [
+            {
+              "id": "pregunta",
+              "displayName": "pregunta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "a",
+      "name": "Cadena",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        520,
+        100
+      ],
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "HhHRb2CLFh8l2raR"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "pregunta": "={{ $('Webhook').first().json.body.pregunta }}"
+          },
+          "matchingColumns": [
+            "pregunta"
+          ],
+          "schema": [
+            {
+              "id": "pregunta",
+              "displayName": "pregunta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "nota",
+      "name": "Nota",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -360
+      ],
+      "parameters": {
+        "color": 4,
+        "width": 520,
+        "height": 160,
+        "content": "## TEST — no es produccion\n\nPOST /webhook/heb-aristo/test/sql {pregunta, variante: 'cadena'|'agente'}. Lo usa `tests/cifras_sql.mjs` para medir A contra B sin pasar por el agente de chat."
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Variante",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Variante": {
+      "main": [
+        [
+          {
+            "node": "Agente",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cadena",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
