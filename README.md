@@ -10,23 +10,6 @@ Tres flujos de n8n —**Ingesta** (PDF → Markdown con secciones reales → pgv
 
 **Camino alterno:** el mismo asistente en la web, **https://heb.stingai.org** — texto o voz (🎙️), sin registro. Existe por si el bot no estuviera disponible el día de la revisión.
 
-**Camino técnico:** el mismo agente por HTTP. Node ≥ 20.
-
-```bash
-git clone https://github.com/andresgd2003-art/HEB-aristo && cd HEB-aristo
-echo "N8N_BASE_URL=https://n8n-n8n.x09761.easypanel.host" > .env
-node tests/humo_chat.mjs "¿Cuánto vendió T02 en julio?" "¿Y en agosto?" "¿Cuántos días tiene un cliente para devolver una licuadora?"
-```
-
-`tests/humo_chat.mjs` encadena los turnos con `previous_response_id` (memoria por conversación). También sirve cualquier cliente HTTP:
-
-```
-POST {N8N_BASE_URL}/webhook/heb-aristo/chat
-{ "input": "¿Qué productos de T02 hay que reordenar?", "previous_response_id": "resp_…" | null }
-→ { "status": "completed", "response_id": "resp_…", "respuesta": "…" }
-→ { "status": "error", "code": "previous_response_not_found" | "rate_limited" | …, "respuesta": "…" }
-```
-
 Preguntas que muestran lo importante:
 
 - `¿Qué pasó con las ventas de T02 del 14 al 16 de julio?` — cruza ventas + ticket 1118 + `manual_apertura_y_cierre_tienda.pdf`, sección 8.2.
