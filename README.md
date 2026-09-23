@@ -43,6 +43,40 @@ plantilla_decisiones.md     el documento de decisiones
 
 Todo el despliegue se regenera desde el repositorio: `infra/crear-flujos.mjs` (chat e ingesta), `infra/consolidar_sql.mjs` (el agente SQL y su guarda), `infra/crear-telegram.mjs` (canal), `infra/crear-web.mjs` + `infra/desplegar-web.sh` (chat web). Los flujos exportados en `workflows/` llevan enmascarados el token del bot, la sal y la allowlist.
 
+## Cómo se ve en producción
+
+Los tres flujos, tal como están desplegados. Las notas amarillas y azules del lienzo son parte del entregable: explican el contrato de cada flujo y las trampas que costó descubrir.
+
+**Recuperación — el chat.** Webhook → validación → resolución de la conversación → el agente → respuesta y registro del turno. El agente tiene dos herramientas y dos modelos (el principal y el de respaldo); todo lo demás son nodos deterministas, no depende del modelo.
+
+![Flujo de recuperación](docs/imagenes/01-chat-recuperacion.png)
+
+**El agente y sus herramientas.** `consultar_politicas` (pgvector sobre los 4 PDF) y `consultar_datos`, que es un agente SQL anidado con su propio modelo, su respaldo y una única herramienta de ejecución (`ejecutar_sql`) que pasa por la guarda determinista antes de tocar Postgres.
+
+![Agente y herramientas](docs/imagenes/02-agente-herramientas.png)
+
+**Ingesta del corpus.** Se dispara a mano cuando cambia un documento: borra la versión anterior, trocea respetando secciones y tablas, y vuelve a indexar. Cada fragmento lleva su cabecera `archivo.pdf — Título (código) — sección`, que es exactamente lo que el asistente cita.
+
+![Flujo de ingesta](docs/imagenes/03-ingesta-corpus.png)
+
+**Canal de Telegram (entrada).** Un mensaje y un toque de botón se normalizan a la misma forma; los toques repetidos se descartan y se confirman a Telegram. Si llega una nota de voz, se transcribe con Whisper. Después, el hash del chat y el límite de ritmo.
+
+![Telegram, entrada](docs/imagenes/04-telegram-entrada.png)
+
+**Canal de Telegram (salida).** Sesión, llamada al chat —con "escribiendo…" mientras responde—, conversión a HTML y envío con los botones de seguimiento. El canal no sabe nada del agente: le habla por el mismo webhook público.
+
+![Telegram, salida](docs/imagenes/05-telegram-salida.png)
+
+**Una ejecución real**, con los tiempos y el recorrido completo por los nodos.
+
+![Ejecución real](docs/imagenes/06-ejecucion-real.png)
+
+**El asistente en el teléfono** (ayuda y menú por secciones) y **en la web de respaldo**, citando documento y sección, con la contradicción entre la FAQ y el procedimiento resuelta en la misma respuesta.
+
+![Telegram en el teléfono](docs/imagenes/07-telegram-movil.png)
+
+![Chat web](docs/imagenes/08-web.png)
+
 ## Cómo sé que funciona
 
 Todas las pruebas pegan al webhook real y la verdad nunca sale del modelo: cifras contra SQL escrito a mano, políticas contra la sección del PDF, citas contra los fragmentos que el agente recuperó (leídos de la ejecución de n8n). Resultados con fecha en `resultados/`; los números y su lectura están en la plantilla, sección 3.
