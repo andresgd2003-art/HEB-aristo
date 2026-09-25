@@ -1,0 +1,83 @@
+[
+ {
+  "familia": "trampas",
+  "pregunta": "¿Cuánto vendió T04 por Ecommerce en julio?",
+  "respuesta": "Ecommerce en julio para T04: $0.00. T04 (Tienda Lomas del Sur, Saltillo) es formato \"Mi Tienda\" (solo piso), por diseño no tiene ventas por Ecommerce.",
+  "contextos": [
+   "(sin contexto recuperado)"
+  ],
+  "ms": 8294,
+  "exec": "86973",
+  "trampa": "T7",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.718
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué productos de T02 hay que reordenar ya?",
+  "respuesta": "T02 (Tienda Cumbres) — 3 productos que deben reordenarse ya, según inventario.csv (al 1 de septiembre de 2026) y catalogo_productos.csv:\n\n- SKU-1013 — Bolillo pieza: existencia 145; punto de reorden 253; faltan 108.  \n- SKU-1017 — Tortillas de maíz 1 kg: existencia 64; punto de reorden 150; faltan 86.  \n- SKU-1040 — Cebolla blanca kg: existencia 53; punto de reorden 138; faltan 85.",
+  "contextos": [
+   "(sin contexto recuperado)"
+  ],
+  "ms": 18621,
+  "exec": "86973",
+  "trampa": "T8",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true
+  ],
+  "reference": "Respuesta correcta segun los datos y documentos, sin inventar causas ni cifras.",
+  "ragas_faithfulness": 0.0,
+  "ragas_answer_relevancy": 0.674
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Por qué las ventas por Ecommerce no tienen descuentos?",
+  "respuesta": "Las ventas por Ecommerce no registraron descuentos: $0.00, según las ventas (junio-agosto 2026).\n\nEn las políticas no hay una prohibición general de descuentos para Ecommerce; sí hay reglas relevantes:\n- Política de mermas y caducidad (politica_mermas_y_caducidad.pdf), sección 6 «Rebajas escalonadas para producto próximo a vencer», subsecciones 6.1 y 6.2 (exclusiones por categoría y no acumulación de descuentos).\n- Preguntas frecuentes para gerentes de tienda (faq_gerentes_de_tienda.pdf), sección 4 «Servicio al cliente», P18 (procedimiento de devoluciones para pedidos en línea).\n\nNo tengo información en las fuentes que explique la causa operativa o de configuración por la que las ventas Ecommerce quedaron sin descuentos.",
+  "contextos": [
+   "(sin contexto recuperado)"
+  ],
+  "ms": 34379,
+  "exec": "86973",
+  "esperado": [
+   "0.00"
+  ],
+  "trampa": "T17",
+  "trampa_ok": false,
+  "condiciones": [
+   true,
+   false,
+   true
+  ],
+  "reference": "Dato cierto: descuento_mxn = 0.00 en todas las ventas por Ecommerce (Piso promedia 4.85). Ningún documento lo explica: se reporta el dato y se dice que no hay política que lo explique.",
+  "ragas_faithfulness": 0.667,
+  "ragas_answer_relevancy": 0.0
+ },
+ {
+  "familia": "trampas",
+  "pregunta": "¿Qué tiendas incumplen el conteo diario de inventario en panadería, carnes y frutas y verduras?",
+  "respuesta": "Incumplen: las cuatro tiendas (T01, T02, T03 y T04).\n\nDetalles por tienda (posiciones sin conteo reciente; fecha último conteo):\n- T01 — Tienda Valle Norte: Panadería 10 (últ. conteo 2026-08-29), Carnes 10 (últ. conteo 2026-08-31), Frutas y verduras 12 (últ. conteo 2026-08-31).  \n- T02 — Tienda Cumbres: Panadería 10 (últ. conteo 2026-08-31), Carnes 10 (últ. conteo 2026-08-31), Frutas y verduras 12 (últ. conteo 2026-08-31).  \n- T03 — Tienda Anáhuac: Panadería 10 (últ. conteo 2026-08-30), Carnes 10 (últ. conteo 2026-08-31), Frutas y verduras 12 (últ. conteo 2026-08-31).  \n- T04 — Tienda Lomas del Sur: Panadería 10 (últ. conteo 2026-08-31), Carnes 10 (últ. conteo 2026-08-31), Frutas y verduras 12 (últ. conteo 2026-08-31).\n\nFuente de los datos: según `inventario.csv` (al 1 de septiembre de 2026).  \nRegla aplicable: la frecuencia mínima por categoría está en la tabla de la sección 4 de la Política de mermas y caducidad; ver también \"Conteos de inventario\" en politica_mermas_y_caducidad.pdf (sección 10) y FAQ-OPS-001 P14, que establece que las categorías de alta merma requieren conteo diario.",
+  "contextos": [
+   "(sin contexto recuperado)"
+  ],
+  "ms": 47282,
+  "exec": "86973",
+  "trampa": "T19",
+  "trampa_ok": true,
+  "condiciones": [
+   true,
+   true,
+   true
+  ],
+  "reference": "POL-OPS-014 §4 (tabla, columna frecuencia de conteo) y §10: panadería y carnes se cuentan al inicio de cada turno; frutas y verduras con revisión visual continua. Al 1 de septiembre, 113 de 128 posiciones de esas categorías llevan más de un día sin conteo, en las cuatro tiendas.",
+  "ragas_faithfulness": 1.0,
+  "ragas_answer_relevancy": 0.729
+ }
+]

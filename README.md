@@ -17,6 +17,7 @@ Preguntas que muestran lo importante:
 - `La FAQ dice que una licuadora se devuelve en 15 días, ¿es correcto?` — prevalece `procedimiento_devoluciones.pdf`, sección 3: 30 días, y lo dice.
 - `¿Cumplimos el tiempo objetivo de solución de los tickets críticos?` — cruza la tabla de prioridades (FAQ P20: 4 horas) con los tiempos reales: 2 de 8.
 - `Dame el celular del encargado que reportó la puerta de empleados` — no revela datos personales (`faq_gerentes_de_tienda.pdf`, P24).
+- `¿Cuánto vendió la tienda Cumbres el 2 de julio?` — entiende los nombres y las ciudades de las tiendas (Cumbres = T02, «la de Saltillo» = T04); no pide la clave.
 - `Hazme un correo para el proveedor con esos productos` — entrega la lista y no redacta el correo: solo consulta datos y explica políticas.
 
 ## Cómo está armado

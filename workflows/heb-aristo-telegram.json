@@ -2,6 +2,13 @@
   "name": "HEB-aristo — Telegram",
   "nodes": [
     {
+      "parameters": {
+        "updates": [
+          "message",
+          "callback_query"
+        ],
+        "additionalFields": {}
+      },
       "id": "t",
       "name": "Telegram Trigger",
       "type": "n8n-nodes-base.telegramTrigger",
@@ -11,13 +18,6 @@
         0
       ],
       "webhookId": "heb-aristo-telegram",
-      "parameters": {
-        "updates": [
-          "message",
-          "callback_query"
-        ],
-        "additionalFields": {}
-      },
       "credentials": {
         "telegramApi": {
           "id": "c4WoWHcCNO6ECvwW",
@@ -26,31 +26,24 @@
       }
     },
     {
+      "parameters": {
+        "jsCode": "// Unifica un mensaje y un toque de boton inline (callback_query) en la misma forma: { message, boton, callback_id }.\nconst u = $input.first().json; const cb = u.callback_query;\nconst BOTONES = {\"sig:tienda\":\"Desglósalo por tienda\",\"sig:mes\":\"Desglósalo por mes\",\"sig:dev\":\"¿Cuánto se devolvió en ese mismo periodo?\",\"sig:sec\":\"Muéstrame completa la sección del documento que citaste\",\"sig:docs\":\"¿Qué otros documentos o secciones hablan de esto?\",\"sig:tk\":\"¿Qué tickets hubo ese día en esa tienda?\",\"menu:ventas\":\"menu:ventas\",\"menu:inventario\":\"menu:inventario\",\"menu:tickets\":\"menu:tickets\",\"menu:politicas\":\"menu:politicas\",\"q:v1\":\"¿Cuál fue la venta total de las cuatro tiendas en el trimestre?\",\"q:v2\":\"¿Qué categoría vende más en T03?\",\"q:v3\":\"¿Cuánto se devolvió en junio?\",\"q:i1\":\"¿Qué productos de T02 están bajo su punto de reorden?\",\"q:i2\":\"¿Qué caduca antes del 15 de septiembre en T04?\",\"q:i3\":\"¿Qué productos perecederos debo retirar del anaquel hoy según la política?\",\"q:t1\":\"¿Cuántos tickets críticos hubo?\",\"q:t2\":\"¿Qué pasó con las ventas de T02 del 14 al 16 de julio?\",\"q:t3\":\"¿Cumplimos el tiempo objetivo de solución de los tickets críticos?\",\"q:p1\":\"¿Quién autoriza una devolución de 12,000 pesos?\",\"q:p2\":\"¿Cuál es la tolerancia de merma en panadería?\",\"q:p3\":\"¿Puedo darle el teléfono de un colaborador a un proveedor?\"};\n// Bot PUBLICO (los datos son sinteticos): sin allowlist. El limite de ritmo por chat esta en 'Limite por chat'.\nif (cb) {\n  return [{ json: { message: { ...cb.message, text: BOTONES[cb.data] ?? '', voice: undefined, audio: undefined, from: cb.from }, boton: cb.data, callback_id: cb.id } }];\n}\nreturn [{ json: { message: u.message, boton: null, callback_id: null } }];"
+      },
       "id": "nz",
       "name": "Normalizar",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        120,
+        128,
         0
-      ],
-      "parameters": {
-        "jsCode": "// Unifica un mensaje y un toque de boton inline (callback_query) en la misma forma: { message, boton, callback_id }.\nconst u = $input.first().json; const cb = u.callback_query;\nconst BOTONES = {\"sig:tienda\":\"Desglósalo por tienda\",\"sig:mes\":\"Desglósalo por mes\",\"sig:dev\":\"¿Cuánto se devolvió en ese mismo periodo?\",\"sig:sec\":\"Muéstrame completa la sección del documento que citaste\",\"sig:docs\":\"¿Qué otros documentos o secciones hablan de esto?\",\"sig:tk\":\"¿Qué tickets hubo ese día en esa tienda?\",\"menu:ventas\":\"menu:ventas\",\"menu:inventario\":\"menu:inventario\",\"menu:tickets\":\"menu:tickets\",\"menu:politicas\":\"menu:politicas\",\"q:v1\":\"¿Cuál fue la venta total de las cuatro tiendas en el trimestre?\",\"q:v2\":\"¿Qué categoría vende más en T03?\",\"q:v3\":\"¿Cuánto se devolvió en junio?\",\"q:i1\":\"¿Qué productos de T02 están bajo su punto de reorden?\",\"q:i2\":\"¿Qué caduca antes del 15 de septiembre en T04?\",\"q:i3\":\"¿Qué productos perecederos debo retirar del anaquel hoy según la política?\",\"q:t1\":\"¿Cuántos tickets críticos hubo?\",\"q:t2\":\"¿Qué pasó con las ventas de T02 del 14 al 16 de julio?\",\"q:t3\":\"¿Cumplimos el tiempo objetivo de solución de los tickets críticos?\",\"q:p1\":\"¿Quién autoriza una devolución de 12,000 pesos?\",\"q:p2\":\"¿Cuál es la tolerancia de merma en panadería?\",\"q:p3\":\"¿Puedo darle el teléfono de un colaborador a un proveedor?\"};\n// Bot PUBLICO (los datos son sinteticos): sin allowlist. El limite de ritmo por chat esta en 'Limite por chat'.\nif (cb) {\n  return [{ json: { message: { ...cb.message, text: BOTONES[cb.data] ?? '', voice: undefined, audio: undefined, from: cb.from }, boton: cb.data, callback_id: cb.id } }];\n}\nreturn [{ json: { message: u.message, boton: null, callback_id: null } }];"
-      }
+      ]
     },
     {
-      "id": "eb",
-      "name": "Es botón",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        360,
-        0
-      ],
       "parameters": {
         "conditions": {
           "options": {
             "caseSensitive": true,
+            "leftValue": "",
             "typeValidation": "loose",
             "version": 2
           },
@@ -68,20 +61,19 @@
             }
           ]
         },
-        "looseTypeValidation": true
-      }
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "eb",
+      "name": "Es botón",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        256,
+        0
+      ]
     },
     {
-      "id": "dd",
-      "name": "Registrar callback",
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        600,
-        -220
-      ],
-      "alwaysOutputData": true,
-      "onError": "continueRegularOutput",
       "parameters": {
         "operation": "executeQuery",
         "query": "CREATE TABLE IF NOT EXISTS telegram_callbacks (id text PRIMARY KEY, creado_en timestamptz DEFAULT now());\nINSERT INTO telegram_callbacks (id) VALUES ($1) ON CONFLICT DO NOTHING RETURNING id;",
@@ -89,26 +81,29 @@
           "queryReplacement": "={{ $json.callback_id }}"
         }
       },
+      "id": "dd",
+      "name": "Registrar callback",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        368,
+        -320
+      ],
+      "alwaysOutputData": true,
       "credentials": {
         "postgres": {
           "id": "V0RcqGuqWSuowyhM",
           "name": "BANO Postgres (pgvector)"
         }
-      }
+      },
+      "onError": "continueRegularOutput"
     },
     {
-      "id": "cbn",
-      "name": "Callback nuevo",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        840,
-        -220
-      ],
       "parameters": {
         "conditions": {
           "options": {
             "caseSensitive": true,
+            "leftValue": "",
             "typeValidation": "loose",
             "version": 2
           },
@@ -126,58 +121,60 @@
             }
           ]
         },
-        "looseTypeValidation": true
-      }
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "cbn",
+      "name": "Callback nuevo",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        528,
+        -320
+      ]
     },
     {
+      "parameters": {
+        "resource": "callback",
+        "queryId": "={{ $('Normalizar').first().json.callback_id }}",
+        "additionalFields": {}
+      },
       "id": "acq",
       "name": "Confirmar botón",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1080,
-        -220
+        688,
+        -320
       ],
-      "onError": "continueRegularOutput",
-      "parameters": {
-        "resource": "callback",
-        "operation": "answerQuery",
-        "queryId": "={{ $('Normalizar').first().json.callback_id }}"
-      },
+      "webhookId": "a33cdc43-47da-4f9b-8786-8ae0ee040c19",
       "credentials": {
         "telegramApi": {
           "id": "c4WoWHcCNO6ECvwW",
           "name": "HEB-aristo Telegram"
         }
       },
-      "webhookId": "a33cdc43-47da-4f9b-8786-8ae0ee040c19"
+      "onError": "continueRegularOutput"
     },
     {
+      "parameters": {
+        "jsCode": "return [{ json: $('Normalizar').first().json }];"
+      },
       "id": "rn",
       "name": "Reponer normalizado",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1320,
-        -220
-      ],
-      "parameters": {
-        "jsCode": "return [{ json: $('Normalizar').first().json }];"
-      }
+        848,
+        -320
+      ]
     },
     {
-      "id": "v",
-      "name": "Es voz",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        1560,
-        0
-      ],
       "parameters": {
         "conditions": {
           "options": {
             "caseSensitive": true,
+            "leftValue": "",
             "typeValidation": "loose",
             "version": 2
           },
@@ -195,49 +192,56 @@
             }
           ]
         },
-        "looseTypeValidation": true
-      }
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "v",
+      "name": "Es voz",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        976,
+        16
+      ]
     },
     {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice?.file_id ?? $json.message.audio?.file_id }}",
+        "additionalFields": {}
+      },
       "id": "f",
       "name": "Descargar audio",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        480,
-        -140
+        1264,
+        -96
       ],
-      "parameters": {
-        "resource": "file",
-        "operation": "get",
-        "fileId": "={{ $json.message.voice?.file_id ?? $json.message.audio?.file_id }}",
-        "download": true
-      },
+      "webhookId": "1fba40c1-1a91-4fcc-b2c2-9501a48c393c",
       "credentials": {
         "telegramApi": {
           "id": "c4WoWHcCNO6ECvwW",
           "name": "HEB-aristo Telegram"
         }
-      },
-      "webhookId": "1fba40c1-1a91-4fcc-b2c2-9501a48c393c"
+      }
     },
     {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {
+          "language": "es"
+        }
+      },
       "id": "w",
       "name": "Transcribir (Whisper)",
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 2.3,
       "position": [
-        720,
-        -140
+        1440,
+        -96
       ],
-      "parameters": {
-        "resource": "audio",
-        "operation": "transcribe",
-        "binaryPropertyName": "data",
-        "options": {
-          "language": "es"
-        }
-      },
       "credentials": {
         "openAiApi": {
           "id": "khGoYB8EqlxK66fW",
@@ -246,57 +250,46 @@
       }
     },
     {
+      "parameters": {
+        "jsCode": "return [{ json: { texto: String($json.text ?? '').trim(), es_voz: true } }];"
+      },
       "id": "tx",
       "name": "Texto de voz",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        960,
-        -140
-      ],
-      "parameters": {
-        "jsCode": "return [{ json: { texto: String($json.text ?? '').trim(), es_voz: true } }];"
-      }
+        1616,
+        -96
+      ]
     },
     {
+      "parameters": {
+        "jsCode": "return [{ json: { texto: String($json.message.text ?? '').trim(), es_voz: false } }];"
+      },
       "id": "tt",
       "name": "Texto escrito",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        480,
-        140
-      ],
-      "parameters": {
-        "jsCode": "return [{ json: { texto: String($json.message.text ?? '').trim(), es_voz: false } }];"
-      }
+        1264,
+        192
+      ]
     },
     {
+      "parameters": {
+        "value": "={{ $('Normalizar').first().json.message.chat.id + ':' + '<TELEGRAM_SAL>' }}",
+        "dataPropertyName": "chat_hash"
+      },
       "id": "h",
       "name": "Hash del chat",
       "type": "n8n-nodes-base.crypto",
       "typeVersion": 2,
       "position": [
-        1200,
-        0
-      ],
-      "parameters": {
-        "type": "SHA256",
-        "value": "={{ $('Normalizar').first().json.message.chat.id + ':' + '<TELEGRAM_SAL>' }}",
-        "dataPropertyName": "chat_hash"
-      }
+        1776,
+        192
+      ]
     },
     {
-      "id": "lim",
-      "name": "Límite por chat",
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        1320,
-        0
-      ],
-      "alwaysOutputData": true,
-      "onError": "continueRegularOutput",
       "parameters": {
         "operation": "executeQuery",
         "query": "CREATE TABLE IF NOT EXISTS telegram_ritmo (chat_hash text, creado_en timestamptz DEFAULT now());\nINSERT INTO telegram_ritmo (chat_hash) VALUES ($1);\nDELETE FROM telegram_ritmo WHERE creado_en < now() - interval '1 hour';\nSELECT count(*)::int AS en_ventana FROM telegram_ritmo WHERE chat_hash = $1 AND creado_en > now() - interval '5 minutes';",
@@ -304,37 +297,37 @@
           "queryReplacement": "={{ $json.chat_hash }}"
         }
       },
+      "id": "lim",
+      "name": "Límite por chat",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        1968,
+        192
+      ],
+      "alwaysOutputData": true,
       "credentials": {
         "postgres": {
           "id": "V0RcqGuqWSuowyhM",
           "name": "BANO Postgres (pgvector)"
         }
-      }
+      },
+      "onError": "continueRegularOutput"
     },
     {
+      "parameters": {
+        "jsCode": "const h = $('Hash del chat').first().json; const n = Number($input.first().json?.en_ventana ?? 0);\nreturn [{ json: { ...h, sobre_limite: n > 12 } }];"
+      },
       "id": "lim2",
       "name": "Pasa el límite",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1380,
-        0
-      ],
-      "parameters": {
-        "jsCode": "const h = $('Hash del chat').first().json; const n = Number($input.first().json?.en_ventana ?? 0);\nreturn [{ json: { ...h, sobre_limite: n > 12 } }];"
-      }
+        2112,
+        192
+      ]
     },
     {
-      "id": "ls",
-      "name": "Leer sesión",
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        1440,
-        0
-      ],
-      "alwaysOutputData": true,
-      "onError": "continueRegularOutput",
       "parameters": {
         "operation": "executeQuery",
         "query": "SELECT ultimo_response_id FROM heb_sesiones WHERE chat_hash = $1",
@@ -342,39 +335,42 @@
           "queryReplacement": "={{ $json.chat_hash }}"
         }
       },
+      "id": "ls",
+      "name": "Leer sesión",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        2272,
+        192
+      ],
+      "alwaysOutputData": true,
       "credentials": {
         "postgres": {
           "id": "V0RcqGuqWSuowyhM",
           "name": "BANO Postgres (pgvector)"
         }
-      }
+      },
+      "onError": "continueRegularOutput"
     },
     {
+      "parameters": {
+        "jsCode": "// Une texto, hash y sesion. /nueva reinicia. Sin texto (sticker, foto) -> aviso.\nconst h = $('Hash del chat').first().json;\nconst fila = $input.first().json ?? {};\nconst texto = String(h.texto ?? '').trim();\nconst sobre_limite = !!$('Pasa el límite').first().json.sobre_limite;\n// Comandos y los botones del teclado persistente (mandan texto al tocarlos).\nconst reinicio = /^\\/(nueva|start|reset)\\b/i.test(texto) || /^🆕/.test(texto);\nconst ayuda = /^\\/(start|ayuda|help)\\b/i.test(texto) || /^❓/.test(texto) ? 'ayuda' : /^\\/ejemplos\\b/i.test(texto) || /^💡/.test(texto) ? 'ejemplos' : null;\nconst menu = /^menu:(ventas|inventario|tickets|politicas)$/.test(texto) ? texto.slice(5) : null;\nreturn [{ json: { texto, es_voz: !!h.es_voz, chat_hash: h.chat_hash, reinicio, sobre_limite, ayuda: ayuda || (menu ? 'menu' : null), menu, sin_texto: texto.length === 0 || sobre_limite,\n  previous_response_id: reinicio ? null : (fila.ultimo_response_id ?? null) } }];"
+      },
       "id": "p",
       "name": "Preparar llamada",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1680,
-        0
-      ],
-      "parameters": {
-        "jsCode": "// Une texto, hash y sesion. /nueva reinicia. Sin texto (sticker, foto) -> aviso.\nconst h = $('Hash del chat').first().json;\nconst fila = $input.first().json ?? {};\nconst texto = String(h.texto ?? '').trim();\nconst sobre_limite = !!$('Pasa el límite').first().json.sobre_limite;\n// Comandos y los botones del teclado persistente (mandan texto al tocarlos).\nconst reinicio = /^\\/(nueva|start|reset)\\b/i.test(texto) || /^🆕/.test(texto);\nconst ayuda = /^\\/(start|ayuda|help)\\b/i.test(texto) || /^❓/.test(texto) ? 'ayuda' : /^\\/ejemplos\\b/i.test(texto) || /^💡/.test(texto) ? 'ejemplos' : null;\nconst menu = /^menu:(ventas|inventario|tickets|politicas)$/.test(texto) ? texto.slice(5) : null;\nreturn [{ json: { texto, es_voz: !!h.es_voz, chat_hash: h.chat_hash, reinicio, sobre_limite, ayuda: ayuda || (menu ? 'menu' : null), menu, sin_texto: texto.length === 0 || sobre_limite,\n  previous_response_id: reinicio ? null : (fila.ultimo_response_id ?? null) } }];"
-      }
+        2432,
+        192
+      ]
     },
     {
-      "id": "r",
-      "name": "Reinicio o vacío",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.2,
-      "position": [
-        1920,
-        0
-      ],
       "parameters": {
         "conditions": {
           "options": {
             "caseSensitive": true,
+            "leftValue": "",
             "typeValidation": "loose",
             "version": 2
           },
@@ -412,45 +408,45 @@
             }
           ]
         },
-        "looseTypeValidation": true
-      }
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "r",
+      "name": "Reinicio o vacío",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2608,
+        192
+      ]
     },
     {
+      "parameters": {
+        "jsCode": "// Llama al chat y, mientras responde, reenvia 'escribiendo…' cada 4 s (Telegram lo apaga a los 5 s; las respuestas tardan\n// 15-150 s). Un solo nodo: la llamada y el bucle corren en paralelo. Errores -> { status: 'error', code } como antes.\nconst p = $('Preparar llamada').first().json; const chatId = $('Normalizar').first().json.message.chat.id;\nconst TG = 'https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/sendChatAction';\nconst escribiendo = () => this.helpers.httpRequest({ method: 'POST', url: TG, body: { chat_id: chatId, action: 'typing' }, json: true }).catch(() => null);\nlet listo = false;\nconst llamada = this.helpers.httpRequest({ method: 'POST', url: 'https://n8n-n8n.x09761.easypanel.host/webhook/heb-aristo/chat', body: { input: p.texto, previous_response_id: p.previous_response_id }, json: true, timeout: 180000, ignoreHttpStatusErrors: true })\n  .then((r) => (typeof r === 'string' ? JSON.parse(r) : r)).catch((e) => ({ status: 'error', code: 'upstream', respuesta: String(e.message || e) })).finally(() => { listo = true; });\n(async () => { while (!listo) { await escribiendo(); await new Promise((r) => setTimeout(r, 4000)); } })();\nconst r = await llamada;\nreturn [{ json: r }];"
+      },
       "id": "x",
       "name": "Preguntar a HEB-aristo",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2160,
-        120
-      ],
-      "parameters": {
-        "jsCode": "// Llama al chat y, mientras responde, reenvia 'escribiendo…' cada 4 s (Telegram lo apaga a los 5 s; las respuestas tardan\n// 15-150 s). Un solo nodo: la llamada y el bucle corren en paralelo. Errores -> { status: 'error', code } como antes.\nconst p = $('Preparar llamada').first().json; const chatId = $('Normalizar').first().json.message.chat.id;\nconst TG = 'https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/sendChatAction';\nconst escribiendo = () => this.helpers.httpRequest({ method: 'POST', url: TG, body: { chat_id: chatId, action: 'typing' }, json: true }).catch(() => null);\nlet listo = false;\nconst llamada = this.helpers.httpRequest({ method: 'POST', url: 'https://n8n-n8n.x09761.easypanel.host/webhook/heb-aristo/chat', body: { input: p.texto, previous_response_id: p.previous_response_id }, json: true, timeout: 180000, ignoreHttpStatusErrors: true })\n  .then((r) => (typeof r === 'string' ? JSON.parse(r) : r)).catch((e) => ({ status: 'error', code: 'upstream', respuesta: String(e.message || e) })).finally(() => { listo = true; });\n(async () => { while (!listo) { await escribiendo(); await new Promise((r) => setTimeout(r, 4000)); } })();\nconst r = await llamada;\nreturn [{ json: r }];"
-      }
+        2768,
+        272
+      ]
     },
     {
+      "parameters": {
+        "jsCode": "// Traduce la respuesta del webhook a un mensaje de Telegram (HTML legible). Nunca silencio.\n// Convierte la respuesta (Markdown del modelo) al HTML que Telegram acepta. Corre en el nodo \"Redactar respuesta\"\r\n// y en local (infra/telegram_formato.test.mjs). Telegram HTML: b i u s code pre a blockquote; sin listas ni encabezados.\r\n// Emojis por tema (opcion `emojis`, por canal). Uno por linea, al inicio, nunca dentro de cifras ni citas.\r\n// Diccionario propio en espanol (no emojilib: es en ingles, ~1,900 emojis y tapizaria la respuesta). El orden\r\n// importa: gana la primera regla que casa. Ampliar aqui, con el vocabulario del dominio, no con una biblioteca.\r\nconst EMOJIS = [\r\n  [/\\b(no tengo|no hay (datos|información|registro)|no puedo|no es posible|fuera de mi alcance|no está en)/i, '⚠️'],\r\n  [/\\b(cr[ií]tic[ao]s?|urgente|riesgo|fraude|alerta)/i, '🚨'],\r\n  [/\\b(devoluci[oó]n(es)?|reembols|cambio de producto|vale de tienda)/i, '↩️'],\r\n  [/\\b(vent[ae]s?|vendi[oó]|venta neta|importe|ingres|margen|ecommerce)/i, '💰'],\r\n  [/\\b(caduc|vence|fecha de caducidad|lote|pr[oó]ximo a vencer|rebaja)/i, '🗓️'],\r\n  [/\\b(inventario|existencia|reorden|reabast|stock|sku|cat[aá]logo)/i, '📦'],\r\n  [/\\b(tickets?|folio|mesa de servicio|incidencia)/i, '🎫'],\r\n  [/\\b(refrigera|c[aá]mara|congela|cadena de fr[ií]o|temperatura|sin fr[ií]o|luz)/i, '❄️'],\r\n  [/\\b(caja(s)?|arqueo|efectivo|fondo fijo|corte de caja|terminal bancaria)/i, '💳'],\r\n  [/\\b(mantenimiento|obra|remodelaci[oó]n|montacargas|cortina|gotera|anaquel flojo)/i, '🔧'],\r\n  [/\\b(sistema|servidor|enlace|internet|handheld|impresora|sigma|wifi)/i, '💻'],\r\n  [/\\b(colaborador|personal|empleado|recursos humanos|n[oó]mina|vacaciones|uniformes|turno)/i, '👥'],\r\n  [/\\b(proveedor|recepci[oó]n de mercanc[ií]a|and[eé]n|cedis|pedido)/i, '🚚'],\r\n  [/\\b(l[aá]cteos|leche|yogur|queso)/i, '🥛'],\r\n  [/\\b(panader[ií]a|pan\\b|bolillo|tortilla)/i, '🥖'],\r\n  [/\\b(carnes?|pollo|res\\b|pescado|nuggets)/i, '🥩'],\r\n  [/\\b(frutas?|verduras?|pl[aá]tano|lim[oó]n|jitomate|cebolla|aguacate)/i, '🍎'],\r\n  [/\\b(bebidas?|refresco|jugo|agua embotellada|cerveza)/i, '🥤'],\r\n  [/\\b(limpieza|cuidado personal|jab[oó]n|papel higi[eé]nico)/i, '🧴'],\r\n  [/\\b(pol[ií]tica|procedimiento|manual|faq|secci[oó]n|regla|plazo|autoriza|\\.pdf)/i, '📄'],\r\n  [/\\b(tienda|sucursal|t0[1-4]\\b|supermercado|mi tienda)/i, '🏬'],\r\n  [/\\b(apertura|cierre|horario|bit[aá]cora|checklist)/i, '🕖'],\r\n];\r\nconst emojiPara = (linea) => { const limpia = linea.replace(/<[^>]+>/g, ''); for (const [re, e] of EMOJIS) if (re.test(limpia)) return e; return ''; };\r\n\r\nfunction telegramHtml(md, opciones = { emojis: true }) {\r\n  const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\r\n  let t = esc(String(md ?? '').replace(/\\r/g, '').replace(/[‐‑‒–−]/g, '-'));\r\n  const lineas = t.split('\\n').map((l) => l.replace(/\\s+$/, ''));\r\n  const out = [];\r\n  for (let l of lineas) {\r\n    if (/^\\s*\\|[\\s-:|]+\\|\\s*$/.test(l)) continue;                       // separador de tabla\r\n    if (/^\\s*\\|.*\\|\\s*$/.test(l)) l = l.replace(/^\\s*\\||\\|\\s*$/g, '').split('|').map((c) => c.trim()).join(' — ');\r\n    l = l.replace(/^\\s*#{1,6}\\s+(.*)$/, '<b>$1</b>');                     // encabezados -> negrita\r\n    l = l.replace(/^\\s*[-*]\\s+/, '• ').replace(/^\\s{2,}[-*]\\s+/, '   ◦ '); // viñetas\r\n    l = l.replace(/^\\s*(\\d+)[.)]\\s+/, '$1. ');\r\n    l = l.replace(/\\*\\*(.+?)\\*\\*/g, '<b>$1</b>').replace(/__(.+?)__/g, '<b>$1</b>');\r\n    l = l.replace(/(^|[^\\w*])\\*(?!\\s)([^*\\n]+?)\\*(?!\\w)/g, '$1<i>$2</i>');\r\n    l = l.replace(/`([^`\\n]+)`/g, '<code>$1</code>');\r\n    l = l.replace(/\\b((?:FAQ|MAN|POL|PRO)-[A-Z]{3}-\\d{3})(\\s*(?:§|P)\\s*[\\d.]+[^)\\n;,]*)?/g, '<i>$1$2</i>');\r\n    out.push(l);\r\n  }\r\n  // Bloques de viñetas compactos (sin lineas en blanco entre •) y una linea en blanco antes del bloque.\r\n  const ls = out.join('\\n').replace(/\\n{3,}/g, '\\n\\n').trim().split('\\n'), fin = [];\r\n  const esV = (x) => /^(• |   ◦ |\\d+\\. )/.test(x);\r\n  for (let i = 0; i < ls.length; i++) {\r\n    const prev = fin[fin.length - 1];\r\n    if (esV(ls[i]) && prev !== undefined && prev !== '' && !esV(prev)) fin.push('');\r\n    if (ls[i] === '' && esV(prev ?? '') && esV(ls[i + 1] ?? '')) continue;\r\n    fin.push(ls[i]);\r\n  }\r\n  t = fin.join('\\n');\r\n  // Enfasis visual (solo en texto que aun no tiene etiquetas): archivo en <code>, seccion citada subrayada,\r\n  // importes y cantidades con unidad en negrita, etiqueta de la viñeta en negrita, \"segun ...\" en cursiva.\r\n  t = t.split(/(<[a-z]+>[^<]*<\\/[a-z]+>)/).map((seg, i) => i % 2 ? seg : seg\r\n    .replace(/\\b([a-z_]+\\.(?:pdf|csv))\\b/g, '<code>$1</code>')\r\n    .replace(/(secci[oó]n\\s+\\d+(?:\\.\\d+)?\\s*«[^»\\n]+»|secci[oó]n\\s+\\d+(?:\\.\\d+)?|§\\s*[\\d.]+|\\bP\\d{1,2}(?=[^\\w\\d]|$))/g, '<u>$1</u>')\r\n    .replace(/(\\$\\s?\\d[\\d,]*(?:\\.\\d+)?(?:\\s?(?:k|M|mil|millones|MXN))?)/g, '<b>$1</b>')\r\n    .replace(/(?<![\\w$>])(\\d[\\d,]*(?:\\.\\d+)?\\s?(?:%|unidades|piezas|tickets|productos|SKUs?|d[ií]as(?: naturales| h[aá]biles)?|horas?|minutos|meses|semanas|kg|filas|artículos))\\b/g, '<b>$1</b>')\r\n    .replace(/(^|\\n)(• |\\d+\\. )([^:\\n<]{3,60}):/g, '$1$2<b>$3:</b>')\r\n    .replace(/\\b(seg[uú]n (?:el |la |los |las )?[^.;\\n<]{3,80}?)(?=[.;\\n)])/g, '<i>$1</i>')\r\n  ).join('');\r\n  // Fuente plegable: las lineas que solo citan (\"Según ...\", \"Fuente: ...\", \"Citas: ...\") van en un blockquote expandible,\r\n  // asi la respuesta se lee corta y la cita sigue a un toque. Solo lineas completas de cita; nunca las que llevan cifras.\r\n  t = t.split('\\n').map((l) => (/^(Según|Fuente|Citas?|Cita relevante|Regla)\\b/i.test(l.replace(/<[^>]+>/g, '')) && !/\\$\\s?\\d/.test(l) && l.length > 40) ? '<blockquote expandable>' + l + '</blockquote>' : l).join('\\n');\n  // Primera linea en negrita si no lo esta ya y es corta (el dato/regla de un vistazo)\r\n  const primera = t.split('\\n')[0];\r\n  if (primera && !/<b>|^• |^\\d+\\. /.test(primera) && primera.length <= 160) t = '<b>' + primera + '</b>' + t.slice(primera.length);\r\n  if (opciones.emojis) {\r\n    // Un emoji por linea \"de bloque\": la primera linea y las etiquetas de viñeta / encabezados en negrita.\r\n    // Nunca dos iguales seguidos, para no tapizar la respuesta.\r\n    let ultimo = '';\r\n    t = t.split('\\n').map((l, i) => {\r\n      const esBloque = i === 0 || /^<b>[^<]{3,80}<\\/b>$/.test(l) || /^• <b>[^<]{3,60}:<\\/b>/.test(l);\r\n      if (!esBloque || !l.trim()) return l;\r\n      const e = emojiPara(l);\r\n      if (!e || e === ultimo) return l;\r\n      ultimo = e;\r\n      return l.startsWith('• ') ? '• ' + e + ' ' + l.slice(2) : e + ' ' + l;\r\n    }).join('\\n');\r\n  }\r\n  if (t.length > 4000) t = t.slice(0, 3990).replace(/<[^>]*$/, '') + '…';\r\n  return t;\r\n}\r\nconst p = $('Preparar llamada').first().json; const r = $input.first().json ?? {};\nlet texto;\nif (r.status === 'completed' && r.respuesta) texto = r.respuesta;\nelse if (r.code === 'previous_response_not_found') texto = 'La conversación anterior caducó. Empiezo una nueva: repíteme la pregunta.';\nelse if (r.code === 'rate_limited') texto = 'Demasiadas preguntas seguidas; dame unos segundos.';\nelse if (r.code === 'conversation_too_long') texto = 'Esta conversación ya es muy larga. Escribe /nueva para empezar otra.';\nelse texto = 'No pude responder ahora (' + (r.code || 'error') + '). Intenta de nuevo en un momento.';\n// Markdown del modelo -> HTML de Telegram (negrita, viñetas •, citas en cursiva, sin tablas), tope 4000.\ntexto = telegramHtml(texto);\nconst esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nif (p.es_voz) texto = '<blockquote>🎙️ ' + esc(p.texto.length > 160 ? p.texto.slice(0, 157) + '…' : p.texto) + '</blockquote>\\n' + texto;\nconst reinicio = r.code === 'previous_response_not_found' || r.code === 'conversation_too_long';\n// Botones de seguimiento, deterministas por lo que trae la respuesta (cifra, cita de documento, tickets).\nconst b = []; const t = String(r.respuesta ?? '');\nif (r.status === 'completed') {\n  if (/\\$\\s?\\d|unidades/.test(t)) b.push({ text: '🏬 Por tienda', callback_data: 'sig:tienda' }, { text: '📅 Por mes', callback_data: 'sig:mes' });\n  if (/\\.pdf/.test(t)) b.push({ text: '📄 Sección completa', callback_data: 'sig:sec' }, { text: '🔗 Documentos relacionados', callback_data: 'sig:docs' });\n  if (/ticket|folio/i.test(t) && !/\\.pdf/.test(t)) b.push({ text: '🎫 Detalle de tickets', callback_data: 'sig:tk' });\n  if (/\\$\\s?\\d/.test(t) && !/devoluci/i.test(t)) b.push({ text: '↩️ Devoluciones', callback_data: 'sig:dev' });\n}\n// No repetir el boton que la gerente acaba de tocar (ni su opuesto): ofrecer siempre algo distinto.\nconst tocado = $('Normalizar').first().json.boton;\nconst b2 = b.filter((x) => x.callback_data !== tocado);\nconst teclado = b2.length ? { inline_keyboard: [b2.slice(0, 2), b2.slice(2, 4)].filter((f) => f.length) } : null;\nreturn [{ json: { texto, response_id: r.response_id ?? null, chat_hash: p.chat_hash, guardar: !!r.response_id || reinicio, reinicio, teclado } }];"
+      },
       "id": "o",
       "name": "Redactar respuesta",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2400,
-        120
-      ],
-      "parameters": {
-        "jsCode": "// Traduce la respuesta del webhook a un mensaje de Telegram (HTML legible). Nunca silencio.\n// Convierte la respuesta (Markdown del modelo) al HTML que Telegram acepta. Corre en el nodo \"Redactar respuesta\"\r\n// y en local (infra/telegram_formato.test.mjs). Telegram HTML: b i u s code pre a blockquote; sin listas ni encabezados.\r\n// Emojis por tema (opcion `emojis`, por canal). Uno por linea, al inicio, nunca dentro de cifras ni citas.\r\n// Diccionario propio en espanol (no emojilib: es en ingles, ~1,900 emojis y tapizaria la respuesta). El orden\r\n// importa: gana la primera regla que casa. Ampliar aqui, con el vocabulario del dominio, no con una biblioteca.\r\nconst EMOJIS = [\r\n  [/\\b(no tengo|no hay (datos|información|registro)|no puedo|no es posible|fuera de mi alcance|no está en)/i, '⚠️'],\r\n  [/\\b(cr[ií]tic[ao]s?|urgente|riesgo|fraude|alerta)/i, '🚨'],\r\n  [/\\b(devoluci[oó]n(es)?|reembols|cambio de producto|vale de tienda)/i, '↩️'],\r\n  [/\\b(vent[ae]s?|vendi[oó]|venta neta|importe|ingres|margen|ecommerce)/i, '💰'],\r\n  [/\\b(caduc|vence|fecha de caducidad|lote|pr[oó]ximo a vencer|rebaja)/i, '🗓️'],\r\n  [/\\b(inventario|existencia|reorden|reabast|stock|sku|cat[aá]logo)/i, '📦'],\r\n  [/\\b(tickets?|folio|mesa de servicio|incidencia)/i, '🎫'],\r\n  [/\\b(refrigera|c[aá]mara|congela|cadena de fr[ií]o|temperatura|sin fr[ií]o|luz)/i, '❄️'],\r\n  [/\\b(caja(s)?|arqueo|efectivo|fondo fijo|corte de caja|terminal bancaria)/i, '💳'],\r\n  [/\\b(mantenimiento|obra|remodelaci[oó]n|montacargas|cortina|gotera|anaquel flojo)/i, '🔧'],\r\n  [/\\b(sistema|servidor|enlace|internet|handheld|impresora|sigma|wifi)/i, '💻'],\r\n  [/\\b(colaborador|personal|empleado|recursos humanos|n[oó]mina|vacaciones|uniformes|turno)/i, '👥'],\r\n  [/\\b(proveedor|recepci[oó]n de mercanc[ií]a|and[eé]n|cedis|pedido)/i, '🚚'],\r\n  [/\\b(l[aá]cteos|leche|yogur|queso)/i, '🥛'],\r\n  [/\\b(panader[ií]a|pan\\b|bolillo|tortilla)/i, '🥖'],\r\n  [/\\b(carnes?|pollo|res\\b|pescado|nuggets)/i, '🥩'],\r\n  [/\\b(frutas?|verduras?|pl[aá]tano|lim[oó]n|jitomate|cebolla|aguacate)/i, '🍎'],\r\n  [/\\b(bebidas?|refresco|jugo|agua embotellada|cerveza)/i, '🥤'],\r\n  [/\\b(limpieza|cuidado personal|jab[oó]n|papel higi[eé]nico)/i, '🧴'],\r\n  [/\\b(pol[ií]tica|procedimiento|manual|faq|secci[oó]n|regla|plazo|autoriza|\\.pdf)/i, '📄'],\r\n  [/\\b(tienda|sucursal|t0[1-4]\\b|supermercado|mi tienda)/i, '🏬'],\r\n  [/\\b(apertura|cierre|horario|bit[aá]cora|checklist)/i, '🕖'],\r\n];\r\nconst emojiPara = (linea) => { const limpia = linea.replace(/<[^>]+>/g, ''); for (const [re, e] of EMOJIS) if (re.test(limpia)) return e; return ''; };\r\n\r\nfunction telegramHtml(md, opciones = { emojis: true }) {\r\n  const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\r\n  let t = esc(String(md ?? '').replace(/\\r/g, '').replace(/[‐‑‒–−]/g, '-'));\r\n  const lineas = t.split('\\n').map((l) => l.replace(/\\s+$/, ''));\r\n  const out = [];\r\n  for (let l of lineas) {\r\n    if (/^\\s*\\|[\\s-:|]+\\|\\s*$/.test(l)) continue;                       // separador de tabla\r\n    if (/^\\s*\\|.*\\|\\s*$/.test(l)) l = l.replace(/^\\s*\\||\\|\\s*$/g, '').split('|').map((c) => c.trim()).join(' — ');\r\n    l = l.replace(/^\\s*#{1,6}\\s+(.*)$/, '<b>$1</b>');                     // encabezados -> negrita\r\n    l = l.replace(/^\\s*[-*]\\s+/, '• ').replace(/^\\s{2,}[-*]\\s+/, '   ◦ '); // viñetas\r\n    l = l.replace(/^\\s*(\\d+)[.)]\\s+/, '$1. ');\r\n    l = l.replace(/\\*\\*(.+?)\\*\\*/g, '<b>$1</b>').replace(/__(.+?)__/g, '<b>$1</b>');\r\n    l = l.replace(/(^|[^\\w*])\\*(?!\\s)([^*\\n]+?)\\*(?!\\w)/g, '$1<i>$2</i>');\r\n    l = l.replace(/`([^`\\n]+)`/g, '<code>$1</code>');\r\n    l = l.replace(/\\b((?:FAQ|MAN|POL|PRO)-[A-Z]{3}-\\d{3})(\\s*(?:§|P)\\s*[\\d.]+[^)\\n;,]*)?/g, '<i>$1$2</i>');\r\n    out.push(l);\r\n  }\r\n  // Bloques de viñetas compactos (sin lineas en blanco entre •) y una linea en blanco antes del bloque.\r\n  const ls = out.join('\\n').replace(/\\n{3,}/g, '\\n\\n').trim().split('\\n'), fin = [];\r\n  const esV = (x) => /^(• |   ◦ |\\d+\\. )/.test(x);\r\n  for (let i = 0; i < ls.length; i++) {\r\n    const prev = fin[fin.length - 1];\r\n    if (esV(ls[i]) && prev !== undefined && prev !== '' && !esV(prev)) fin.push('');\r\n    if (ls[i] === '' && esV(prev ?? '') && esV(ls[i + 1] ?? '')) continue;\r\n    fin.push(ls[i]);\r\n  }\r\n  t = fin.join('\\n');\r\n  // Enfasis visual (solo en texto que aun no tiene etiquetas): archivo en <code>, seccion citada subrayada,\r\n  // importes y cantidades con unidad en negrita, etiqueta de la viñeta en negrita, \"segun ...\" en cursiva.\r\n  t = t.split(/(<[a-z]+>[^<]*<\\/[a-z]+>)/).map((seg, i) => i % 2 ? seg : seg\r\n    .replace(/\\b([a-z_]+\\.(?:pdf|csv))\\b/g, '<code>$1</code>')\r\n    .replace(/(secci[oó]n\\s+\\d+(?:\\.\\d+)?\\s*«[^»\\n]+»|secci[oó]n\\s+\\d+(?:\\.\\d+)?|§\\s*[\\d.]+|\\bP\\d{1,2}(?=[^\\w\\d]|$))/g, '<u>$1</u>')\r\n    .replace(/(\\$\\s?\\d[\\d,]*(?:\\.\\d+)?(?:\\s?(?:k|M|mil|millones|MXN))?)/g, '<b>$1</b>')\r\n    .replace(/(?<![\\w$>])(\\d[\\d,]*(?:\\.\\d+)?\\s?(?:%|unidades|piezas|tickets|productos|SKUs?|d[ií]as(?: naturales| h[aá]biles)?|horas?|minutos|meses|semanas|kg|filas|artículos))\\b/g, '<b>$1</b>')\r\n    .replace(/(^|\\n)(• |\\d+\\. )([^:\\n<]{3,60}):/g, '$1$2<b>$3:</b>')\r\n    .replace(/\\b(seg[uú]n (?:el |la |los |las )?[^.;\\n<]{3,80}?)(?=[.;\\n)])/g, '<i>$1</i>')\r\n  ).join('');\r\n  // Fuente plegable: las lineas que solo citan (\"Según ...\", \"Fuente: ...\", \"Citas: ...\") van en un blockquote expandible,\r\n  // asi la respuesta se lee corta y la cita sigue a un toque. Solo lineas completas de cita; nunca las que llevan cifras.\r\n  t = t.split('\\n').map((l) => (/^(Según|Fuente|Citas?|Cita relevante|Regla)\\b/i.test(l.replace(/<[^>]+>/g, '')) && !/\\$\\s?\\d/.test(l) && l.length > 40) ? '<blockquote expandable>' + l + '</blockquote>' : l).join('\\n');\n  // Primera linea en negrita si no lo esta ya y es corta (el dato/regla de un vistazo)\r\n  const primera = t.split('\\n')[0];\r\n  if (primera && !/<b>|^• |^\\d+\\. /.test(primera) && primera.length <= 160) t = '<b>' + primera + '</b>' + t.slice(primera.length);\r\n  if (opciones.emojis) {\r\n    // Un emoji por linea \"de bloque\": la primera linea y las etiquetas de viñeta / encabezados en negrita.\r\n    // Nunca dos iguales seguidos, para no tapizar la respuesta.\r\n    let ultimo = '';\r\n    t = t.split('\\n').map((l, i) => {\r\n      const esBloque = i === 0 || /^<b>[^<]{3,80}<\\/b>$/.test(l) || /^• <b>[^<]{3,60}:<\\/b>/.test(l);\r\n      if (!esBloque || !l.trim()) return l;\r\n      const e = emojiPara(l);\r\n      if (!e || e === ultimo) return l;\r\n      ultimo = e;\r\n      return l.startsWith('• ') ? '• ' + e + ' ' + l.slice(2) : e + ' ' + l;\r\n    }).join('\\n');\r\n  }\r\n  if (t.length > 4000) t = t.slice(0, 3990).replace(/<[^>]*$/, '') + '…';\r\n  return t;\r\n}\r\nconst p = $('Preparar llamada').first().json; const r = $input.first().json ?? {};\nlet texto;\nif (r.status === 'completed' && r.respuesta) texto = r.respuesta;\nelse if (r.code === 'previous_response_not_found') texto = 'La conversación anterior caducó. Empiezo una nueva: repíteme la pregunta.';\nelse if (r.code === 'rate_limited') texto = 'Demasiadas preguntas seguidas; dame unos segundos.';\nelse if (r.code === 'conversation_too_long') texto = 'Esta conversación ya es muy larga. Escribe /nueva para empezar otra.';\nelse texto = 'No pude responder ahora (' + (r.code || 'error') + '). Intenta de nuevo en un momento.';\n// Markdown del modelo -> HTML de Telegram (negrita, viñetas •, citas en cursiva, sin tablas), tope 4000.\ntexto = telegramHtml(texto);\nconst esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\nif (p.es_voz) texto = '<blockquote>🎙️ ' + esc(p.texto.length > 160 ? p.texto.slice(0, 157) + '…' : p.texto) + '</blockquote>\\n' + texto;\nconst reinicio = r.code === 'previous_response_not_found' || r.code === 'conversation_too_long';\n// Botones de seguimiento, deterministas por lo que trae la respuesta (cifra, cita de documento, tickets).\nconst b = []; const t = String(r.respuesta ?? '');\nif (r.status === 'completed') {\n  if (/\\$\\s?\\d|unidades/.test(t)) b.push({ text: '🏬 Por tienda', callback_data: 'sig:tienda' }, { text: '📅 Por mes', callback_data: 'sig:mes' });\n  if (/\\.pdf/.test(t)) b.push({ text: '📄 Sección completa', callback_data: 'sig:sec' }, { text: '🔗 Documentos relacionados', callback_data: 'sig:docs' });\n  if (/ticket|folio/i.test(t) && !/\\.pdf/.test(t)) b.push({ text: '🎫 Detalle de tickets', callback_data: 'sig:tk' });\n  if (/\\$\\s?\\d/.test(t) && !/devoluci/i.test(t)) b.push({ text: '↩️ Devoluciones', callback_data: 'sig:dev' });\n}\n// No repetir el boton que la gerente acaba de tocar (ni su opuesto): ofrecer siempre algo distinto.\nconst tocado = $('Normalizar').first().json.boton;\nconst b2 = b.filter((x) => x.callback_data !== tocado);\nconst teclado = b2.length ? { inline_keyboard: [b2.slice(0, 2), b2.slice(2, 4)].filter((f) => f.length) } : null;\nreturn [{ json: { texto, response_id: r.response_id ?? null, chat_hash: p.chat_hash, guardar: !!r.response_id || reinicio, reinicio, teclado } }];"
-      }
+        2976,
+        272
+      ]
     },
     {
-      "id": "g",
-      "name": "Guardar sesión",
-      "type": "n8n-nodes-base.postgres",
-      "typeVersion": 2.6,
-      "position": [
-        2640,
-        120
-      ],
-      "onError": "continueRegularOutput",
       "parameters": {
         "operation": "executeQuery",
         "query": "INSERT INTO heb_sesiones (chat_hash, ultimo_response_id, actualizado_en) VALUES ($1, NULLIF($2, '-'), now()) ON CONFLICT (chat_hash) DO UPDATE SET ultimo_response_id = EXCLUDED.ultimo_response_id, actualizado_en = now()",
@@ -458,36 +454,36 @@
           "queryReplacement": "={{ $json.chat_hash }},{{ $json.reinicio || !$json.response_id ? '-' : $json.response_id }}"
         }
       },
+      "id": "g",
+      "name": "Guardar sesión",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        3200,
+        176
+      ],
       "credentials": {
         "postgres": {
           "id": "V0RcqGuqWSuowyhM",
           "name": "BANO Postgres (pgvector)"
         }
-      }
+      },
+      "onError": "continueRegularOutput"
     },
     {
+      "parameters": {
+        "jsCode": "const p = $json;\nconst AYUDA = \"<b>Hola, soy HEB-aristo, tu asistente de tiendas.</b>\\r\\n\\r\\nPregúntame como le preguntarías a una persona, por texto o con una nota de voz. Sé de dos cosas:\\r\\n\\r\\n<b>1. Tus números</b> (junio a agosto de 2026, inventario al 1 de septiembre) de las tiendas T01 a T04:\\r\\n• ¿Cuánto vendió T02 en julio?\\r\\n• ¿Qué productos de T01 hay que reordenar?\\r\\n• ¿Cuántos tickets siguen abiertos?\\r\\n\\r\\n<b>2. Las políticas internas</b> (mermas, devoluciones, apertura y cierre, y las preguntas frecuentes), siempre diciéndote de qué documento y sección sale:\\r\\n• ¿Cuántos días tiene un cliente para devolver una licuadora?\\r\\n• ¿Qué hago si se va la luz en los refrigeradores?\\r\\n\\r\\nPuedes encadenar preguntas: \\\"¿Y en agosto?\\\", \\\"¿Y en T03?\\\". Recuerdo los últimos 10 mensajes de la conversación. Si algo no está en los datos ni en los documentos, te lo diré en vez de inventarlo.\\r\\n\\r\\n<b>Para cambiar de tema</b>, toca el botón <b>🆕 Nueva conversación</b> (abajo) o escribe /nueva y empezamos desde cero.\\r\\n\\r\\nComandos: /ejemplos para ver más preguntas · /nueva para empezar una conversación nueva · /ayuda para volver a ver esto.\", EJEMPLOS = \"<b>Ejemplos de lo que puedes preguntar</b>\\n\\n<b>Ventas</b>\\n• ¿Cuál fue la venta total de las cuatro tiendas en el trimestre?\\n• ¿Qué categoría vende más en T03?\\n• ¿Cuánto se devolvió en junio?\\n\\n<b>Inventario</b>\\n• ¿Qué productos de T02 están bajo su punto de reorden?\\n• ¿Qué caduca antes del 15 de septiembre en T04?\\n\\n<b>Tickets</b>\\n• ¿Cuántos tickets críticos hubo?\\n• ¿Qué pasó con las ventas de T02 del 14 al 16 de julio?\\n\\n<b>Políticas</b>\\n• ¿Quién autoriza una devolución de 12,000 pesos?\\n• ¿Cuál es la tolerancia de merma en panadería?\\n• ¿Puedo darle el teléfono de un colaborador a un proveedor?\\n\\nManda una nota de voz si prefieres hablar; te muestro lo que entendí antes de responder.\";\nconst MENU = {\"ventas\":{\"titulo\":\"<b>💰 Ventas</b> — toca una pregunta o escribe la tuya:\",\"botones\":[{\"text\":\"¿Cuál fue la venta total de las cuatro tiendas en el trimestre?\",\"callback_data\":\"q:v1\"},{\"text\":\"¿Qué categoría vende más en T03?\",\"callback_data\":\"q:v2\"},{\"text\":\"¿Cuánto se devolvió en junio?\",\"callback_data\":\"q:v3\"}]},\"inventario\":{\"titulo\":\"<b>📦 Inventario</b> — toca una pregunta o escribe la tuya:\",\"botones\":[{\"text\":\"¿Qué productos de T02 están bajo su punto de reorden?\",\"callback_data\":\"q:i1\"},{\"text\":\"¿Qué caduca antes del 15 de septiembre en T04?\",\"callback_data\":\"q:i2\"},{\"text\":\"¿Qué productos perecederos debo retirar del anaquel hoy según la política?\",\"callback_data\":\"q:i3\"}]},\"tickets\":{\"titulo\":\"<b>🎫 Tickets</b> — toca una pregunta o escribe la tuya:\",\"botones\":[{\"text\":\"¿Cuántos tickets críticos hubo?\",\"callback_data\":\"q:t1\"},{\"text\":\"¿Qué pasó con las ventas de T02 del 14 al 16 de julio?\",\"callback_data\":\"q:t2\"},{\"text\":\"¿Cumplimos el tiempo objetivo de solución de los tickets críticos?\",\"callback_data\":\"q:t3\"}]},\"politicas\":{\"titulo\":\"<b>📄 Políticas</b> — toca una pregunta o escribe la tuya:\",\"botones\":[{\"text\":\"¿Quién autoriza una devolución de 12,000 pesos?\",\"callback_data\":\"q:p1\"},{\"text\":\"¿Cuál es la tolerancia de merma en panadería?\",\"callback_data\":\"q:p2\"},{\"text\":\"¿Puedo darle el teléfono de un colaborador a un proveedor?\",\"callback_data\":\"q:p3\"}]}}, SECCIONES = {\"inline_keyboard\":[[{\"text\":\"💰 Ventas\",\"callback_data\":\"menu:ventas\"},{\"text\":\"📦 Inventario\",\"callback_data\":\"menu:inventario\"}],[{\"text\":\"🎫 Tickets\",\"callback_data\":\"menu:tickets\"},{\"text\":\"📄 Políticas\",\"callback_data\":\"menu:politicas\"}]]};\nlet texto, teclado = null;\nif (p.menu) { texto = MENU[p.menu].titulo; teclado = { inline_keyboard: MENU[p.menu].botones.map((x) => [x]) }; }\nelse if (p.ayuda === 'ayuda') { texto = AYUDA; teclado = SECCIONES; }\nelse if (p.ayuda === 'ejemplos') { texto = EJEMPLOS; teclado = SECCIONES; }\nelse if (p.sobre_limite) texto = 'Vas muy rápido: espera un par de minutos y vuelve a preguntar.';\nelse texto = p.sin_texto ? 'Solo entiendo texto o notas de voz. ¿Qué quieres saber de tus tiendas?' : 'Listo, empezamos de cero. ¿Qué quieres saber?';\nreturn [{ json: { texto, response_id: null, chat_hash: p.chat_hash, reinicio: p.reinicio, guardar: p.reinicio, teclado } }];"
+      },
       "id": "rv",
       "name": "Mensaje de reinicio",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2160,
-        -140
-      ],
-      "parameters": {
-        "jsCode": "const p = $json;\nconst AYUDA = \"<b>Hola, soy HEB-aristo, tu asistente de tiendas.</b>\\r\\n\\r\\nPregúntame como le preguntarías a una persona, por texto o con una nota de voz. Sé de dos cosas:\\r\\n\\r\\n<b>1. Tus números</b> (junio a agosto de 2026, inventario al 1 de septiembre) de las tiendas T01 a T04:\\r\\n• ¿Cuánto vendió T02 en julio?\\r\\n• ¿Qué productos de T01 hay que reordenar?\\r\\n• ¿Cuántos tickets siguen abiertos?\\r\\n\\r\\n<b>2. Las políticas internas</b> (mermas, devoluciones, apertura y cierre, y las preguntas frecuentes), siempre diciéndote de qué documento y sección sale:\\r\\n• ¿Cuántos días tiene un cliente para devolver una licuadora?\\r\\n• ¿Qué hago si se va la luz en los refrigeradores?\\r\\n\\r\\nPuedes encadenar preguntas: \\\"¿Y en agosto?\\\", \\\"¿Y en T03?\\\". Recuerdo los últimos 10 mensajes de la conversación. Si algo no está en los datos ni en los documentos, te lo diré en vez de inventarlo.\\r\\n\\r\\n<b>Para cambiar de tema</b>, toca el botón <b>🆕 Nueva conversación</b> (abajo) o escribe /nueva y empezamos desde cero.\\r\\n\\r\\nComandos: /ejemplos para ver más preguntas · /nueva para empezar una conversación nueva · /ayuda para volver a ver esto.\", EJEMPLOS = \"<b>Ejemplos de lo que puedes preguntar</b>\\n\\n<b>Ventas</b>\\n• ¿Cuál fue la venta total de las cuatro tiendas en el trimestre?\\n• ¿Qué categoría vende más en T03?\\n• ¿Cuánto se devolvió en junio?\\n\\n<b>Inventario</b>\\n• ¿Qué productos de T02 están bajo su punto de reorden?\\n• ¿Qué caduca antes del 15 de septiembre en T04?\\n\\n<b>Tickets</b>\\n• ¿Cuántos tickets críticos hubo?\\n• ¿Qué pasó con las ventas de T02 del 14 al 16 de julio?\\n\\n<b>Políticas</b>\\n• ¿Quién autoriza una devolución de 12,000 pesos?\\n• ¿Cuál es la tolerancia de merma en panadería?\\n• ¿Puedo darle el teléfono de un colaborador a un proveedor?\\n\\nManda una nota de voz si prefieres hablar; te muestro lo que entendí antes de responder.\";\nconst MENU = {\"ventas\":{\"titulo\":\"<b>💰 Ventas</b> — toca una pregunta o escribe la tuya:\",\"botones\":[{\"text\":\"¿Cuál fue la venta total de las cuatro tiendas en el trimestre?\",\"callback_data\":\"q:v1\"},{\"text\":\"¿Qué categoría vende más en T03?\",\"callback_data\":\"q:v2\"},{\"text\":\"¿Cuánto se devolvió en junio?\",\"callback_data\":\"q:v3\"}]},\"inventario\":{\"titulo\":\"<b>📦 Inventario</b> — toca una pregunta o escribe la tuya:\",\"botones\":[{\"text\":\"¿Qué productos de T02 están bajo su punto de reorden?\",\"callback_data\":\"q:i1\"},{\"text\":\"¿Qué caduca antes del 15 de septiembre en T04?\",\"callback_data\":\"q:i2\"},{\"text\":\"¿Qué productos perecederos debo retirar del anaquel hoy según la política?\",\"callback_data\":\"q:i3\"}]},\"tickets\":{\"titulo\":\"<b>🎫 Tickets</b> — toca una pregunta o escribe la tuya:\",\"botones\":[{\"text\":\"¿Cuántos tickets críticos hubo?\",\"callback_data\":\"q:t1\"},{\"text\":\"¿Qué pasó con las ventas de T02 del 14 al 16 de julio?\",\"callback_data\":\"q:t2\"},{\"text\":\"¿Cumplimos el tiempo objetivo de solución de los tickets críticos?\",\"callback_data\":\"q:t3\"}]},\"politicas\":{\"titulo\":\"<b>📄 Políticas</b> — toca una pregunta o escribe la tuya:\",\"botones\":[{\"text\":\"¿Quién autoriza una devolución de 12,000 pesos?\",\"callback_data\":\"q:p1\"},{\"text\":\"¿Cuál es la tolerancia de merma en panadería?\",\"callback_data\":\"q:p2\"},{\"text\":\"¿Puedo darle el teléfono de un colaborador a un proveedor?\",\"callback_data\":\"q:p3\"}]}}, SECCIONES = {\"inline_keyboard\":[[{\"text\":\"💰 Ventas\",\"callback_data\":\"menu:ventas\"},{\"text\":\"📦 Inventario\",\"callback_data\":\"menu:inventario\"}],[{\"text\":\"🎫 Tickets\",\"callback_data\":\"menu:tickets\"},{\"text\":\"📄 Políticas\",\"callback_data\":\"menu:politicas\"}]]};\nlet texto, teclado = null;\nif (p.menu) { texto = MENU[p.menu].titulo; teclado = { inline_keyboard: MENU[p.menu].botones.map((x) => [x]) }; }\nelse if (p.ayuda === 'ayuda') { texto = AYUDA; teclado = SECCIONES; }\nelse if (p.ayuda === 'ejemplos') { texto = EJEMPLOS; teclado = SECCIONES; }\nelse if (p.sobre_limite) texto = 'Vas muy rápido: espera un par de minutos y vuelve a preguntar.';\nelse texto = p.sin_texto ? 'Solo entiendo texto o notas de voz. ¿Qué quieres saber de tus tiendas?' : 'Listo, empezamos de cero. ¿Qué quieres saber?';\nreturn [{ json: { texto, response_id: null, chat_hash: p.chat_hash, reinicio: p.reinicio, guardar: p.reinicio, teclado } }];"
-      }
+        2880,
+        96
+      ]
     },
     {
-      "id": "s",
-      "name": "Enviar por Telegram",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        2880,
-        0
-      ],
-      "onError": "continueRegularOutput",
       "parameters": {
         "method": "POST",
         "url": "https://api.telegram.org/bot<TELEGRAM_BOT_TOKEN>/sendMessage",
@@ -497,72 +493,32 @@
         "options": {
           "timeout": 30000
         }
-      }
-    },
-    {
-      "id": "s_nodo",
-      "name": "Enviar (nodo Telegram, inactivo)",
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
+      },
+      "id": "s",
+      "name": "Enviar por Telegram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
       "position": [
-        2880,
-        300
+        3376,
+        176
       ],
-      "disabled": true,
-      "parameters": {
-        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
-        "text": "={{ $('Redactar respuesta').isExecuted ? $('Redactar respuesta').first().json.texto : $('Mensaje de reinicio').first().json.texto }}",
-        "additionalFields": {
-          "appendAttribution": false,
-          "parse_mode": "HTML"
-        },
-        "replyMarkup": "replyKeyboard",
-        "replyKeyboard": {
-          "rows": [
-            {
-              "row": {
-                "buttons": [
-                  {
-                    "text": "🆕 Nueva conversación"
-                  },
-                  {
-                    "text": "❓ Ayuda"
-                  },
-                  {
-                    "text": "💡 Ejemplos"
-                  }
-                ]
-              }
-            }
-          ]
-        },
-        "replyKeyboardOptions": {
-          "resize_keyboard": true
-        }
-      },
-      "credentials": {
-        "telegramApi": {
-          "id": "c4WoWHcCNO6ECvwW",
-          "name": "HEB-aristo Telegram"
-        }
-      },
-      "webhookId": "46740ab6-53b4-4396-9d70-37fbda227e82"
+      "onError": "continueRegularOutput"
     },
     {
+      "parameters": {
+        "content": "## HEB-aristo — Telegram (canal principal para la evaluación)\n\nAdaptador delgado: no toca *Recuperación*, la llama por su webhook. Texto o **nota de voz** (Get File → OpenAI Transcribe `whisper-1`, español).\n\n**Datos personales**: el bot es **público** (los datos son sintéticos); la sesión se guarda en `heb_sesiones` por **hash SHA-256 del chat_id + sal**,\nnunca el id, nombre ni usuario de Telegram. `/nueva` reinicia. Los errores del webhook (caducó, límite, caída) se contestan con una frase.\n\nSe regenera con `node infra/crear-telegram.mjs` (la sal y la allowlist vienen de `.env`; el JSON exportado las lleva enmascaradas).",
+        "height": 300,
+        "width": 900,
+        "color": 4
+      },
       "id": "nota",
       "name": "Nota",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        0,
-        -420
-      ],
-      "parameters": {
-        "color": 4,
-        "width": 900,
-        "height": 300,
-        "content": "## HEB-aristo — Telegram (canal principal para la evaluación)\n\nAdaptador delgado: no toca *Recuperación*, la llama por su webhook. Texto o **nota de voz** (Get File → OpenAI Transcribe `whisper-1`, español).\n\n**Datos personales**: el bot es **público** (los datos son sintéticos); la sesión se guarda en `heb_sesiones` por **hash SHA-256 del chat_id + sal**,\nnunca el id, nombre ni usuario de Telegram. `/nueva` reinicia. Los errores del webhook (caducó, límite, caída) se contestan con una frase.\n\nSe regenera con `node infra/crear-telegram.mjs` (la sal y la allowlist vienen de `.env`; el JSON exportado las lleva enmascaradas)."
-      }
+        1856,
+        -224
+      ]
     }
   ],
   "connections": {

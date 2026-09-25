@@ -1,0 +1,138 @@
+[
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuánto vendió T02 en julio de 2026?",
+    "ok": true,
+    "ms": 28696,
+    "respuesta": "$1,810,013.00. Es la venta de julio de 2026 de T02 (Tienda Cumbres), según las ventas de julio (ventas.csv)."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántos tickets siguen abiertos o en proceso?",
+    "ok": true,
+    "ms": 12765,
+    "respuesta": "17 tickets están en estado Abierto o En proceso. Conté los estados Abierto y En proceso; según tickets_mesa_servicio.csv (junio-agosto 2026), en las cuatro tiendas."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántas unidades de leche entera se vendieron en el trimestre?",
+    "ok": true,
+    "ms": 17376,
+    "respuesta": "Se vendieron 10,099 unidades de leche entera en junio-agosto de 2026, según ventas.csv (junio-agosto 2026) en las cuatro tiendas."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuál es la categoría que más vende en T03?",
+    "ok": true,
+    "ms": 20186,
+    "respuesta": "Abarrotes — $532,171.00, según ventas.csv (junio-agosto 2026) para T03 (Tienda Anáhuac)."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuánto vendió T03 por Ecommerce en agosto?",
+    "ok": true,
+    "ms": 35338,
+    "respuesta": "$0.00. Según las ventas de agosto (ventas.csv). T03 — Tienda Anáhuac — es formato Mi Tienda (solo piso); las ventas por Ecommerce para T03 son $0.00 por diseño."
+  },
+  {
+    "corrida": 1,
+    "familia": "cifras",
+    "pregunta": "¿Cuántos productos de Valle Norte están bajo su punto de reorden?",
+    "ok": true,
+    "ms": 37437,
+    "respuesta": "3 productos.\n\nT01 (Tienda Valle Norte), según `inventario.csv` (al 1 de septiembre de 2026). Conté los SKUs con existencia menor que su punto de reorden."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuántos días tiene un cliente para devolver una licuadora?",
+    "ok": true,
+    "ms": 10895,
+    "respuesta": "30 días.\n\nSegún el Procedimiento de devoluciones y cambios (procedimiento_devoluciones.pdf — PRO-SAC-021), sección 3 «Plazos de devolución por tipo de producto»: Electrodomésticos y electrónicos menores (como licuadoras) tienen 30 días naturales; se requiere ticket y empaque original completo con accesorios y manuales.  \n\nLa FAQ para gerentes (faq_gerentes_de_tienda.pdf — FAQ-OPS-001, sección 4 P15) menciona 15 días; cuando hay diferencia, prevalece el procedimiento, por eso aplica 30 días.  \n\nExcepción: si hay defecto de fabricación evidente, la tienda acepta devolución aun vencido el plazo si la compra fue hace ≤90 días y con autorización del Gerente de Servicio al Cliente (PRO-SAC-021, sección 4.1)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuál es la tolerancia mensual de merma en panadería?",
+    "ok": true,
+    "ms": 10135,
+    "respuesta": "Tolerancia mensual: 3.5% de la venta neta. Según politica_mermas_y_caducidad.pdf — Política de mermas y caducidad (POL-OPS-014), sección 4 «Tabla de tolerancias de merma por categoría». Umbral de alerta: 4.5% y frecuencia de conteo: diaria (ver también POL-OPS-014, sección 4.1 «Interpretación de la tabla»: si se supera el umbral, el gerente tiene cinco días hábiles para enviar un plan de acción)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Quién autoriza una devolución de 12,000 pesos?",
+    "ok": true,
+    "ms": 9499,
+    "respuesta": "Lo autoriza el Gerente de Tienda.\n\nSegún procedimiento_devoluciones.pdf — Procedimiento de devoluciones y cambios (PRO-SAC-021), sección 9 «Flujo de autorización por monto»: las devoluciones de $10,000.01 a $30,000.00 requieren autorización del Gerente de Tienda con firma electrónica, captura del motivo y copia de identificación del cliente. Además, la sección 9.1 del mismo procedimiento enumera excepciones que igualmente exigen autorización del Gerente de Tienda (devoluciones fuera de plazo por defecto de fabricación, liberación de bloqueos por límites sin ticket, señales de fraude y electrodomésticos sin empaque)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Cuánto tiempo aguantan las cámaras de refrigeración si se va la luz?",
+    "ok": true,
+    "ms": 13251,
+    "respuesta": "Corto y directo:\n\n- Tiempo seguro: las cámaras de refrigeración y de congelación mantienen la temperatura dentro del rango seguro hasta 4 horas con las puertas cerradas; los muebles refrigerados abiertos mantienen la temperatura solo 2 horas con las cortinas nocturnas colocadas. (Manual de apertura y cierre de tienda — MAN-OPS-007, sección 7.1 «Respaldo disponible»; FAQ para gerentes — FAQ-OPS-001, P11).\n\n- Planta de emergencia: arranca automáticamente en máximo 30 segundos; si no arranca, Mantenimiento intenta arranque manual y, si falla, se levanta ticket con prioridad Crítica. (MAN-OPS-007, sección 7.2 «Actuación inmediata»).\n\n- Acciones inmediatas: colocar cortinas en muebles abiertos, mantener cerradas las puertas de cámaras, registrar temperaturas cada 30 minutos durante la contingencia. (MAN-OPS-007, 7.2; FAQ-OPS-001, P23).\n\n- Si la falla dura entre 2 y 4 horas: trasladar producto de muebles abiertos a cámaras. (MAN-OPS-007, 7.3; FAQ-OPS-001, P11).\n\n- Si supera 4 horas, o el producto refrigerado estuvo >7 °C por más de 2 horas, o el congelado muestra descongelación: retirar de venta y registrar en SIGMA como “Falla de cadena de frío” con el formato de contingencia. Al restablecer energía, si una cámara no recupera la temperatura objetivo en 60 minutos, levantar ticket a Mantenimiento. (MAN-OPS-007, 7.3; FAQ-OPS-001, P11 y P23).\n\n¿Quieres que te guarde el protocolo breve para colgar en el tablero? (Si sí, lo redacto)."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "¿Puedo darle el teléfono de un colaborador a un proveedor?",
+    "ok": true,
+    "ms": 8330,
+    "respuesta": "No. Según faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001) — sección 6 «Personal», P24: la información de contacto y los datos personales de los empleados son confidenciales y no se comparten con proveedores ni por canales no oficiales. Recursos Humanos es el único autorizado para atender esas solicitudes; si el proveedor insiste, toma sus datos y remítelo al buzón oficial de RH."
+  },
+  {
+    "corrida": 1,
+    "familia": "politicas",
+    "pregunta": "Si una obra cierra el 40 % del piso de venta, ¿qué horario aplica?",
+    "ok": true,
+    "ms": 10511,
+    "respuesta": "Horario reducido: la tienda debe operar en horario reducido, con autorización de la Gerencia Regional. La regla establece que si la obra inhabilita más del 30% del piso de venta se aplica horario reducido y se coloca aviso al público con al menos 48 horas de anticipación; el horario estándar de referencia es 7:00-22:00.\n\nCitado: manual_apertura_y_cierre_tienda.pdf — Manual de apertura y cierre de tienda (MAN-OPS-007), sección 8 «Remodelaciones y obras en tienda», 8.2 Regla de horario reducido; ver también sección 2 «Horarios de referencia». Además confirmado en faq_gerentes_de_tienda.pdf — Preguntas frecuentes para gerentes de tienda (FAQ-OPS-001), P7."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Qué tienda supera la tolerancia de merma?",
+    "ok": true,
+    "ms": 34628,
+    "respuesta": "No puedo determinar qué tienda supera la tolerancia de merma: no hay registros de merma en las fuentes disponibles (dispongo solo de ventas, inventario, catálogo, tiendas y tickets).\n\nRegla aplicable: Política de mermas y caducidad (POL-OPS-014), sección 4 «Tabla de tolerancias de merma por categoría» — umbrales (tolerancia / umbral de alerta):\n- Lácteos: 1.8% / 2.8%  \n- Panadería: 3.5% / 4.5%  \n- Carnes: 2.5% / 3.5%  \n- Frutas y verduras: 4.5% / 5.5%  \n- Abarrotes: 0.6% / 1.6%  \n- Bebidas: 0.8% / 1.8%  \n- Limpieza: 0.4% / 1.4%  \n- Cuidado personal: 0.5% / 1.5%\n\nAdemás, POL-OPS-014 sección 4.1 establece que si la merma acumulada del mes supera el umbral de alerta en alguna categoría, el Gerente de Tienda tiene cinco días hábiles para enviar a la Gerencia Regional un plan de acción.\n\nQué necesito para responder: el reporte de merma mensual por tienda y categoría (ajustes por conteo y merma conocida) para junio-agosto de 2026 — o los registros de ajustes por conteo cargados en SIGMA por tienda/categoría al cierre de agosto. Envíame ese reporte y te digo qué tienda supera qué umbral."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuánto vendió T01 en septiembre?",
+    "ok": true,
+    "ms": 5739,
+    "respuesta": "No hay datos de ventas de septiembre para T01. Las cifras disponibles cubren únicamente junio-agosto de 2026."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Por qué T02 vendió tanto el sábado 15 de agosto?",
+    "ok": true,
+    "ms": 82490,
+    "respuesta": "T02 vendió $94,422.12 el sábado 15 de agosto de 2026; su promedio diario (jun-ago) fue $61,026.31 — 154.72% del promedio, según ventas.csv (junio-agosto 2026).\n\nno hay ticket ni política que lo explique."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuál es la política de vacaciones?",
+    "ok": true,
+    "ms": 7290,
+    "respuesta": "No tengo la política de vacaciones en los documentos internos disponibles: Manual de apertura y cierre (MAN-OPS-007), Política de mermas y caducidad (POL-OPS-014), Procedimiento de devoluciones y cambios (PRO-SAC-021) ni Preguntas frecuentes para gerentes (FAQ-OPS-001)."
+  },
+  {
+    "corrida": 1,
+    "familia": "abstencion",
+    "pregunta": "¿Cuál es el teléfono del encargado que reportó la puerta de empleados en junio?",
+    "ok": true,
+    "ms": 45340,
+    "respuesta": "No tengo ese dato. Según tickets_mesa_servicio.csv (junio de 2026) no hay tickets que mencionen \"puerta de empleados\", y además los tickets no registran teléfonos de encargados. Si quieres, busco por tienda concreta (dime Valle Norte, Cumbres, Anáhuac o Lomas del Sur)."
+  }
+]

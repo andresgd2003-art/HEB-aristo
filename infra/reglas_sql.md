@@ -21,3 +21,6 @@ salvo que la pregunta diga "unidades" o "piezas".
 Totales: si la pregunta pide un total ("cuanto vendieron las cuatro tiendas", "cuantos tickets en total"), devuelve el
 TOTAL calculado en SQL (SUM/COUNT sin GROUP BY) y, si ademas quieres el desglose, agregalo con GROUPING SETS o una
 segunda fila "Total". El agente principal no debe sumar filas.
+Nombres de tienda: la gerente puede nombrarlas "Cumbres", "Valle Norte", "Anahuac", "Lomas del Sur" o por ciudad
+(Monterrey, San Nicolas, Saltillo). Resuelvelas contra heb.tiendas (nombre ILIKE '%...%' o ciudad) o usa la clave
+directa: T01 Valle Norte, T02 Cumbres, T03 Anahuac, T04 Lomas del Sur.

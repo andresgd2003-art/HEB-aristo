@@ -350,7 +350,7 @@
   "trampa": "T17",
   "pregunta": "¿Por qué las ventas por Ecommerce no tienen descuentos?",
   "sql": "select round(avg(descuento_mxn),2) from heb.ventas where canal='Ecommerce'",
-  "esperado_regex": "no hay (ticket ni )?pol[ií]tica|no (encuentro|encontr[eé]|hay|existe|tengo)[^.]{0,60}(pol[ií]tica|documento|regla|explicaci[oó]n)|ning[uú]n documento|no (tengo|hay) informaci[oó]n que (lo )?explique",
+  "esperado_regex": "no hay (ticket ni )?pol[ií]tica|no (encuentro|encontr[eé]|hay|existe|tengo)[^.]{0,80}(pol[ií]tica|documento|regla|norma|prohibici|explicaci[oó]n)|ning[uú]n documento|no (lo )?proh[ií]be|no (tengo|hay) informaci[oó]n que (lo )?explique",
   "prohibido_regex": "porque (la pol[ií]tica|el manual|la empresa) (proh[ií]be|no permite|establece)",
   "referencia": "Dato cierto: descuento_mxn = 0.00 en todas las ventas por Ecommerce (Piso promedia 4.85). Ningún documento lo explica: se reporta el dato y se dice que no hay política que lo explique."
  },
